@@ -1,0 +1,555 @@
+function getMenu() {
+  return `Hola 👋 Soy Orby, asistente de OneOrbix.
+
+Para ayudarte mejor, elige una opción:
+
+1️⃣ Importar productos desde China
+2️⃣ Amazon FBA (vender en Amazon)
+3️⃣ Club de Importadores OneOrbix ⭐
+4️⃣ Exportar productos
+5️⃣ Ferias internacionales
+6️⃣ Ecommerce, automatización y crecimiento digital
+7️⃣ Asesoría personalizada
+8️⃣ Atención al cliente`;
+}
+
+// OPCIÓN 1: IMPORTACIÓN
+function getImportacionIntro() {
+  return `Perfecto. Para orientarte mejor, dime cuál de estas opciones describe mejor tu caso:
+
+1️⃣ Ya sé qué producto quiero importar
+2️⃣ Quiero importar pero aún no sé qué producto elegir
+3️⃣ Busco proveedor o fabricante en China/USA
+4️⃣ Solo quiero información general`;
+}
+
+function getImportacionCaso1() {
+  return `Perfecto. Eso facilita mucho el proceso.
+
+Ahora dime:
+
+1️⃣ Ya he importado antes
+2️⃣ Sería mi primera vez importando`;
+}
+
+function getImportacionCaso2() {
+  return `Entiendo. Elegir el producto correcto es clave.
+
+Dime:
+
+1️⃣ Quiero vender en Ecuador
+2️⃣ Quiero vender en Amazon
+3️⃣ Solo estoy explorando ideas`;
+}
+
+function getImportacionCaso3() {
+  return `Perfecto. Buscar proveedor es un paso clave.
+
+Dime:
+
+1️⃣ Ya tengo el producto definido
+2️⃣ Necesito ayuda para definir producto y proveedor`;
+}
+
+function getImportacionInfoGeneral() {
+  return `Perfecto. Te explico brevemente:
+
+En OneOrbix ayudamos a importar desde China o USA, encontrar proveedores y estructurar el proceso completo.
+
+Cuando quieras avanzar en tu caso, escribe 1 y seguimos.`;
+}
+
+// OPCIÓN 2: AMAZON
+function getAmazonIntro() {
+  return `Excelente. Cuéntame cuál de estas opciones se parece más a tu caso:
+
+1️⃣ Ya tengo producto para vender
+2️⃣ Quiero vender en Amazon pero aún no sé qué producto elegir
+3️⃣ Necesito guía completa para comenzar
+4️⃣ Solo quiero información general`;
+}
+
+function getAmazonCaso1() {
+  return `Perfecto. Eso acelera bastante el proceso.
+
+Ahora dime:
+
+1️⃣ Ya vendo ese producto
+2️⃣ Aún no lo vendo, pero ya lo tengo definido
+3️⃣ Quiero validar si ese producto sirve para Amazon`;
+}
+
+function getAmazonCaso2() {
+  return `Entiendo. Elegir bien el producto es clave en Amazon.
+
+Dime:
+
+1️⃣ Quiero vender una marca propia
+2️⃣ Quiero revender productos`;
+}
+
+function getAmazonCaso3() {
+  return `Perfecto. Para orientarte mejor, dime:
+
+1️⃣ Sería mi primera vez vendiendo en Amazon
+2️⃣ Ya he investigado algo, pero necesito estructura
+3️⃣ Ya intenté antes y quiero hacerlo mejor`;
+}
+
+function getAmazonInfoGeneral() {
+  return `Con gusto. En OneOrbix te ayudamos a definir productos, estructurar tu estrategia y preparar el proceso para vender en Amazon FBA.
+
+Cuando quieras evaluar tu caso puntual, escribe 2 y seguimos.`;
+}
+
+function getAmazonPreguntaFinal() {
+  return `Ahora dime:
+
+1️⃣ Quiero avanzar pronto
+2️⃣ Quiero entender el proceso antes de decidir
+3️⃣ Solo estoy reuniendo información por ahora`;
+}
+
+// OPCIÓN 3: CLUB
+function getClubIntro() {
+  return `Excelente. El Club de Importadores OneOrbix es la forma más rápida y segura de empezar a importar con acompañamiento real.
+
+Dentro del club tienes acceso a:
+
+✔ Búsqueda de proveedores en China y USA
+✔ Asesoría para vender en Amazon
+✔ Importación con carga compartida a Ecuador
+✔ Apoyo logístico y operativo paso a paso
+
+Para orientarte mejor, dime:
+
+1️⃣ Quiero empezar a importar desde cero
+2️⃣ Ya tengo una idea de producto
+3️⃣ Ya he importado antes, pero quiero mejorar
+4️⃣ Solo quiero conocer cómo funciona el club`;
+}
+
+function getClubCaso1() {
+  return `Perfecto. El club está diseñado justo para eso.
+
+Dime:
+
+1️⃣ Quiero importar para vender
+2️⃣ Quiero importar para uso personal
+3️⃣ Aún estoy explorando ideas`;
+}
+
+function getClubCaso2() {
+  return `Excelente. Eso acelera mucho el proceso.
+
+Dime:
+
+1️⃣ Ya validé el producto
+2️⃣ Tengo la idea, pero necesito validarla`;
+}
+
+function getClubCaso3() {
+  return `Perfecto. Entonces podemos ayudarte a escalar.
+
+Dime:
+
+1️⃣ Quiero mejorar costos y proveedores
+2️⃣ Quiero optimizar logística y tiempos
+3️⃣ Quiero estructurar mejor mi negocio`;
+}
+
+function getClubInfoGeneral() {
+  return `Perfecto. El Club de Importadores es una membresía que te permite aprender, ejecutar y escalar tus importaciones con acompañamiento paso a paso.
+
+Incluye herramientas, asesoría y acceso a oportunidades reales de negocio.
+
+¿Te gustaría conocer los planes disponibles?`;
+}
+
+function getClubPreguntaFinal() {
+  return `Ahora dime:
+
+1️⃣ Quiero empezar lo antes posible
+2️⃣ Quiero entender bien antes de unirme
+3️⃣ Solo estoy explorando por ahora`;
+}
+
+// OPCIÓN 4: EXPORTACIÓN
+function getExportacionIntro() {
+  return `Perfecto. Para ayudarte mejor, dime cuál de estas opciones describe mejor tu caso:
+
+1️⃣ Ya tengo un producto listo para exportar
+2️⃣ Tengo un producto, pero no sé si es apto para exportación
+3️⃣ Quiero exportar, pero aún no tengo definido el producto o mercado
+4️⃣ Solo quiero información general`;
+}
+
+function getExportacionCaso1() {
+  return `Excelente. Eso nos da una base sólida.
+
+Ahora dime:
+
+1️⃣ Ya tengo marca o empresa operando
+2️⃣ Tengo el producto, pero aún no he estructurado la parte comercial
+3️⃣ Ya he tenido contactos o interés desde el exterior`;
+}
+
+function getExportacionCaso2() {
+  return `Entiendo. Validar el potencial exportable es un paso clave.
+
+Dime:
+
+1️⃣ Quiero exportar a Estados Unidos
+2️⃣ Quiero exportar a China, Europa o Dubái
+3️⃣ Aún no sé a qué mercado apuntar`;
+}
+
+function getExportacionCaso3() {
+  return `Perfecto. Para orientarte mejor, dime:
+
+1️⃣ Ya tengo un negocio y quiero expandirme al exterior
+2️⃣ Estoy evaluando ideas de productos exportables
+3️⃣ Solo estoy explorando oportunidades`;
+}
+
+function getExportacionInfoGeneral() {
+  return `Con gusto. En OneOrbix ayudamos a estructurar procesos de exportación, validar productos, identificar mercados y facilitar conexiones comerciales.
+
+Cuando quieras evaluar tu caso puntual, escribe 4 y seguimos.`;
+}
+
+function getExportacionPreguntaFinal() {
+  return `Ahora dime:
+
+1️⃣ Quiero avanzar pronto con mi proceso de exportación
+2️⃣ Quiero entender primero los requisitos y pasos
+3️⃣ Solo estoy reuniendo información por ahora`;
+}
+
+// OPCIÓN 5: FERIAS
+function getFeriasIntro() {
+  return `Perfecto. Para orientarte mejor sobre ferias internacionales, dime cuál de estas opciones describe mejor tu caso:
+
+1️⃣ Quiero asistir a una feria específica
+2️⃣ Quiero ir a una feria, pero no sé cuál es la mejor opción
+3️⃣ Busco proveedores o productos específicos en ferias
+4️⃣ Solo quiero información general`;
+}
+
+function getFeriasCaso1() {
+  return `Excelente. Ahora dime:
+
+1️⃣ Ya he asistido antes a ferias internacionales
+2️⃣ Sería mi primera vez asistiendo
+3️⃣ Estoy evaluando ir en el próximo evento`;
+}
+
+function getFeriasCaso2() {
+  return `Entiendo. Dime:
+
+1️⃣ Busco productos para importar
+2️⃣ Busco oportunidades de negocio o alianzas
+3️⃣ Solo quiero explorar opciones`;
+}
+
+function getFeriasCaso3() {
+  return `Perfecto. Dime:
+
+1️⃣ Ya tengo definido el tipo de producto que busco
+2️⃣ Tengo una idea general, pero necesito ayuda para concretarla`;
+}
+
+function getFeriasInfoGeneral() {
+  return `Con gusto. En OneOrbix te ayudamos a planificar tu participación en ferias internacionales, identificar proveedores y aprovechar al máximo el viaje.
+
+Cuando quieras evaluar tu caso puntual, escribe 5 y seguimos.`;
+}
+
+function getFeriasPreguntaFinal() {
+  return `Ahora dime:
+
+1️⃣ Quiero participar en una feria próximamente
+2️⃣ Quiero prepararme antes de tomar una decisión
+3️⃣ Solo estoy reuniendo información por ahora`;
+}
+
+// OPCIÓN 6: DIGITAL / ECOMMERCE / IA
+function getDigitalIntro() {
+  return `Perfecto. Para ayudarte mejor, dime qué necesitas exactamente:
+
+1️⃣ Crear una tienda online desde cero
+2️⃣ Mejorar o reparar una tienda existente
+3️⃣ Implementar automatización o IA para vender más
+4️⃣ Mejorar campañas, SEO o generación de ventas
+5️⃣ Solo quiero información general`;
+}
+
+function getDigitalCrearTiendaPaso2() {
+  return `Perfecto. Dime qué tipo de tienda quieres crear:
+
+1️⃣ Shopify
+2️⃣ WordPress / WooCommerce
+3️⃣ PrestaShop
+4️⃣ Aún no sé cuál me conviene`;
+}
+
+function getDigitalCrearTiendaPaso3() {
+  return `Perfecto. Ahora dime qué necesitas exactamente:
+
+1️⃣ Crear la tienda completa desde cero
+2️⃣ Configurar pagos, envíos y estructura básica
+3️⃣ Necesito orientación para definir la mejor opción`;
+}
+
+function getDigitalPreguntaIntencion() {
+  return `Ahora dime:
+
+1️⃣ Quiero empezar lo antes posible
+2️⃣ Quiero entender primero cómo funcionaría
+3️⃣ Solo estoy explorando`;
+}
+
+function getDigitalMejorarTiendaPaso2() {
+  return `Perfecto. ¿Qué tipo de tienda tienes actualmente?
+
+1️⃣ Shopify
+2️⃣ WordPress / WooCommerce
+3️⃣ PrestaShop
+4️⃣ Otra plataforma`;
+}
+
+function getDigitalMejorarTiendaPaso3() {
+  return `Dime cuál se parece más a tu caso:
+
+1️⃣ La tienda no está generando ventas
+2️⃣ Quiero mejorar diseño, velocidad o estructura
+3️⃣ Tengo errores técnicos o necesito soporte`;
+}
+
+function getDigitalMejorarTiendaPaso4() {
+  return `Perfecto. Ahora dime qué tan pronto quieres resolver esto:
+
+1️⃣ Quiero corregirlo o mejorarlo lo antes posible
+2️⃣ Quiero entender primero qué conviene hacer
+3️⃣ Solo estoy evaluando opciones por ahora`;
+}
+
+function getDigitalIAPaso2() {
+  return `Excelente. Dime qué quieres implementar:
+
+1️⃣ Chatbot para atención al cliente
+2️⃣ Agente con IA para ventas o leads
+3️⃣ Automatización de procesos internos
+4️⃣ No tengo claro qué necesito`;
+}
+
+function getDigitalIAPaso3() {
+  return `Perfecto. Ahora dime cuál de estas opciones describe mejor tu objetivo:
+
+1️⃣ Quiero mejorar atención y convertir más clientes
+2️⃣ Quiero automatizar tareas y ahorrar tiempo operativo
+3️⃣ Quiero entender primero qué tipo de solución me conviene`;
+}
+
+function getDigitalIAPaso4() {
+  return `Ahora dime:
+
+1️⃣ Quiero implementarlo pronto
+2️⃣ Quiero entender cómo funcionaría
+3️⃣ Solo estoy explorando`;
+}
+
+function getDigitalMarketingPaso2() {
+  return `Perfecto. Dime qué necesitas mejorar:
+
+1️⃣ Campañas en Meta Ads o Google Ads
+2️⃣ SEO para mi sitio web
+3️⃣ Generación de leads o más ventas
+4️⃣ No tengo clara la estrategia`;
+}
+
+function getDigitalMarketingPaso3() {
+  return `Ahora dime cuál de estas opciones se parece más a tu caso:
+
+1️⃣ Tengo tráfico pero no convierto
+2️⃣ No estoy generando suficiente tráfico
+3️⃣ Quiero empezar desde cero`;
+}
+
+function getDigitalMarketingPaso4() {
+  return `Perfecto. Ahora dime qué tan pronto quieres trabajar esto:
+
+1️⃣ Quiero empezar lo antes posible
+2️⃣ Quiero entender primero qué estrategia me conviene
+3️⃣ Solo estoy explorando por ahora`;
+}
+
+function getDigitalInfoGeneral() {
+  return `Con gusto. En OneOrbix ayudamos a:
+
+✔ Crear tiendas online
+✔ Mejorar ecommerce existentes
+✔ Implementar automatización con IA
+✔ Optimizar estrategias digitales para generar ventas
+
+Para orientarte mejor, dime qué te interesa más en este momento:
+
+1️⃣ Crear o mejorar una tienda online
+2️⃣ Automatización o IA para vender más
+3️⃣ Marketing digital, SEO o generación de ventas`;
+}
+
+function getDigitalInfoGeneralPaso3() {
+  return `Y ahora dime:
+
+1️⃣ Quiero avanzar pronto
+2️⃣ Quiero entender primero mis opciones
+3️⃣ Solo estoy explorando`;
+}
+
+// OPCIÓN 7: ASESORÍA
+function getAsesoriaIntro() {
+  return `Perfecto. Para ayudarte mejor, dime cuál de estas opciones describe mejor tu situación:
+
+1️⃣ Necesito ayuda para importar o exportar productos
+2️⃣ Quiero estructurar un negocio (Amazon, ecommerce, etc.)
+3️⃣ Tengo un negocio, pero necesito optimizarlo o escalarlo
+4️⃣ Solo quiero hacer una consulta puntual`;
+}
+
+function getAsesoriaCaso1() {
+  return `Entiendo. Para orientarte mejor, dime:
+
+1️⃣ Ya tengo una idea clara del producto o mercado
+2️⃣ Tengo una idea general, pero necesito estructura
+3️⃣ No tengo claro por dónde empezar`;
+}
+
+function getAsesoriaCaso2() {
+  return `Perfecto. Dime:
+
+1️⃣ Ya tengo productos o servicios definidos
+2️⃣ Tengo la idea, pero no está estructurada
+3️⃣ Estoy explorando opciones`;
+}
+
+function getAsesoriaCaso3() {
+  return `Excelente. Eso es donde más valor podemos aportar.
+
+Dime:
+
+1️⃣ Ya estoy generando ventas, pero quiero escalar
+2️⃣ Tengo ventas, pero no son constantes
+3️⃣ No estoy logrando resultados`;
+}
+
+function getAsesoriaCaso4() {
+  return `Perfecto. Por favor escribe tu consulta puntual y te orientaré con la mayor claridad posible.`;
+}
+
+function getAsesoriaPreguntaFinal() {
+  return `Ahora dime:
+
+1️⃣ Quiero resolver esto lo antes posible
+2️⃣ Quiero entender mejor antes de avanzar
+3️⃣ Solo estoy reuniendo información`;
+}
+
+// OPCIÓN 8: ATENCIÓN AL CLIENTE
+function getAtencionClienteIntro() {
+  return `Perfecto. Déjanos tu consulta y en breve nos comunicaremos contigo.`;
+}
+
+function getAtencionClienteConfirmacion() {
+  return `Perfecto. Hemos recibido tu consulta. En breve nos comunicaremos contigo para ayudarte mejor.`;
+}
+
+// GENERALES
+function getLeadCuriosoReply(opcion = "") {
+  if (opcion) {
+    return `Perfecto. Cuando quieras trabajar tu caso de forma más concreta, escribe ${opcion} y seguimos.`;
+  }
+
+  return `Perfecto. Cuando quieras trabajar tu caso de forma más concreta, seguimos.`;
+}
+
+function getLeadTibioReply() {
+  return `Vas por buen camino. Ya tengo una idea inicial de tu interés.
+
+Si quieres, cuéntame un poco más de tu caso y te orientamos mejor.`;
+}
+
+function getLeadCalificadoReply() {
+  return `Excelente. Veo que ya tienes una intención clara.
+
+1️⃣ Quiero orientación aquí
+2️⃣ Quiero agendar una reunión`;
+}
+
+module.exports = {
+  getMenu,
+
+  getImportacionIntro,
+  getImportacionCaso1,
+  getImportacionCaso2,
+  getImportacionCaso3,
+  getImportacionInfoGeneral,
+
+  getAmazonIntro,
+  getAmazonCaso1,
+  getAmazonCaso2,
+  getAmazonCaso3,
+  getAmazonInfoGeneral,
+  getAmazonPreguntaFinal,
+
+  getClubIntro,
+  getClubCaso1,
+  getClubCaso2,
+  getClubCaso3,
+  getClubInfoGeneral,
+  getClubPreguntaFinal,
+
+  getExportacionIntro,
+  getExportacionCaso1,
+  getExportacionCaso2,
+  getExportacionCaso3,
+  getExportacionInfoGeneral,
+  getExportacionPreguntaFinal,
+
+  getFeriasIntro,
+  getFeriasCaso1,
+  getFeriasCaso2,
+  getFeriasCaso3,
+  getFeriasInfoGeneral,
+  getFeriasPreguntaFinal,
+
+  getDigitalIntro,
+  getDigitalCrearTiendaPaso2,
+  getDigitalCrearTiendaPaso3,
+  getDigitalPreguntaIntencion,
+  getDigitalMejorarTiendaPaso2,
+  getDigitalMejorarTiendaPaso3,
+  getDigitalMejorarTiendaPaso4,
+  getDigitalIAPaso2,
+  getDigitalIAPaso3,
+  getDigitalIAPaso4,
+  getDigitalMarketingPaso2,
+  getDigitalMarketingPaso3,
+  getDigitalMarketingPaso4,
+  getDigitalInfoGeneral,
+  getDigitalInfoGeneralPaso3,
+
+  getAsesoriaIntro,
+  getAsesoriaCaso1,
+  getAsesoriaCaso2,
+  getAsesoriaCaso3,
+  getAsesoriaCaso4,
+  getAsesoriaPreguntaFinal,
+
+  getAtencionClienteIntro,
+  getAtencionClienteConfirmacion,
+
+  getLeadCuriosoReply,
+  getLeadTibioReply,
+  getLeadCalificadoReply
+};
