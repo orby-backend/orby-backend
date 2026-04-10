@@ -22,9 +22,6 @@ const { handleExploracionFlow } = require("./services/flows/exploracion");
 const { handleDigitalFlow } = require("./services/flows/digital");
 
 const {
-  isImportFreeTextIntent,
-  buildImportIntentResponse,
-  getImportGeneralFallbackAnswer,
   getImportLeadCuriosoReply,
   getImportLeadTibioReply,
   getImportLeadCalificadoReply,
@@ -91,6 +88,80 @@ const {
 
 const app = express();
 app.use(express.json());
+
+// ========================================================
+// HELPERS DE TEXTO Y NAVEGACIÓN
+// ========================================================
+function normalizeText(text = "") {
+  return String(text)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
+}
+
+function isMenuCommand(cleanMessage = "") {
+  return cleanMessage === "menu";
+}
+
+function isRestartCommand(cleanMessage = "") {
+  return cleanMessage === "reiniciar";
+}
+
+function isFinalState(estado = "") {
+  return [
+    "lead_curioso",
+    "lead_tibio",
+    "lead_calificado",
+    "digital_lead_calificado"
+  ].includes(estado) || String(estado).endsWith("_lead_calificado");
+}
+
+function appendNavigationHint(reply) {
+  return `${reply}\n\nSi quieres ver otras opciones, escribe MENU.\nSi quieres empezar de cero, escribe REINICIAR.`;
+}
+
+function shouldAppendNavigationHint(reply, user) {
+  const text = String(reply || "");
+
+  if (!text.trim()) return false;
+  if (text.includes("escribe MENU") || text.includes("escribe REINICIAR")) {
+    return false;
+  }
+
+  if (text.includes(CALENDLY_LINK)) return true;
+  if (isFinalState(user?.estado)) return true;
+
+  const finalReplyPatterns = [
+    /hemos tomado tu solicitud/i,
+    /te contactara/i,
+    /te contactará/i,
+    /horario solicitado/i,
+    /en breve estaremos contigo/i,
+    /aqui tienes el enlace para agendar/i,
+    /aquí tienes el enlace para agendar/i,
+    /reunion via meeting/i,
+    /reunión vía meeting/i
+  ];
+
+  return finalReplyPatterns.some((pattern) => pattern.test(text));
+}
+
+function decorateReplyPayload(payload, phone) {
+  if (!payload || typeof payload !== "object") return payload;
+  if (!payload.reply || typeof payload.reply !== "string") return payload;
+
+  const latestUser = phone ? getUser(phone) : null;
+
+  if (shouldAppendNavigationHint(payload.reply, latestUser)) {
+    return {
+      ...payload,
+      reply: appendNavigationHint(payload.reply)
+    };
+  }
+
+  return payload;
+}
 
 // ========================================================
 // HEALTH CHECK
@@ -387,14 +458,16 @@ app.post("/webhook", async (req, res) => {
       res.json = (payload) => {
         (async () => {
           try {
-            if (payload?.reply) {
-              await sendWhatsAppText(metaPhone, payload.reply);
+            const decoratedPayload = decorateReplyPayload(payload, req.body?.phone);
+
+            if (decoratedPayload?.reply) {
+              await sendWhatsAppText(metaPhone, decoratedPayload.reply);
             }
 
             return originalJson({
               received: true,
               source: "meta",
-              forwarded: !!payload?.reply
+              forwarded: !!decoratedPayload?.reply
             });
           } catch (sendError) {
             console.error("Error enviando respuesta a WhatsApp:", sendError);
@@ -435,7 +508,7 @@ app.post("/webhook", async (req, res) => {
       return res.status(400).json({ error: "phone y message son obligatorios" });
     }
 
-    const cleanMessage = String(message).trim().toLowerCase();
+    const cleanMessage = normalizeText(message);
     const detectedIntent = detectIntent(message);
 
     let user = getUser(phone);
@@ -443,7 +516,7 @@ app.post("/webhook", async (req, res) => {
     // ========================================================
     // 1. COMANDOS DE SISTEMA
     // ========================================================
-    if (cleanMessage === "menu") {
+    if (isMenuCommand(cleanMessage)) {
       if (!user) {
         user = createNewUser();
         logLeadEvent({
@@ -483,7 +556,7 @@ app.post("/webhook", async (req, res) => {
       return res.json({ reply: getMenu(), source: "backend" });
     }
 
-    if (cleanMessage === "reiniciar") {
+    if (isRestartCommand(cleanMessage)) {
       resetUser(phone);
       const newUser = createNewUser();
       saveUser(phone, newUser);
@@ -723,19 +796,14 @@ app.post("/webhook", async (req, res) => {
     if (digitalIntentRes) {
       return res.json(digitalIntentRes);
     }
+
     // ========================================================
     // 4.5 RETORNO AUTOMÁTICO AL MENÚ DESDE ESTADOS FINALES
     // ========================================================
-    const finalStates = [
-      "lead_curioso",
-      "lead_tibio",
-      "lead_calificado",
-      "digital_lead_calificado"
-    ];
-
     if (
-      finalStates.includes(user.estado) &&
-      !["menu", "reiniciar"].includes(cleanMessage)
+      isFinalState(user.estado) &&
+      !isMenuCommand(cleanMessage) &&
+      !isRestartCommand(cleanMessage)
     ) {
       user.estado = "menu_enviado";
       user.score = 0;
@@ -748,6 +816,7 @@ app.post("/webhook", async (req, res) => {
         source: "backend"
       });
     }
+
     // ========================================================
     // 5. FALLBACK CONTROLADO
     // ========================================================
