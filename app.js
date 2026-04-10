@@ -798,13 +798,23 @@ app.post("/webhook", async (req, res) => {
     }
 
     // ========================================================
-    // 4.5 RETORNO AUTOMÁTICO AL MENÚ DESDE ESTADOS FINALES
+    // 4.5 RETORNO AL MENÚ SOLO POR COMANDO EXPLÍCITO
     // ========================================================
     if (
       isFinalState(user.estado) &&
-      !isMenuCommand(cleanMessage) &&
-      !isRestartCommand(cleanMessage)
+      (isMenuCommand(cleanMessage) || isRestartCommand(cleanMessage))
     ) {
+      if (isRestartCommand(cleanMessage)) {
+        resetUser(phone);
+        const newUser = createNewUser();
+        saveUser(phone, newUser);
+
+        return res.json({
+          reply: `Perfecto. Empezamos desde cero 👌\n\n${getMenu()}`,
+          source: "backend"
+        });
+      }
+
       user.estado = "menu_enviado";
       user.score = 0;
       user.subopcion = null;
