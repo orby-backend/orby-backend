@@ -117,6 +117,22 @@ function isFinalState(estado = "") {
   ].includes(estado) || String(estado).endsWith("_lead_calificado");
 }
 
+function isConversationalState(estado = "") {
+  return [
+    "lead_curioso",
+    "lead_tibio",
+    "lead_calificado",
+    "digital_lead_calificado"
+  ].includes(estado) || String(estado).endsWith("_lead_calificado");
+}
+
+function isFreeTextMessage(cleanMessage = "") {
+  if (!cleanMessage) return false;
+  if (isMenuCommand(cleanMessage) || isRestartCommand(cleanMessage)) return false;
+  if (isClosedOption(cleanMessage)) return false;
+  return true;
+}
+
 function appendNavigationHint(reply) {
   return `${reply}\n\nSi quieres ver otras opciones, escribe MENU.\nSi quieres empezar de cero, escribe REINICIAR.`;
 }
@@ -306,16 +322,23 @@ function isDigitalIntent(intent = "") {
 
 function shouldUseGemini(user, cleanMessage, rawMessage) {
   if (!user) return false;
+  if (!isFreeTextMessage(cleanMessage)) return false;
 
   const detectedIntent = detectIntent(rawMessage);
+
   if (isKnownBackendIntent(detectedIntent)) {
     return false;
   }
 
-  const isQualifiedLead =
-    user.estado === "lead_tibio" || user.estado === "lead_calificado";
+  if (isConversationalState(user.estado)) {
+    return true;
+  }
 
-  return isQualifiedLead && !isClosedOption(cleanMessage);
+  if (user.interes_principal && isFreeTextMessage(cleanMessage)) {
+    return true;
+  }
+
+  return false;
 }
 
 async function getGeminiReplyWithFallback(prompt, user, fallbackReply) {
@@ -599,7 +622,7 @@ app.post("/webhook", async (req, res) => {
       });
 
       return res.json({
-        reply: `Hola 👋 Soy Orby, el asistente comercial de OneOrbix.\n\n${getMenu()}`,
+        reply: getMenu(),
         source: "backend"
       });
     }
@@ -831,11 +854,19 @@ app.post("/webhook", async (req, res) => {
     // 5. FALLBACK CONTROLADO
     // ========================================================
     if (shouldUseGemini(user, cleanMessage, message)) {
-      const prompt = `Usuario interesado en ${user.interes_principal}. Responde breve y comercial: ${message}`;
+      const prompt = `
+Eres Orby, asistente comercial de OneOrbix.
+El usuario está interesado en: ${user.interes_principal || "servicios generales"}.
+Estado actual: ${user.estado || "sin_estado"}.
+Responde de forma breve, natural, útil y comercial.
+No repitas el menú salvo que sea necesario.
+Mensaje del usuario: ${message}
+      `.trim();
+
       const aiReply = await getGeminiReplyWithFallback(
         prompt,
         user,
-        "Entiendo. ¿Quieres que agendemos una reunión?"
+        "Entiendo. ¿Quieres que te ayude a dar el siguiente paso o prefieres que agendemos una reunión?"
       );
 
       return res.json({
@@ -925,8 +956,18 @@ app.post("/webhook", async (req, res) => {
       }
     }
 
+    let fallbackReply = "No entendí del todo tu mensaje.";
+
+    if (user.estado === "menu_enviado") {
+      fallbackReply = `No entendí tu respuesta.\n\n${getMenu()}`;
+    } else if (user.interes_principal) {
+      fallbackReply = `Entiendo. Si quieres, puedo seguir ayudándote con ${user.interes_principal}.\n\nTambién puedes escribir MENU para ver otras opciones.`;
+    } else {
+      fallbackReply = "No entendí del todo tu mensaje. Escribe MENU para ver las opciones disponibles.";
+    }
+
     return res.json({
-      reply: "No entendí tu respuesta. Escribe MENU para volver al inicio.",
+      reply: fallbackReply,
       source: "backend"
     });
   } catch (error) {
