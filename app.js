@@ -93,7 +93,7 @@ const app = express();
 app.use(express.json());
 
 // ========================================================
-// HEALTH CHECK (IMPORTANTE PARA RENDER, RAILWAY Y NAVEGADOR)
+// HEALTH CHECK
 // ========================================================
 app.get("/", (req, res) => {
   res.status(200).send("Orby backend activo 🚀");
@@ -127,6 +127,80 @@ app.get("/webhook", (req, res) => {
     return res.sendStatus(500);
   }
 });
+
+// ========================================================
+// UTILIDADES WHATSAPP CLOUD API
+// ========================================================
+async function sendWhatsAppText(to, text) {
+  const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
+  const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+
+  if (!accessToken || !phoneNumberId) {
+    throw new Error("Faltan WHATSAPP_ACCESS_TOKEN o WHATSAPP_PHONE_NUMBER_ID");
+  }
+
+  const response = await fetch(
+    `https://graph.facebook.com/v25.0/${phoneNumberId}/messages`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        messaging_product: "whatsapp",
+        to,
+        type: "text",
+        text: { body: text }
+      })
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      `Error enviando mensaje a WhatsApp: ${response.status} ${JSON.stringify(data)}`
+    );
+  }
+
+  return data;
+}
+
+function extractMetaMessage(body) {
+  const value = body?.entry?.[0]?.changes?.[0]?.value;
+  const incomingMessage = value?.messages?.[0];
+
+  if (!incomingMessage) return null;
+
+  const phone = incomingMessage.from;
+  let message = "";
+
+  if (incomingMessage.type === "text") {
+    message = incomingMessage.text?.body || "";
+  } else if (incomingMessage.type === "button") {
+    message =
+      incomingMessage.button?.text ||
+      incomingMessage.button?.payload ||
+      "";
+  } else if (incomingMessage.type === "interactive") {
+    if (incomingMessage.interactive?.button_reply) {
+      message =
+        incomingMessage.interactive.button_reply.title ||
+        incomingMessage.interactive.button_reply.id ||
+        "";
+    } else if (incomingMessage.interactive?.list_reply) {
+      message =
+        incomingMessage.interactive.list_reply.title ||
+        incomingMessage.interactive.list_reply.id ||
+        "";
+    }
+  }
+
+  if (!phone || !message) return null;
+
+  return { phone, message };
+}
 
 function createNewUser() {
   return {
@@ -286,6 +360,75 @@ function routeDigitalIntent({
 
 app.post("/webhook", async (req, res) => {
   try {
+    const isMetaWebhook =
+      req.body?.object === "whatsapp_business_account" ||
+      !!req.body?.entry?.[0]?.changes?.[0]?.value;
+
+    let metaPhone = null;
+
+    if (isMetaWebhook) {
+      const extracted = extractMetaMessage(req.body);
+
+      // Si es un webhook de estados, entregas u otros eventos sin mensaje
+      if (!extracted) {
+        return res.sendStatus(200);
+      }
+
+      metaPhone = extracted.phone;
+
+      // Adaptar payload de Meta al formato interno de Orby
+      req.body = {
+        phone: extracted.phone,
+        message: extracted.message
+      };
+
+      const originalJson = res.json.bind(res);
+
+      res.json = (payload) => {
+        (async () => {
+          try {
+            if (payload?.reply) {
+              await sendWhatsAppText(metaPhone, payload.reply);
+            }
+
+            return originalJson({
+              received: true,
+              source: "meta",
+              forwarded: !!payload?.reply
+            });
+          } catch (sendError) {
+            console.error("Error enviando respuesta a WhatsApp:", sendError);
+
+            try {
+              logErrorEvent({
+                phone: metaPhone,
+                module: "whatsapp_send",
+                estado: null,
+                interes_principal: null,
+                incoming_message: req.body?.message || null,
+                error_message: sendError.message,
+                stack: sendError.stack,
+                detail: {
+                  route: "/webhook"
+                }
+              });
+            } catch (logErr) {
+              console.error("Error registrando log de envío:", logErr.message);
+            }
+
+            return originalJson({
+              received: true,
+              source: "meta",
+              forwarded: false,
+              error: "No se pudo enviar la respuesta por WhatsApp"
+            });
+          }
+        })();
+
+        return res;
+      };
+    }
+
     const { phone, message } = req.body;
 
     if (!phone || !message) {
