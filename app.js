@@ -93,10 +93,39 @@ const app = express();
 app.use(express.json());
 
 // ========================================================
-// HEALTH CHECK (IMPORTANTE PARA RENDER Y NAVEGADOR)
+// HEALTH CHECK (IMPORTANTE PARA RENDER, RAILWAY Y NAVEGADOR)
 // ========================================================
 app.get("/", (req, res) => {
   res.status(200).send("Orby backend activo 🚀");
+});
+
+// ========================================================
+// VERIFICACIÓN WEBHOOK META / WHATSAPP CLOUD API
+// ========================================================
+app.get("/webhook", (req, res) => {
+  try {
+    const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN;
+
+    const mode = req.query["hub.mode"];
+    const token = req.query["hub.verify_token"];
+    const challenge = req.query["hub.challenge"];
+
+    if (!VERIFY_TOKEN) {
+      console.error("❌ Falta WHATSAPP_VERIFY_TOKEN en variables de entorno");
+      return res.sendStatus(500);
+    }
+
+    if (mode === "subscribe" && token === VERIFY_TOKEN) {
+      console.log("✅ Webhook verificado correctamente con Meta");
+      return res.status(200).send(challenge);
+    }
+
+    console.warn("❌ Error de verificación del webhook: token inválido");
+    return res.sendStatus(403);
+  } catch (error) {
+    console.error("❌ Error en GET /webhook:", error.message);
+    return res.sendStatus(500);
+  }
 });
 
 function createNewUser() {
@@ -684,7 +713,7 @@ app.post("/webhook", async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log("=======================================");
   console.log(`🚀 Orby backend corriendo en puerto ${PORT}`);
   console.log(`🌐 Entorno: ${process.env.NODE_ENV || "development"}`);
