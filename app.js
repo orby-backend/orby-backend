@@ -723,7 +723,31 @@ app.post("/webhook", async (req, res) => {
     if (digitalIntentRes) {
       return res.json(digitalIntentRes);
     }
+    // ========================================================
+    // 4.5 RETORNO AUTOMÁTICO AL MENÚ DESDE ESTADOS FINALES
+    // ========================================================
+    const finalStates = [
+      "lead_curioso",
+      "lead_tibio",
+      "lead_calificado",
+      "digital_lead_calificado"
+    ];
 
+    if (
+      finalStates.includes(user.estado) &&
+      !["menu", "reiniciar"].includes(cleanMessage)
+    ) {
+      user.estado = "menu_enviado";
+      user.score = 0;
+      user.subopcion = null;
+      user.interes_principal = null;
+      saveUser(phone, user);
+
+      return res.json({
+        reply: `Perfecto 👌\n\nVolvemos al menú principal:\n\n${getMenu()}`,
+        source: "backend"
+      });
+    }
     // ========================================================
     // 5. FALLBACK CONTROLADO
     // ========================================================
