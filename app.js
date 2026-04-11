@@ -89,6 +89,9 @@ const {
 const app = express();
 app.use(express.json());
 
+const CLUB_GENERAL_LINK =
+  "https://oneorbix.com/club-de-exportadores-e-importadores-oneorbix/";
+
 // ========================================================
 // HELPERS DE TEXTO Y NAVEGACIÓN
 // ========================================================
@@ -106,6 +109,10 @@ function isMenuCommand(cleanMessage = "") {
 
 function isRestartCommand(cleanMessage = "") {
   return cleanMessage === "reiniciar";
+}
+
+function isBackCommand(cleanMessage = "") {
+  return cleanMessage === "atras" || cleanMessage === "atrás";
 }
 
 function isFinalState(estado = "") {
@@ -128,20 +135,30 @@ function isConversationalState(estado = "") {
 
 function isFreeTextMessage(cleanMessage = "") {
   if (!cleanMessage) return false;
-  if (isMenuCommand(cleanMessage) || isRestartCommand(cleanMessage)) return false;
+  if (
+    isMenuCommand(cleanMessage) ||
+    isRestartCommand(cleanMessage) ||
+    isBackCommand(cleanMessage)
+  ) {
+    return false;
+  }
   if (isClosedOption(cleanMessage)) return false;
   return true;
 }
 
 function appendNavigationHint(reply) {
-  return `${reply}\n\nSi quieres ver otras opciones, escribe MENU.\nSi quieres empezar de cero, escribe REINICIAR.`;
+  return `${reply}\n\nSi quieres ver otras opciones, escribe MENU.\nSi quieres empezar de cero, escribe REINICIAR.\nSi quieres volver al paso anterior dentro del Club, escribe ATRAS.`;
 }
 
 function shouldAppendNavigationHint(reply, user) {
   const text = String(reply || "");
 
   if (!text.trim()) return false;
-  if (text.includes("escribe MENU") || text.includes("escribe REINICIAR")) {
+  if (
+    text.includes("escribe MENU") ||
+    text.includes("escribe REINICIAR") ||
+    text.includes("escribe ATRAS")
+  ) {
     return false;
   }
 
@@ -177,6 +194,757 @@ function decorateReplyPayload(payload, phone) {
   }
 
   return payload;
+}
+
+function createNewUser() {
+  return {
+    estado: "menu_enviado",
+    score: 0,
+    interes_principal: null,
+    subopcion: null,
+    detalle_importacion: null,
+    callback_phone: null,
+    callback_schedule: null,
+    origen: "manual"
+  };
+}
+
+function classifyLead(user) {
+  if (user.score >= 10) return "lead_calificado";
+  if (user.score >= 5) return "lead_tibio";
+  return "lead_curioso";
+}
+
+function isClosedOption(cleanMessage) {
+  return ["1", "2", "3", "4", "5", "6", "7", "8"].includes(cleanMessage);
+}
+
+function isKnownBackendIntent(intent = "") {
+  return intent && intent !== "general_service_question";
+}
+
+function isDigitalIntent(intent = "") {
+  return String(intent).startsWith("digital_");
+}
+
+function isClubIntent(intent = "") {
+  return [
+    "show_plans",
+    "payment_help",
+    "basic_plan_link",
+    "professional_plan_link",
+    "premium_plan_link",
+    "basic_plan_payment",
+    "professional_plan_payment",
+    "premium_plan_payment",
+    "basic_plan_details",
+    "professional_plan_details",
+    "premium_plan_details",
+    "basic_plan_price",
+    "professional_plan_price",
+    "premium_plan_price",
+    "whatsapp_support_plan",
+    "supplier_verification_plan",
+    "monthly_advisory_plan",
+    "experienced_recommendation",
+    "beginner_recommendation",
+    "validated_product_recommendation",
+    "personal_use_recommendation",
+    "scaling_recommendation",
+    "compare_plans",
+    "basic_vs_professional",
+    "professional_vs_premium",
+    "recommend_plan",
+    "price_objection",
+    "value_question",
+    "buy_signal",
+    "schedule_call",
+    "not_ready_yet"
+  ].includes(intent);
+}
+
+function shouldUseGemini(user, cleanMessage, rawMessage) {
+  if (!user) return false;
+  if (!isFreeTextMessage(cleanMessage)) return false;
+
+  const detectedIntent = detectIntent(rawMessage);
+
+  if (isKnownBackendIntent(detectedIntent)) {
+    return false;
+  }
+
+  if (isConversationalState(user.estado)) {
+    return true;
+  }
+
+  if (user.interes_principal && isFreeTextMessage(cleanMessage)) {
+    return true;
+  }
+
+  return false;
+}
+
+async function getGeminiReplyWithFallback(prompt, user, fallbackReply) {
+  try {
+    const aiReply = await askGemini(prompt, user);
+    if (!aiReply || typeof aiReply !== "string" || !aiReply.trim()) {
+      return fallbackReply;
+    }
+    return aiReply.trim();
+  } catch (error) {
+    console.error("Error obteniendo respuesta de Gemini:", error);
+    return fallbackReply;
+  }
+}
+
+// ========================================================
+// HELPERS CLUB
+// ========================================================
+function buildPlanLine(plan) {
+  if (!plan) return "";
+  return `• ${plan.nombre} — ${plan.precio}\nVer más: ${plan.link}\nComprar ahora: ${plan.payLink}`;
+}
+
+function buildPlansOverviewReply(memberships, intro = "") {
+  return `${intro}
+
+Estos son los planes disponibles del Club de Importadores OneOrbix:
+
+${buildPlanLine(memberships?.basico)}
+
+${buildPlanLine(memberships?.profesional)}
+
+${buildPlanLine(memberships?.premium)}
+
+También puedes revisar la página general del club aquí:
+${CLUB_GENERAL_LINK}`;
+}
+
+function buildPlanDetailsReply(plan, customIntro = "") {
+  if (!plan) return "No encontré ese plan en este momento.";
+  const includes = Array.isArray(plan.incluye)
+    ? plan.incluye.map((item) => `- ${item}`).join("\n")
+    : "";
+
+  return `${customIntro}${customIntro ? "\n\n" : ""}${plan.nombre} — ${plan.precio}
+
+Ideal para:
+${plan.idealPara}
+
+Incluye:
+${includes}
+
+Resumen:
+${plan.resumen}
+
+Ver más:
+${plan.link}
+
+Comprar ahora:
+${plan.payLink}`;
+}
+
+function buildPlanPriceReply(plan) {
+  if (!plan) return "No encontré ese plan en este momento.";
+  return `${plan.nombre} tiene un valor de ${plan.precio}.
+
+Ver detalles:
+${plan.link}
+
+Comprar ahora:
+${plan.payLink}`;
+}
+
+function buildPlanLinkReply(plan) {
+  if (!plan) return "No encontré ese plan en este momento.";
+  return `Claro. Aquí tienes el enlace de ${plan.nombre}:
+
+${plan.link}
+
+Y si quieres avanzar directamente con la compra:
+${plan.payLink}`;
+}
+
+function buildPlanPaymentReply(plan) {
+  if (!plan) return "No encontré ese plan en este momento.";
+  return `Perfecto. Si quieres comprar ${plan.nombre}, aquí tienes el enlace de pago directo:
+
+${plan.payLink}
+
+Y aquí puedes ver más detalles del plan:
+${plan.link}`;
+}
+
+function buildClubGeneralInfoReply() {
+  return `Perfecto. Te explico de forma simple cómo funciona el Club de Importadores OneOrbix:
+
+Es una membresía diseñada para ayudarte a importar con acompañamiento real, evitando errores y mejorando tus resultados desde el inicio.
+
+Dentro del club trabajamos en:
+
+- búsqueda y validación de proveedores
+- simulación de costos de importación
+- logística desde origen hasta destino
+- acceso a carga consolidada
+- asesoría paso a paso según tu caso
+
+Nuestras membresías funcionan con un único pago anual, y cada plan incluye beneficios pensados tanto para quienes están empezando como para quienes ya tienen experiencia importando.
+
+Además, durante todo el tiempo de tu membresía cuentas con acompañamiento y asesoría continua para ayudarte a avanzar con mayor claridad y seguridad.
+
+Puedes revisar más aquí:
+${CLUB_GENERAL_LINK}
+
+Si quieres, responde:
+1. Ver planes disponibles
+2. Recomiéndame un plan según mi caso`;
+}
+
+function buildClubComparisonReply() {
+  return `Perfecto. La diferencia principal entre los planes del Club de Importadores OneOrbix está en el nivel de acompañamiento, herramientas y profundidad del apoyo.
+
+👉 ${memberships?.basico?.nombre}
+Es ideal para empezar con una base clara y una inversión más contenida.
+
+👉 ${memberships?.profesional?.nombre}
+Es una opción más completa para quienes quieren avanzar con más estructura, herramientas y acompañamiento práctico.
+
+👉 ${memberships?.premium?.nombre}
+Es la opción más robusta para quienes buscan apoyo continuo, análisis más profundo y una ejecución más completa.
+
+Puedes ver todos los planes aquí:
+${CLUB_GENERAL_LINK}`;
+}
+
+function buildClubRecommendationReply(user) {
+  const context = user?.club_context || "";
+
+  if (
+    [
+      "amazon_fba",
+      "validated_product",
+      "specific_import",
+      "supplier_search",
+      "sell_ecuador"
+    ].includes(context)
+  ) {
+    return `Por lo que me has compartido, el plan que mejor suele ajustarse a tu caso es:
+
+👉 ${memberships?.profesional?.nombre}
+
+porque te da más estructura, herramientas y acompañamiento práctico para avanzar con claridad.
+
+Ver detalles:
+${memberships?.profesional?.link}
+
+Comprar ahora:
+${memberships?.profesional?.payLink}`;
+  }
+
+  if (
+    [
+      "costs_optimization",
+      "logistics_control",
+      "logistics_review",
+      "business_structure",
+      "experienced_importer"
+    ].includes(context)
+  ) {
+    return `Por el tipo de necesidad que estás describiendo, el plan que mejor suele ajustarse a tu caso es:
+
+👉 ${memberships?.premium?.nombre}
+
+porque está pensado para quienes ya están importando y quieren optimizar costos, logística y operación con más acompañamiento.
+
+Ver detalles:
+${memberships?.premium?.link}
+
+Comprar ahora:
+${memberships?.premium?.payLink}`;
+  }
+
+  return `Perfecto. Si estás empezando o todavía estás aterrizando mejor tu proceso, normalmente el plan que más suele equilibrar claridad y acompañamiento es:
+
+👉 ${memberships?.profesional?.nombre}
+
+Ver detalles:
+${memberships?.profesional?.link}
+
+Comprar ahora:
+${memberships?.profesional?.payLink}`;
+}
+
+function getClubBackNavigation(user) {
+  const currentState = String(user?.estado || "");
+  const currentContext = String(user?.club_context || "");
+  const currentSuboption = String(user?.subopcion || "");
+
+  // Si está en el inicio del club, ATRAS vuelve al menú
+  if (currentState === "club_p1") {
+    return {
+      estado: "menu_enviado",
+      reply: `Perfecto 👌\n\nVolvemos al menú principal:\n\n${getMenu()}`
+    };
+  }
+
+  // Si está en p2, vuelve a p1
+  if (currentState === "club_p2") {
+    return {
+      estado: "club_p1",
+      reply: getClubIntro()
+    };
+  }
+
+  // Si está en p3, vuelve a p2 según subopción
+  if (currentState === "club_p3") {
+    if (currentSuboption === "cero") {
+      return {
+        estado: "club_p2",
+        reply: getClubCaso1()
+      };
+    }
+
+    if (currentSuboption === "idea_producto") {
+      return {
+        estado: "club_p2",
+        reply: getClubCaso2()
+      };
+    }
+
+    if (currentSuboption === "ya_importo") {
+      return {
+        estado: "club_p2",
+        reply: getClubCaso3()
+      };
+    }
+  }
+
+  // General info
+  if (currentState === "club_info_general") {
+    return {
+      estado: "club_p1",
+      reply: getClubIntro()
+    };
+  }
+
+  // Desde cero -> vender
+  if (["club_sell_ecuador", "club_sell_amazon"].includes(currentState)) {
+    return {
+      estado: "club_p3",
+      reply: `Ahora dime:
+
+1. Quiero vender en Ecuador
+2. Quiero vender en Amazon FBA`
+    };
+  }
+
+  // Desde cero -> uso personal
+  if (
+    [
+      "club_personal_courier_waiting_product",
+      "club_personal_courier_result",
+      "club_personal_specific_choice"
+    ].includes(currentState)
+  ) {
+    return {
+      estado: "club_p3",
+      reply: `Ahora dime:
+
+1. Quiero traer productos pequeños (casillero / courier)
+2. Quiero importar algo específico para mi negocio o uso personal`
+    };
+  }
+
+  if (
+    [
+      "club_personal_specific_defined_waiting_product",
+      "club_personal_specific_supplier_waiting_product"
+    ].includes(currentState)
+  ) {
+    return {
+      estado: "club_personal_specific_choice",
+      reply: `Perfecto. Para orientarte mejor, dime:
+
+1. Ya tengo el producto definido
+2. Necesito ayuda para encontrar proveedor`
+    };
+  }
+
+  // Desde cero -> explorando ideas
+  if (
+    ["club_exploring_suggestions_market", "club_exploring_product_guidance"].includes(
+      currentState
+    )
+  ) {
+    return {
+      estado: "club_p3",
+      reply: `Ahora dime:
+
+1. Sugerencias de productos
+2. Quiero entender mejor qué producto me conviene`
+    };
+  }
+
+  // Idea producto -> validado
+  if (
+    ["club_validated_start_waiting_product", "club_validated_help"].includes(
+      currentState
+    )
+  ) {
+    return {
+      estado: "club_p3",
+      reply: `Ahora dime:
+
+1. ¿Cómo puedo empezar?
+2. ¿Cómo me ayudaría el club en mi caso?`
+    };
+  }
+
+  // Idea producto -> necesita validar
+  if (
+    ["club_need_validation_potential", "club_need_validation_review"].includes(
+      currentState
+    )
+  ) {
+    return {
+      estado: "club_p3",
+      reply: `Ahora dime:
+
+1. Quiero validar si mi idea tiene potencial
+2. Quiero entender qué debo revisar antes de importar`
+    };
+  }
+
+  // Ya importa -> costos
+  if (["club_costs_action_waiting_product", "club_costs_value"].includes(currentState)) {
+    return {
+      estado: "club_p3",
+      reply: `Ahora dime:
+
+1. Quiero optimizar costos y logística
+2. ¿Cómo me ayudaría el club en mi caso específico?`
+    };
+  }
+
+  // Ya importa -> logística
+  if (
+    ["club_logistics_control_waiting_mode", "club_logistics_review_waiting_context"].includes(
+      currentState
+    )
+  ) {
+    return {
+      estado: "club_p3",
+      reply: `Ahora dime:
+
+1. Quiero mejorar tiempos y control logístico
+2. Quiero revisar si estoy gestionando bien mi logística actual`
+    };
+  }
+
+  // Ya importa -> estructura
+  if (["club_business_structure_action", "club_business_structure_plan"].includes(currentState)) {
+    return {
+      estado: "club_p3",
+      reply: `Ahora dime:
+
+1. Quiero estructurar mi operación con más claridad
+2. Quiero ver qué plan puede ayudarme mejor`
+    };
+  }
+
+  // fallback suave dentro de club
+  if (currentContext || currentSuboption || user?.interes_principal === "club") {
+    return {
+      estado: "club_p1",
+      reply: getClubIntro()
+    };
+  }
+
+  return null;
+}
+
+function routeClubIntent({ detectedIntent, user }) {
+  if (!isClubIntent(detectedIntent)) return null;
+
+  switch (detectedIntent) {
+    case "show_plans":
+      return {
+        reply: buildPlansOverviewReply(
+          memberships,
+          "Perfecto. Aquí tienes los planes disponibles del Club de Importadores OneOrbix:"
+        ),
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "payment_help":
+      return {
+        reply: `Claro. Si quieres comprar una membresía, aquí tienes las opciones disponibles:
+
+${buildPlanLine(memberships?.basico)}
+
+${buildPlanLine(memberships?.profesional)}
+
+${buildPlanLine(memberships?.premium)}
+
+También puedes revisar la página general del club aquí:
+${CLUB_GENERAL_LINK}`,
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "basic_plan_link":
+      return {
+        reply: buildPlanLinkReply(memberships?.basico),
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "professional_plan_link":
+      return {
+        reply: buildPlanLinkReply(memberships?.profesional),
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "premium_plan_link":
+      return {
+        reply: buildPlanLinkReply(memberships?.premium),
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "basic_plan_payment":
+      return {
+        reply: buildPlanPaymentReply(memberships?.basico),
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "professional_plan_payment":
+      return {
+        reply: buildPlanPaymentReply(memberships?.profesional),
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "premium_plan_payment":
+      return {
+        reply: buildPlanPaymentReply(memberships?.premium),
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "basic_plan_details":
+      return {
+        reply: buildPlanDetailsReply(memberships?.basico),
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "professional_plan_details":
+      return {
+        reply: buildPlanDetailsReply(memberships?.profesional),
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "premium_plan_details":
+      return {
+        reply: buildPlanDetailsReply(memberships?.premium),
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "basic_plan_price":
+      return {
+        reply: buildPlanPriceReply(memberships?.basico),
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "professional_plan_price":
+      return {
+        reply: buildPlanPriceReply(memberships?.profesional),
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "premium_plan_price":
+      return {
+        reply: buildPlanPriceReply(memberships?.premium),
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "whatsapp_support_plan":
+      return {
+        reply: `Si buscas soporte por WhatsApp, los planes que más suelen encajar son:
+
+👉 ${memberships?.profesional?.nombre}
+👉 ${memberships?.premium?.nombre}
+
+Si quieres más acompañamiento y seguimiento continuo, normalmente el ${memberships?.premium?.nombre} suele ser la opción más robusta.`,
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "supplier_verification_plan":
+      return {
+        reply: `Si te interesa la verificación de proveedor, normalmente el ${memberships?.profesional?.nombre} suele ser una muy buena opción para empezar con más estructura, y el ${memberships?.premium?.nombre} si buscas un acompañamiento más profundo.
+
+Ver planes:
+${CLUB_GENERAL_LINK}`,
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "monthly_advisory_plan":
+      return {
+        reply: `Si lo que buscas es asesoría mensual continua, el plan que normalmente mejor encaja es:
+
+👉 ${memberships?.premium?.nombre}
+
+Ver detalles:
+${memberships?.premium?.link}
+
+Comprar ahora:
+${memberships?.premium?.payLink}`,
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "experienced_recommendation":
+    case "scaling_recommendation":
+      return {
+        reply: `Por lo que me comentas, el plan que más suele ajustarse a tu caso es:
+
+👉 ${memberships?.premium?.nombre}
+
+porque está pensado para quienes ya están importando y quieren optimizar, estructurar mejor su operación o crecer con más acompañamiento.
+
+Ver detalles:
+${memberships?.premium?.link}
+
+Comprar ahora:
+${memberships?.premium?.payLink}`,
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "validated_product_recommendation":
+      return {
+        reply: `Si ya tienes el producto validado, normalmente el plan que mejor suele encajar es:
+
+👉 ${memberships?.profesional?.nombre}
+
+porque te ayuda a avanzar con más estructura, herramientas y acompañamiento práctico.
+
+Ver detalles:
+${memberships?.profesional?.link}
+
+Comprar ahora:
+${memberships?.profesional?.payLink}`,
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "beginner_recommendation":
+    case "personal_use_recommendation":
+      return {
+        reply: `Si estás empezando desde cero o todavía estás aterrizando mejor tu caso, normalmente una muy buena forma de avanzar es revisar el ${memberships?.basico?.nombre} o el ${memberships?.profesional?.nombre}, según el nivel de acompañamiento que necesites.
+
+Ver planes:
+${CLUB_GENERAL_LINK}`,
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "compare_plans":
+    case "basic_vs_professional":
+    case "professional_vs_premium":
+      return {
+        reply: buildClubComparisonReply(),
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "recommend_plan":
+      return {
+        reply: buildClubRecommendationReply(user),
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "price_objection":
+      return {
+        reply: `Entiendo. Cuando alguien siente que una membresía puede ser costosa, lo importante no es solo el precio, sino cuánto puede ayudarte a evitar errores, mejorar decisiones y avanzar con más estructura.
+
+Si quieres, puedo recomendarte el plan que mejor se ajusta a tu caso para que no pagues de más.
+
+Ver planes:
+${CLUB_GENERAL_LINK}`,
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "value_question":
+      return {
+        reply: `Buena pregunta. El valor del club no está solo en acceder a información, sino en contar con acompañamiento real para:
+
+- tomar mejores decisiones
+- evitar errores costosos
+- mejorar costos, logística y proveedores
+- avanzar con más claridad según tu etapa
+
+Si quieres, puedo orientarte sobre qué plan tendría más sentido en tu caso.`,
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "buy_signal":
+      return {
+        reply: `Perfecto. Si quieres avanzar con una membresía, aquí tienes los planes disponibles:
+
+${buildPlanLine(memberships?.basico)}
+
+${buildPlanLine(memberships?.profesional)}
+
+${buildPlanLine(memberships?.premium)}
+
+También puedes revisar la página general del club aquí:
+${CLUB_GENERAL_LINK}`,
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "schedule_call":
+      return {
+        reply: `Perfecto. Si prefieres hablar con alguien antes de tomar una decisión, podemos orientarte mejor según tu caso.
+
+Y si mientras tanto quieres revisar las membresías, aquí tienes la página general del club:
+${CLUB_GENERAL_LINK}`,
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    case "not_ready_yet":
+      return {
+        reply: `Perfecto. Cuando quieras retomar el tema, aquí estaremos para orientarte.
+
+Mientras tanto, puedes revisar cómo funciona el club y los planes disponibles aquí:
+${CLUB_GENERAL_LINK}`,
+        source: "backend",
+        intent: detectedIntent
+      };
+
+    default:
+      return {
+        reply: buildClubGeneralInfoReply(),
+        source: "backend",
+        intent: detectedIntent
+      };
+  }
 }
 
 // ========================================================
@@ -287,71 +1055,6 @@ function extractMetaMessage(body) {
   if (!phone || !message) return null;
 
   return { phone, message };
-}
-
-function createNewUser() {
-  return {
-    estado: "menu_enviado",
-    score: 0,
-    interes_principal: null,
-    subopcion: null,
-    detalle_importacion: null,
-    callback_phone: null,
-    callback_schedule: null,
-    origen: "manual"
-  };
-}
-
-function classifyLead(user) {
-  if (user.score >= 10) return "lead_calificado";
-  if (user.score >= 5) return "lead_tibio";
-  return "lead_curioso";
-}
-
-function isClosedOption(cleanMessage) {
-  return ["1", "2", "3", "4", "5", "6", "7", "8"].includes(cleanMessage);
-}
-
-function isKnownBackendIntent(intent = "") {
-  return intent && intent !== "general_service_question";
-}
-
-function isDigitalIntent(intent = "") {
-  return String(intent).startsWith("digital_");
-}
-
-function shouldUseGemini(user, cleanMessage, rawMessage) {
-  if (!user) return false;
-  if (!isFreeTextMessage(cleanMessage)) return false;
-
-  const detectedIntent = detectIntent(rawMessage);
-
-  if (isKnownBackendIntent(detectedIntent)) {
-    return false;
-  }
-
-  if (isConversationalState(user.estado)) {
-    return true;
-  }
-
-  if (user.interes_principal && isFreeTextMessage(cleanMessage)) {
-    return true;
-  }
-
-  return false;
-}
-
-async function getGeminiReplyWithFallback(prompt, user, fallbackReply) {
-  try {
-    const aiReply = await askGemini(prompt, user);
-    if (!aiReply || typeof aiReply !== "string" || !aiReply.trim()) {
-      return fallbackReply;
-    }
-    return aiReply.trim();
-  } catch (error) {
-    console.error("Error obteniendo respuesta de Gemini:", error);
-    return fallbackReply;
-  }
 }
 
 function routeDigitalIntent({
@@ -628,6 +1331,43 @@ app.post("/webhook", async (req, res) => {
     }
 
     // ========================================================
+    // 1.5 ATRAS - NAVEGACIÓN BÁSICA CLUB
+    // ========================================================
+    if (isBackCommand(cleanMessage)) {
+      if (user.interes_principal === "club") {
+        const backNav = getClubBackNavigation(user);
+
+        if (backNav) {
+          user.estado = backNav.estado;
+          saveUser(phone, user);
+
+          logLeadEvent({
+            phone,
+            module: "club",
+            event_type: "back_navigation",
+            estado: user.estado,
+            interes_principal: user.interes_principal,
+            subopcion: user.subopcion,
+            score: user.score,
+            detail: {
+              trigger: "atras_command"
+            }
+          });
+
+          return res.json({
+            reply: backNav.reply,
+            source: "backend"
+          });
+        }
+      }
+
+      return res.json({
+        reply: "Ahora mismo ATRAS está disponible dentro del módulo Club. Si quieres, escribe MENU para ver las opciones principales.",
+        source: "backend"
+      });
+    }
+
+    // ========================================================
     // 2. REDIRECCIÓN MÓDULO DIGITAL
     // ========================================================
     if (user.estado.startsWith("digital_") || cleanMessage === "6") {
@@ -724,6 +1464,7 @@ app.post("/webhook", async (req, res) => {
       user,
       phone,
       cleanMessage,
+      message,
       saveUser,
       classifyLead,
       getClubCaso1,
@@ -818,6 +1559,23 @@ app.post("/webhook", async (req, res) => {
 
     if (digitalIntentRes) {
       return res.json(digitalIntentRes);
+    }
+
+    // ========================================================
+    // 4.2 RUTEO POR INTENCIÓN CLUB ANTES DEL FALLBACK
+    // ========================================================
+    const clubIntentRes = routeClubIntent({
+      detectedIntent,
+      user
+    });
+
+    if (clubIntentRes) {
+      if (!user.interes_principal) {
+        user.interes_principal = "club";
+        saveUser(phone, user);
+      }
+
+      return res.json(clubIntentRes);
     }
 
     // ========================================================
@@ -960,8 +1718,17 @@ Mensaje del usuario: ${message}
 
     if (user.estado === "menu_enviado") {
       fallbackReply = `No entendí tu respuesta.\n\n${getMenu()}`;
+    } else if (user.interes_principal === "club") {
+      fallbackReply = `Entiendo. Si quieres, puedo seguir ayudándote con el Club de Importadores OneOrbix.
+
+También puedes escribir:
+ATRAS para volver al paso anterior
+MENU para ver otras opciones
+REINICIAR para empezar desde cero`;
     } else if (user.interes_principal) {
-      fallbackReply = `Entiendo. Si quieres, puedo seguir ayudándote con ${user.interes_principal}.\n\nTambién puedes escribir MENU para ver otras opciones.`;
+      fallbackReply = `Entiendo. Si quieres, puedo seguir ayudándote con ${user.interes_principal}.
+
+También puedes escribir MENU para ver otras opciones.`;
     } else {
       fallbackReply = "No entendí del todo tu mensaje. Escribe MENU para ver las opciones disponibles.";
     }
