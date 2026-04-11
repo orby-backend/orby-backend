@@ -40,9 +40,10 @@ ${buildPlanLine(memberships?.premium)}
 También puedes ver la información general aquí:
 ${CLUB_GENERAL_LINK}
 
-Si quieres, responde:
-1. Ver planes disponibles
-2. Recomiéndame un plan según mi caso`;
+Si quieres continuar, escribe:
+MENU para volver al menú principal
+REINICIAR para empezar desde cero
+ATRAS para volver al paso anterior`;
 }
 
 function buildGeneralClubInfoReply(memberships) {
@@ -68,8 +69,8 @@ Puedes conocer más aquí:
 ${CLUB_GENERAL_LINK}
 
 Si quieres, responde:
-1. Ver planes disponibles
-2. Recomiéndame un plan según mi caso`;
+1️⃣ Ver planes disponibles
+2️⃣ Recomiéndame un plan según mi caso`;
 }
 
 function buildAmazonFBAReply(memberships) {
@@ -85,8 +86,8 @@ También puedes revisar la página general del club aquí:
 ${CLUB_GENERAL_LINK}
 
 Si quieres, responde:
-1. Ver planes disponibles
-2. Recomiéndame el mejor plan para Amazon FBA`;
+1️⃣ Recomiéndame el mejor plan para Amazon FBA
+2️⃣ Volver al menú principal`;
 }
 
 function buildEcuadorSellReply(memberships) {
@@ -102,8 +103,8 @@ También puedes revisar la página general del club aquí:
 ${CLUB_GENERAL_LINK}
 
 Si quieres, responde:
-1. Ver planes disponibles
-2. Recomiéndame el mejor plan para vender en Ecuador`;
+1️⃣ Recomiéndame el mejor plan para vender en Ecuador
+2️⃣ Volver al menú principal`;
 }
 
 function buildCourierIntroReply() {
@@ -136,15 +137,15 @@ Ver más sobre el club:
 ${CLUB_GENERAL_LINK}
 
 Si quieres, responde:
-1. Ver planes disponibles
-2. Recomiéndame un plan según mi caso`;
+1️⃣ Ver planes disponibles
+2️⃣ Recomiéndame un plan según mi caso`;
 }
 
 function buildSpecificImportChoiceReply() {
   return `Perfecto. Para orientarte mejor, dime:
 
-1. Ya tengo el producto definido
-2. Necesito ayuda para encontrar proveedor`;
+1️⃣ Ya tengo el producto definido
+2️⃣ Necesito ayuda para encontrar proveedor`;
 }
 
 function buildSpecificDefinedReply() {
@@ -184,7 +185,12 @@ Comprar ahora:
 ${memberships?.profesional?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}`;
+${CLUB_GENERAL_LINK}
+
+Si quieres continuar, escribe:
+MENU para volver al menú principal
+REINICIAR para empezar desde cero
+ATRAS para volver al paso anterior`;
 }
 
 function buildSpecificSupplierReply() {
@@ -211,15 +217,20 @@ Comprar ahora:
 ${memberships?.profesional?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}`;
+${CLUB_GENERAL_LINK}
+
+Si quieres continuar, escribe:
+MENU para volver al menú principal
+REINICIAR para empezar desde cero
+ATRAS para volver al paso anterior`;
 }
 
 function buildExploringSuggestionsChoiceReply() {
   return `Perfecto. Para darte mejores sugerencias, dime:
 
-1. Quiero vender en Ecuador
-2. Quiero vender en Amazon
-3. Quiero opciones para ambos`;
+1️⃣ Quiero vender en Ecuador
+2️⃣ Quiero vender en Amazon
+3️⃣ Quiero opciones para ambos`;
 }
 
 function buildEcuadorIdeasReply() {
@@ -239,7 +250,11 @@ Algunas categorías interesantes pueden ser:
 - iluminación decorativa
 - gadgets prácticos
 
-Si quieres, también puedo orientarte según tu presupuesto o tipo de cliente.`;
+Si quieres, también puedo orientarte según tu presupuesto o tipo de cliente.
+
+Si quieres continuar, escribe:
+MENU para volver al menú principal
+ATRAS para volver al paso anterior`;
 }
 
 function buildAmazonIdeasReply() {
@@ -259,7 +274,11 @@ Algunas categorías interesantes para evaluar son:
 - artículos de oficina
 - productos para mascotas
 
-Si quieres, también puedo orientarte sobre qué tipo de producto suele convenir más según inversión y competencia.`;
+Si quieres, también puedo orientarte sobre qué tipo de producto suele convenir más según inversión y competencia.
+
+Si quieres continuar, escribe:
+MENU para volver al menú principal
+ATRAS para volver al paso anterior`;
 }
 
 function buildBothMarketsIdeasReply() {
@@ -268,7 +287,11 @@ function buildBothMarketsIdeasReply() {
 Para Ecuador suelen funcionar productos de rotación rápida y venta práctica.
 Para Amazon convienen productos ligeros, fáciles de enviar y con demanda más estable.
 
-Si quieres, puedo ayudarte a definir cuál mercado te conviene más según tu presupuesto, experiencia y tipo de producto.`;
+Si quieres, puedo ayudarte a definir cuál mercado te conviene más según tu presupuesto, experiencia y tipo de producto.
+
+Si quieres continuar, escribe:
+MENU para volver al menú principal
+ATRAS para volver al paso anterior`;
 }
 
 function buildProductGuidanceReply() {
@@ -331,7 +354,12 @@ Comprar ahora:
 ${memberships?.profesional?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}`;
+${CLUB_GENERAL_LINK}
+
+Si quieres continuar, escribe:
+MENU para volver al menú principal
+REINICIAR para empezar desde cero
+ATRAS para volver al paso anterior`;
 }
 
 function buildValidatedHelpReply() {
@@ -345,8 +373,8 @@ Dentro del club puedes apoyarte en:
 - acompañamiento para tomar mejores decisiones
 
 Si quieres, responde:
-1. Ver planes disponibles
-2. Recomiéndame un plan según mi caso`;
+1️⃣ Ver planes disponibles
+2️⃣ Recomiéndame un plan según mi caso`;
 }
 
 function buildCostsActionReply() {
@@ -394,7 +422,12 @@ Comprar ahora:
 ${memberships?.premium?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}`;
+${CLUB_GENERAL_LINK}
+
+Si quieres continuar, escribe:
+MENU para volver al menú principal
+REINICIAR para empezar desde cero
+ATRAS para volver al paso anterior`;
 }
 
 function buildCostsValueReply() {
@@ -410,8 +443,8 @@ Muchos importadores logran:
 Si quieres, puedo orientarte según tu caso y ver si realmente te conviene.
 
 Responde:
-1. Ver planes disponibles
-2. Recomiéndame un plan según mi caso`;
+1️⃣ Ver planes disponibles
+2️⃣ Recomiéndame un plan según mi caso`;
 }
 
 function buildLogisticsControlReply() {
@@ -453,7 +486,12 @@ Comprar ahora:
 ${memberships?.premium?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}`;
+${CLUB_GENERAL_LINK}
+
+Si quieres continuar, escribe:
+MENU para volver al menú principal
+REINICIAR para empezar desde cero
+ATRAS para volver al paso anterior`;
 }
 
 function buildLogisticsReviewReply() {
@@ -491,7 +529,12 @@ Comprar ahora:
 ${memberships?.premium?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}`;
+${CLUB_GENERAL_LINK}
+
+Si quieres continuar, escribe:
+MENU para volver al menú principal
+REINICIAR para empezar desde cero
+ATRAS para volver al paso anterior`;
 }
 
 function buildPlanRecommendationReply(user, memberships) {
@@ -504,7 +547,8 @@ function buildPlanRecommendationReply(user, memberships) {
       "amazon_fba",
       "validated_product",
       "specific_import",
-      "supplier_search"
+      "supplier_search",
+      "sell_ecuador"
     ].includes(context)
   ) {
     return `Por lo que me has compartido, el plan que mejor suele ajustarse a tu caso es:
@@ -520,7 +564,12 @@ Comprar ahora:
 ${professional?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}`;
+${CLUB_GENERAL_LINK}
+
+Si quieres continuar, escribe:
+MENU para volver al menú principal
+REINICIAR para empezar desde cero
+ATRAS para volver al paso anterior`;
   }
 
   if (
@@ -528,7 +577,8 @@ ${CLUB_GENERAL_LINK}`;
       "costs_optimization",
       "logistics_control",
       "logistics_review",
-      "experienced_importer"
+      "experienced_importer",
+      "business_structure"
     ].includes(context)
   ) {
     return `Por el tipo de necesidad que estás describiendo, el plan que mejor suele ajustarse a tu caso es:
@@ -544,25 +594,40 @@ Comprar ahora:
 ${premium?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}`;
+${CLUB_GENERAL_LINK}
+
+Si quieres continuar, escribe:
+MENU para volver al menú principal
+REINICIAR para empezar desde cero
+ATRAS para volver al paso anterior`;
   }
 
-  return `Perfecto. Para ayudarte mejor, aquí tienes los planes disponibles del club:
+  return `Perfecto. Si estás empezando o todavía estás aterrizando mejor tu proceso, normalmente el plan que más suele equilibrar claridad y acompañamiento es:
 
-${buildPlanLine(memberships?.basico)}
+👉 ${professional?.nombre}
 
-${buildPlanLine(memberships?.profesional)}
+Ver detalles:
+${professional?.link}
 
-${buildPlanLine(memberships?.premium)}
+Comprar ahora:
+${professional?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}`;
+${CLUB_GENERAL_LINK}
+
+Si quieres continuar, escribe:
+MENU para volver al menú principal
+REINICIAR para empezar desde cero
+ATRAS para volver al paso anterior`;
 }
 
 function buildHiddenExploringReply() {
   return `Perfecto. Cuando quieras revisar tu caso con más claridad, aquí estaremos para orientarte.
 
-También puedes escribir MENU para ver otras opciones o REINICIAR para empezar desde cero.`;
+También puedes escribir:
+MENU para ver otras opciones
+REINICIAR para empezar desde cero
+ATRAS para volver al paso anterior`;
 }
 
 // ========================================================
@@ -715,7 +780,7 @@ function handleClubFlow({
       }
 
       return {
-        reply: "Por favor responde con 1, 2, 3 o 4.",
+        reply: "Por favor responde con 1️⃣, 2️⃣, 3️⃣ o 4️⃣.",
         source: "backend"
       };
     }
@@ -745,8 +810,8 @@ function handleClubFlow({
           return {
             reply: `Ahora dime:
 
-1. Quiero vender en Ecuador
-2. Quiero vender en Amazon FBA`,
+1️⃣ Quiero vender en Ecuador
+2️⃣ Quiero vender en Amazon FBA`,
             source: "backend"
           };
         }
@@ -768,8 +833,8 @@ function handleClubFlow({
           return {
             reply: `Ahora dime:
 
-1. Quiero traer productos pequeños (casillero / courier)
-2. Quiero importar algo específico para mi negocio o uso personal`,
+1️⃣ Quiero traer productos pequeños (casillero / courier)
+2️⃣ Quiero importar algo específico para mi negocio o uso personal`,
             source: "backend"
           };
         }
@@ -791,14 +856,14 @@ function handleClubFlow({
           return {
             reply: `Ahora dime:
 
-1. Sugerencias de productos
-2. Quiero entender mejor qué producto me conviene`,
+1️⃣ Sugerencias de productos
+2️⃣ Quiero entender mejor qué producto me conviene`,
             source: "backend"
           };
         }
 
         return {
-          reply: "Por favor responde con 1, 2 o 3.",
+          reply: "Por favor responde con 1️⃣, 2️⃣ o 3️⃣.",
           source: "backend"
         };
       }
@@ -824,8 +889,8 @@ function handleClubFlow({
           return {
             reply: `Ahora dime:
 
-1. ¿Cómo puedo empezar?
-2. ¿Cómo me ayudaría el club en mi caso?`,
+1️⃣ ¿Cómo puedo empezar?
+2️⃣ ¿Cómo me ayudaría el club en mi caso?`,
             source: "backend"
           };
         }
@@ -847,14 +912,14 @@ function handleClubFlow({
           return {
             reply: `Ahora dime:
 
-1. Quiero validar si mi idea tiene potencial
-2. Quiero entender qué debo revisar antes de importar`,
+1️⃣ Quiero validar si mi idea tiene potencial
+2️⃣ Quiero entender qué debo revisar antes de importar`,
             source: "backend"
           };
         }
 
         return {
-          reply: "Por favor responde con 1 o 2.",
+          reply: "Por favor responde con 1️⃣ o 2️⃣.",
           source: "backend"
         };
       }
@@ -880,8 +945,8 @@ function handleClubFlow({
           return {
             reply: `Ahora dime:
 
-1. Quiero optimizar costos y logística
-2. ¿Cómo me ayudaría el club en mi caso específico?`,
+1️⃣ Quiero optimizar costos y logística
+2️⃣ ¿Cómo me ayudaría el club en mi caso específico?`,
             source: "backend"
           };
         }
@@ -903,8 +968,8 @@ function handleClubFlow({
           return {
             reply: `Ahora dime:
 
-1. Quiero mejorar tiempos y control logístico
-2. Quiero revisar si estoy gestionando bien mi logística actual`,
+1️⃣ Quiero mejorar tiempos y control logístico
+2️⃣ Quiero revisar si estoy gestionando bien mi logística actual`,
             source: "backend"
           };
         }
@@ -926,14 +991,14 @@ function handleClubFlow({
           return {
             reply: `Ahora dime:
 
-1. Quiero estructurar mi operación con más claridad
-2. Quiero ver qué plan puede ayudarme mejor`,
+1️⃣ Quiero estructurar mi operación con más claridad
+2️⃣ Quiero ver qué plan puede ayudarme mejor`,
             source: "backend"
           };
         }
 
         return {
-          reply: "Por favor responde con 1, 2 o 3.",
+          reply: "Por favor responde con 1️⃣, 2️⃣ o 3️⃣.",
           source: "backend"
         };
       }
@@ -943,9 +1008,6 @@ function handleClubFlow({
     // CLUB - PASO 3
     // =====================================================
     if (user.estado === "club_p3") {
-      // ---------------------------------
-      // DESDE CERO -> VENDER
-      // ---------------------------------
       if (user.club_context === "sell") {
         if (cleanMessage === "1") {
           user.score += 3;
@@ -986,14 +1048,11 @@ function handleClubFlow({
         }
 
         return {
-          reply: "Por favor responde con 1 o 2.",
+          reply: "Por favor responde con 1️⃣ o 2️⃣.",
           source: "backend"
         };
       }
 
-      // ---------------------------------
-      // DESDE CERO -> USO PERSONAL
-      // ---------------------------------
       if (user.club_context === "personal_use") {
         if (cleanMessage === "1") {
           user.score += 3;
@@ -1034,14 +1093,11 @@ function handleClubFlow({
         }
 
         return {
-          reply: "Por favor responde con 1 o 2.",
+          reply: "Por favor responde con 1️⃣ o 2️⃣.",
           source: "backend"
         };
       }
 
-      // ---------------------------------
-      // DESDE CERO -> EXPLORANDO IDEAS
-      // ---------------------------------
       if (user.club_context === "exploring_ideas") {
         if (cleanMessage === "1") {
           moveToState({
@@ -1086,14 +1142,11 @@ function handleClubFlow({
         }
 
         return {
-          reply: "Por favor responde con 1 o 2.",
+          reply: "Por favor responde con 1️⃣ o 2️⃣.",
           source: "backend"
         };
       }
 
-      // ---------------------------------
-      // IDEA PRODUCTO -> VALIDADO
-      // ---------------------------------
       if (user.club_context === "validated_product") {
         if (cleanMessage === "1") {
           user.score += 3;
@@ -1140,14 +1193,11 @@ function handleClubFlow({
         }
 
         return {
-          reply: "Por favor responde con 1 o 2.",
+          reply: "Por favor responde con 1️⃣ o 2️⃣.",
           source: "backend"
         };
       }
 
-      // ---------------------------------
-      // IDEA PRODUCTO -> NECESITA VALIDAR
-      // ---------------------------------
       if (user.club_context === "need_validation") {
         if (cleanMessage === "1") {
           user.score += 3;
@@ -1198,8 +1248,8 @@ Si quieres, dime qué producto tienes en mente y te orientamos mejor 👇`,
 Si quieres, también puedo recomendarte un plan del club según tu caso.
 
 Responde:
-1. Ver planes disponibles
-2. Recomiéndame un plan según mi caso`,
+1️⃣ Ver planes disponibles
+2️⃣ Recomiéndame un plan según mi caso`,
             source: "backend"
           };
         }
@@ -1213,14 +1263,11 @@ Responde:
         }
 
         return {
-          reply: "Por favor responde con 1 o 2.",
+          reply: "Por favor responde con 1️⃣ o 2️⃣.",
           source: "backend"
         };
       }
 
-      // ---------------------------------
-      // YA IMPORTO -> COSTOS
-      // ---------------------------------
       if (user.club_context === "costs_optimization") {
         if (cleanMessage === "1") {
           user.score += 3;
@@ -1267,14 +1314,11 @@ Responde:
         }
 
         return {
-          reply: "Por favor responde con 1 o 2.",
+          reply: "Por favor responde con 1️⃣ o 2️⃣.",
           source: "backend"
         };
       }
 
-      // ---------------------------------
-      // YA IMPORTO -> LOGÍSTICA
-      // ---------------------------------
       if (user.club_context === "logistics_control") {
         if (cleanMessage === "1") {
           user.score += 3;
@@ -1321,14 +1365,11 @@ Responde:
         }
 
         return {
-          reply: "Por favor responde con 1 o 2.",
+          reply: "Por favor responde con 1️⃣ o 2️⃣.",
           source: "backend"
         };
       }
 
-      // ---------------------------------
-      // YA IMPORTO -> ESTRUCTURA NEGOCIO
-      // ---------------------------------
       if (user.club_context === "business_structure") {
         if (cleanMessage === "1") {
           user.score += 3;
@@ -1377,13 +1418,18 @@ Comprar ahora:
 ${memberships?.premium?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}`,
+${CLUB_GENERAL_LINK}
+
+Si quieres continuar, escribe:
+MENU para volver al menú principal
+REINICIAR para empezar desde cero
+ATRAS para volver al paso anterior`,
             source: "backend"
           };
         }
 
         return {
-          reply: "Por favor responde con 1 o 2.",
+          reply: "Por favor responde con 1️⃣ o 2️⃣.",
           source: "backend"
         };
       }
@@ -1413,51 +1459,43 @@ ${CLUB_GENERAL_LINK}`,
 
       return {
         reply: `Si quieres continuar, responde:
-1. Ver planes disponibles
-2. Recomiéndame un plan según mi caso`,
+1️⃣ Ver planes disponibles
+2️⃣ Recomiéndame un plan según mi caso`,
         source: "backend"
       };
     }
 
     if (user.estado === "club_sell_ecuador") {
       if (cleanMessage === "1") {
-        return {
-          reply: buildPlansOverviewReply(
-            memberships,
-            "Perfecto. Aquí tienes los planes disponibles para avanzar con más claridad si quieres vender en Ecuador:"
-          ),
-          source: "backend"
-        };
-      }
-
-      if (cleanMessage === "2") {
-        user.club_context = "validated_product";
+        user.club_context = "sell_ecuador";
         return {
           reply: buildPlanRecommendationReply(user, memberships),
           source: "backend"
         };
       }
 
+      if (cleanMessage === "2") {
+        return {
+          reply: `Perfecto 👌
+
+Volvemos al menú principal:
+
+MENU para ver opciones
+REINICIAR para empezar desde cero`,
+          source: "backend"
+        };
+      }
+
       return {
         reply: `Si quieres continuar, responde:
-1. Ver planes disponibles
-2. Recomiéndame el mejor plan para vender en Ecuador`,
+1️⃣ Recomiéndame el mejor plan para vender en Ecuador
+2️⃣ Volver al menú principal`,
         source: "backend"
       };
     }
 
     if (user.estado === "club_sell_amazon") {
       if (cleanMessage === "1") {
-        return {
-          reply: buildPlansOverviewReply(
-            memberships,
-            "Perfecto. Aquí tienes los planes disponibles para avanzar hacia Amazon FBA:"
-          ),
-          source: "backend"
-        };
-      }
-
-      if (cleanMessage === "2") {
         user.club_context = "amazon_fba";
         return {
           reply: buildPlanRecommendationReply(user, memberships),
@@ -1465,10 +1503,22 @@ ${CLUB_GENERAL_LINK}`,
         };
       }
 
+      if (cleanMessage === "2") {
+        return {
+          reply: `Perfecto 👌
+
+Volvemos al menú principal:
+
+MENU para ver opciones
+REINICIAR para empezar desde cero`,
+          source: "backend"
+        };
+      }
+
       return {
         reply: `Si quieres continuar, responde:
-1. Ver planes disponibles
-2. Recomiéndame el mejor plan para Amazon FBA`,
+1️⃣ Recomiéndame el mejor plan para Amazon FBA
+2️⃣ Volver al menú principal`,
         source: "backend"
       };
     }
@@ -1486,6 +1536,31 @@ ${CLUB_GENERAL_LINK}`,
 
       return {
         reply: buildCourierProductReply(userInput, memberships),
+        source: "backend"
+      };
+    }
+
+    if (user.estado === "club_personal_courier_result") {
+      if (cleanMessage === "1") {
+        return {
+          reply: buildPlansOverviewReply(
+            memberships,
+            "Perfecto. Aquí tienes los planes disponibles del Club de Importadores OneOrbix:"
+          ),
+          source: "backend"
+        };
+      }
+
+      if (cleanMessage === "2") {
+        user.club_context = "personal_use";
+        return {
+          reply: buildPlanRecommendationReply(user, memberships),
+          source: "backend"
+        };
+      }
+
+      return {
+        reply: "Por favor responde con 1️⃣ o 2️⃣.",
         source: "backend"
       };
     }
@@ -1526,7 +1601,7 @@ ${CLUB_GENERAL_LINK}`,
       }
 
       return {
-        reply: "Por favor responde con 1 o 2.",
+        reply: "Por favor responde con 1️⃣ o 2️⃣.",
         source: "backend"
       };
     }
@@ -1568,19 +1643,36 @@ ${CLUB_GENERAL_LINK}`,
       }
 
       return {
-        reply: "Por favor responde con 1, 2 o 3.",
+        reply: "Por favor responde con 1️⃣, 2️⃣ o 3️⃣.",
         source: "backend"
       };
     }
 
     if (user.estado === "club_exploring_product_guidance") {
+      if (cleanMessage === "1") {
+        return {
+          reply: buildPlansOverviewReply(
+            memberships,
+            "Perfecto. Aquí tienes los planes disponibles del Club de Importadores OneOrbix:"
+          ),
+          source: "backend"
+        };
+      }
+
+      if (cleanMessage === "2") {
+        return {
+          reply: buildPlanRecommendationReply(user, memberships),
+          source: "backend"
+        };
+      }
+
       return {
         reply: `Perfecto. Con un presupuesto aproximado de "${userInput}", ya se puede empezar a aterrizar mejor qué tipo de producto podría convenirte según mercado, competencia y logística.
 
-Si quieres, también puedo ayudarte a revisar los planes del club para acompañarte en ese proceso:
+Si quieres, también puedo ayudarte a revisar los planes del club:
 
-1. Ver planes disponibles
-2. Recomiéndame un plan según mi caso`,
+1️⃣ Ver planes disponibles
+2️⃣ Recomiéndame un plan según mi caso`,
         source: "backend"
       };
     }
@@ -1613,21 +1705,38 @@ Si quieres, también puedo ayudarte a revisar los planes del club para acompaña
 
       return {
         reply: `Si quieres continuar, responde:
-1. Ver planes disponibles
-2. Recomiéndame un plan según mi caso`,
+1️⃣ Ver planes disponibles
+2️⃣ Recomiéndame un plan según mi caso`,
         source: "backend"
       };
     }
 
     if (user.estado === "club_need_validation_potential") {
+      if (cleanMessage === "1") {
+        return {
+          reply: buildPlansOverviewReply(
+            memberships,
+            "Perfecto. Aquí tienes los planes disponibles del Club de Importadores OneOrbix:"
+          ),
+          source: "backend"
+        };
+      }
+
+      if (cleanMessage === "2") {
+        return {
+          reply: buildPlanRecommendationReply(user, memberships),
+          source: "backend"
+        };
+      }
+
       return {
         reply: `Perfecto. Para una idea como "${capitalizeText(userInput)}", lo más importante es revisar si el producto tiene sentido comercial, margen suficiente y una logística manejable.
 
 Si quieres acompañamiento para avanzar con más claridad, el club puede ayudarte en ese proceso.
 
 Responde:
-1. Ver planes disponibles
-2. Recomiéndame un plan según mi caso`,
+1️⃣ Ver planes disponibles
+2️⃣ Recomiéndame un plan según mi caso`,
         source: "backend"
       };
     }
@@ -1653,8 +1762,8 @@ Responde:
 
       return {
         reply: `Si quieres continuar, responde:
-1. Ver planes disponibles
-2. Recomiéndame un plan según mi caso`,
+1️⃣ Ver planes disponibles
+2️⃣ Recomiéndame un plan según mi caso`,
         source: "backend"
       };
     }
@@ -1687,8 +1796,8 @@ Responde:
 
       return {
         reply: `Si quieres continuar, responde:
-1. Ver planes disponibles
-2. Recomiéndame un plan según mi caso`,
+1️⃣ Ver planes disponibles
+2️⃣ Recomiéndame un plan según mi caso`,
         source: "backend"
       };
     }
@@ -1726,7 +1835,12 @@ Comprar ahora:
 ${memberships?.premium?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}`,
+${CLUB_GENERAL_LINK}
+
+Si quieres continuar, escribe:
+MENU para volver al menú principal
+REINICIAR para empezar desde cero
+ATRAS para volver al paso anterior`,
         source: "backend"
       };
     }
