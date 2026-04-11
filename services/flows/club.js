@@ -38,18 +38,20 @@ ${buildPlanLine(memberships?.profesional)}
 ${buildPlanLine(memberships?.premium)}
 
 También puedes ver la información general aquí:
-${CLUB_GENERAL_LINK}
-
-Si quieres continuar, escribe:
-MENU para volver al menú principal
-REINICIAR para empezar desde cero
-ATRAS para volver al paso anterior`;
+${CLUB_GENERAL_LINK}`;
 }
 
-function buildGeneralClubInfoReply(memberships) {
-  return `Perfecto. Te explico de forma simple cómo funciona el Club de Importadores OneOrbix:
+function buildPlanChoiceCTA() {
+  return `Si quieres, responde:
 
-Es una membresía diseñada para ayudarte a importar con acompañamiento real, evitando errores y mejorando tus resultados desde el inicio.
+1️⃣ Ver planes disponibles
+2️⃣ Recomiéndame un plan según mi caso`;
+}
+
+function buildGeneralClubInfoReply() {
+  return `Claro. Te explico cómo funciona el Club de Importadores OneOrbix de forma simple:
+
+Es una membresía pensada para ayudarte a importar con acompañamiento real, evitando errores comunes y tomando decisiones más sólidas desde el inicio.
 
 Dentro del club trabajamos en:
 
@@ -59,22 +61,18 @@ Dentro del club trabajamos en:
 - acceso a carga consolidada
 - asesoría paso a paso según tu caso
 
-Nuestras membresías funcionan con un único pago anual, y cada plan incluye beneficios pensados tanto para quienes están empezando como para quienes ya tienen experiencia importando.
-
-Además, durante todo el tiempo de tu membresía cuentas con acompañamiento y asesoría continua para ayudarte a avanzar con mayor claridad y seguridad.
-
-La idea es que no tengas que improvisar, sino trabajar con una estructura que te permita aprender, ejecutar y optimizar tu operación.
+La idea no es que avances a ciegas, sino con más claridad, mejor estructura y apoyo durante el proceso.
 
 Puedes conocer más aquí:
 ${CLUB_GENERAL_LINK}
 
-Si quieres, responde:
-1️⃣ Ver planes disponibles
-2️⃣ Recomiéndame un plan según mi caso`;
+${buildPlanChoiceCTA()}`;
 }
 
 function buildAmazonFBAReply(memberships) {
-  return `Perfecto. Si tu objetivo es vender en Amazon FBA, dentro del Club de Importadores OneOrbix tenemos tres opciones de membresía que pueden ayudarte según tu etapa y nivel de acompañamiento.
+  return `Bien. Si tu objetivo es vender en Amazon FBA, el club puede ayudarte a elegir mejor, estructurar el proceso y reducir errores antes de mover dinero.
+
+Estas son las membresías disponibles:
 
 ${buildPlanLine(memberships?.basico)}
 
@@ -85,13 +83,16 @@ ${buildPlanLine(memberships?.premium)}
 También puedes revisar la página general del club aquí:
 ${CLUB_GENERAL_LINK}
 
-Si quieres, responde:
+Si quieres continuar, responde:
+
 1️⃣ Recomiéndame el mejor plan para Amazon FBA
 2️⃣ Volver al menú principal`;
 }
 
 function buildEcuadorSellReply(memberships) {
-  return `Perfecto. Si quieres importar para vender en Ecuador, el Club de Importadores OneOrbix puede ayudarte a avanzar con estructura, acompañamiento y mejores decisiones desde el inicio.
+  return `Entiendo. Si quieres importar para vender en Ecuador, el club puede ayudarte a avanzar con más estructura, mejor criterio y menos improvisación.
+
+Estas son las membresías disponibles:
 
 ${buildPlanLine(memberships?.basico)}
 
@@ -102,7 +103,8 @@ ${buildPlanLine(memberships?.premium)}
 También puedes revisar la página general del club aquí:
 ${CLUB_GENERAL_LINK}
 
-Si quieres, responde:
+Si quieres continuar, responde:
+
 1️⃣ Recomiéndame el mejor plan para vender en Ecuador
 2️⃣ Volver al menú principal`;
 }
@@ -114,31 +116,29 @@ function buildCourierIntroReply() {
 - envías el producto a tu dirección en el exterior
 - nosotros lo recibimos, consolidamos y lo enviamos a Ecuador
 
-Este servicio es ideal para productos pequeños, compras personales y envíos rápidos.
+Este formato suele funcionar muy bien para productos pequeños, compras personales y envíos rápidos.
 
-Si quieres, dime qué producto deseas traer y te ayudamos a calcular el costo aproximado 👇`;
+Si quieres, dime qué producto deseas traer y te ayudamos a estimar mejor el escenario 👇`;
 }
 
-function buildCourierProductReply(userInput, memberships) {
+function buildCourierProductReply(userInput) {
   const product = capitalizeText(userInput);
 
-  return `Perfecto. Para un producto como "${product}", lo primero es revisar:
+  return `Bien. Para un producto como "${product}", lo primero es revisar:
 
 - peso aproximado
 - tamaño
 - valor del producto
 - país de origen
 
-Con esos datos se puede estimar mejor si te conviene traerlo por courier o casillero, y si existe una forma más eficiente de hacerlo.
+Con esos datos ya se puede estimar mejor si te conviene traerlo por courier o casillero, y si existe una forma más eficiente de hacerlo.
 
-Si más adelante quieres avanzar con apoyo más estructurado, el Club de Importadores OneOrbix también puede ayudarte a tomar mejores decisiones de compra y logística.
+Si luego quieres avanzar con acompañamiento más estructurado, el club también puede ayudarte a tomar mejores decisiones de compra y logística.
 
 Ver más sobre el club:
 ${CLUB_GENERAL_LINK}
 
-Si quieres, responde:
-1️⃣ Ver planes disponibles
-2️⃣ Recomiéndame un plan según mi caso`;
+${buildPlanChoiceCTA()}`;
 }
 
 function buildSpecificImportChoiceReply() {
@@ -149,9 +149,9 @@ function buildSpecificImportChoiceReply() {
 }
 
 function buildSpecificDefinedReply() {
-  return `Excelente. Eso acelera bastante el proceso.
+  return `Excelente. Eso acelera mucho el proceso.
 
-Podemos ayudarte con:
+En ese punto podemos ayudarte con:
 
 - revisión inicial del caso
 - cálculo estimado de costos
@@ -163,20 +163,20 @@ Para avanzar, envíame:
 - país de origen, si lo sabes
 - cantidad aproximada
 
-y te orientamos con un análisis inicial 👇`;
+y te doy una orientación inicial 👇`;
 }
 
 function buildSpecificDefinedProductReply(userInput, memberships) {
   const product = capitalizeText(userInput);
 
-  return `Perfecto. Para un producto como "${product}", lo ideal es revisar:
+  return `Bien. Para un producto como "${product}", lo importante es revisar con cuidado:
 
 - proveedor
 - condiciones de compra
 - costos logísticos
 - forma más eficiente de importarlo
 
-Si tu objetivo es avanzar con acompañamiento más estructurado, normalmente el ${memberships?.profesional?.nombre} suele ser una muy buena opción, porque te da herramientas, asesoría y apoyo más práctico para ejecutar con más claridad.
+Si tu objetivo es avanzar con apoyo más estructurado, normalmente el ${memberships?.profesional?.nombre} suele encajar muy bien, porque te da herramientas, asesoría y acompañamiento práctico para ejecutar con más claridad.
 
 Ver detalles:
 ${memberships?.profesional?.link}
@@ -185,16 +185,11 @@ Comprar ahora:
 ${memberships?.profesional?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}
-
-Si quieres continuar, escribe:
-MENU para volver al menú principal
-REINICIAR para empezar desde cero
-ATRAS para volver al paso anterior`;
+${CLUB_GENERAL_LINK}`;
 }
 
 function buildSpecificSupplierReply() {
-  return `Perfecto. Podemos ayudarte a buscar proveedores confiables y evaluar opciones según el tipo de producto que necesitas.
+  return `Tiene sentido. Podemos ayudarte a buscar proveedores más confiables y evaluar opciones según el tipo de producto que necesitas.
 
 Para empezar, dime:
 
@@ -206,9 +201,9 @@ y te orientamos sobre los siguientes pasos 👇`;
 function buildSpecificSupplierProductReply(userInput, memberships) {
   const product = capitalizeText(userInput);
 
-  return `Perfecto. Si estás buscando importar "${product}", el siguiente paso es ayudarte a encontrar proveedores más confiables y evaluar si la operación tiene sentido para tu caso.
+  return `Perfecto. Si estás buscando importar "${product}", el siguiente paso es identificar proveedores más confiables y evaluar si la operación realmente tiene sentido para tu caso.
 
-En escenarios así, normalmente el ${memberships?.profesional?.nombre} suele encajar muy bien porque incluye acompañamiento más práctico para avanzar con mayor claridad.
+En escenarios así, normalmente el ${memberships?.profesional?.nombre} suele ser una muy buena opción porque incluye acompañamiento más práctico para avanzar con mayor claridad.
 
 Ver detalles:
 ${memberships?.profesional?.link}
@@ -217,12 +212,7 @@ Comprar ahora:
 ${memberships?.profesional?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}
-
-Si quieres continuar, escribe:
-MENU para volver al menú principal
-REINICIAR para empezar desde cero
-ATRAS para volver al paso anterior`;
+${CLUB_GENERAL_LINK}`;
 }
 
 function buildExploringSuggestionsChoiceReply() {
@@ -234,14 +224,14 @@ function buildExploringSuggestionsChoiceReply() {
 }
 
 function buildEcuadorIdeasReply() {
-  return `Perfecto. Para vender en Ecuador, suelen funcionar mejor productos que sean:
+  return `Bien. Para vender en Ecuador, suelen funcionar mejor productos que sean:
 
 - de uso cotidiano
 - fáciles de vender en redes o marketplaces
 - de buena rotación
 - con margen atractivo
 
-Algunas categorías interesantes pueden ser:
+Algunas categorías interesantes para explorar pueden ser:
 
 - accesorios para celular
 - productos para hogar y organización
@@ -250,15 +240,11 @@ Algunas categorías interesantes pueden ser:
 - iluminación decorativa
 - gadgets prácticos
 
-Si quieres, también puedo orientarte según tu presupuesto o tipo de cliente.
-
-Si quieres continuar, escribe:
-MENU para volver al menú principal
-ATRAS para volver al paso anterior`;
+Si quieres, también puedo orientarte según tu presupuesto o tipo de cliente.`;
 }
 
 function buildAmazonIdeasReply() {
-  return `Perfecto. Para Amazon, conviene enfocarse en productos que sean:
+  return `Claro. Para Amazon conviene enfocarse en productos que sean:
 
 - ligeros
 - fáciles de enviar
@@ -274,28 +260,20 @@ Algunas categorías interesantes para evaluar son:
 - artículos de oficina
 - productos para mascotas
 
-Si quieres, también puedo orientarte sobre qué tipo de producto suele convenir más según inversión y competencia.
-
-Si quieres continuar, escribe:
-MENU para volver al menú principal
-ATRAS para volver al paso anterior`;
+Si quieres, también puedo orientarte sobre qué tipo de producto suele convenir más según inversión y competencia.`;
 }
 
 function buildBothMarketsIdeasReply() {
-  return `Perfecto. Si estás evaluando opciones para ambos mercados, lo ideal es separar bien la estrategia:
+  return `Buena dirección. Si estás evaluando opciones para ambos mercados, lo ideal es separar bien la estrategia:
 
 Para Ecuador suelen funcionar productos de rotación rápida y venta práctica.
 Para Amazon convienen productos ligeros, fáciles de enviar y con demanda más estable.
 
-Si quieres, puedo ayudarte a definir cuál mercado te conviene más según tu presupuesto, experiencia y tipo de producto.
-
-Si quieres continuar, escribe:
-MENU para volver al menú principal
-ATRAS para volver al paso anterior`;
+Si quieres, puedo ayudarte a definir cuál mercado te conviene más según tu presupuesto, experiencia y tipo de producto.`;
 }
 
 function buildProductGuidanceReply() {
-  return `Perfecto. Elegir bien el producto es clave.
+  return `Elegir bien el producto cambia por completo el resultado.
 
 Para tomar una buena decisión conviene considerar:
 
@@ -312,7 +290,7 @@ y te orientamos mejor 👇`;
 }
 
 function buildValidatedStartReply() {
-  return `Perfecto. Como ya tienes el producto validado, el siguiente paso es estructurar bien todo el proceso para importar y vender sin errores.
+  return `Muy bien. Si ya tienes el producto validado, el siguiente paso es estructurar bien el proceso para importar y vender sin errores evitables.
 
 Para orientarte mejor, dime:
 
@@ -354,16 +332,11 @@ Comprar ahora:
 ${memberships?.profesional?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}
-
-Si quieres continuar, escribe:
-MENU para volver al menú principal
-REINICIAR para empezar desde cero
-ATRAS para volver al paso anterior`;
+${CLUB_GENERAL_LINK}`;
 }
 
 function buildValidatedHelpReply() {
-  return `Perfecto. Cuando ya tienes el producto validado, el valor del club no está solo en aprender, sino en ayudarte a ejecutar con más claridad, menos errores y mejor estructura.
+  return `Cuando ya tienes el producto validado, el valor del club no está solo en aprender, sino en ayudarte a ejecutar con más claridad, menos errores y mejor estructura.
 
 Dentro del club puedes apoyarte en:
 
@@ -372,13 +345,13 @@ Dentro del club puedes apoyarte en:
 - orientación logística
 - acompañamiento para tomar mejores decisiones
 
-Si quieres, responde:
-1️⃣ Ver planes disponibles
-2️⃣ Recomiéndame un plan según mi caso`;
+${buildPlanChoiceCTA()}`;
 }
 
 function buildCostsActionReply() {
-  return `Perfecto. En el Club de Importadores OneOrbix podemos ayudarte a optimizar:
+  return `Aquí es donde muchos importadores pierden margen sin darse cuenta.
+
+En el Club de Importadores OneOrbix podemos ayudarte a optimizar:
 
 - costos de compra y negociación con proveedores
 - costos logísticos desde China
@@ -391,7 +364,7 @@ Para orientarte mejor, dime:
 👉 ¿Qué producto estás importando actualmente?
 (puedes enviarme el nombre o un link)
 
-Con eso te doy una referencia de mejoras posibles en costos y logística 👇`;
+Con eso te doy una referencia inicial de mejoras posibles 👇`;
 }
 
 function buildCostsActionProductReply(userInput, memberships) {
@@ -404,7 +377,7 @@ function buildCostsActionProductReply(userInput, memberships) {
 - tipo de envío
 - consolidación de carga
 
-En tu caso, el plan que mejor encaja suele ser:
+En tu caso, el plan que mejor suele encajar es:
 
 👉 ${memberships?.premium?.nombre}
 
@@ -422,16 +395,11 @@ Comprar ahora:
 ${memberships?.premium?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}
-
-Si quieres continuar, escribe:
-MENU para volver al menú principal
-REINICIAR para empezar desde cero
-ATRAS para volver al paso anterior`;
+${CLUB_GENERAL_LINK}`;
 }
 
 function buildCostsValueReply() {
-  return `Perfecto. Cuando ya estás importando, el valor del club no está en empezar de cero, sino en ayudarte a importar mejor.
+  return `Exacto. Cuando ya estás importando, el valor del club no está en empezar de cero, sino en ayudarte a importar mejor.
 
 Muchos importadores logran:
 
@@ -440,15 +408,13 @@ Muchos importadores logran:
 - aumentar márgenes
 - evitar errores costosos
 
-Si quieres, puedo orientarte según tu caso y ver si realmente te conviene.
+Si quieres, puedo orientarte según tu caso y ver qué plan tendría más sentido.
 
-Responde:
-1️⃣ Ver planes disponibles
-2️⃣ Recomiéndame un plan según mi caso`;
+${buildPlanChoiceCTA()}`;
 }
 
 function buildLogisticsControlReply() {
-  return `Perfecto. Cuando ya estás importando, uno de los mayores problemas suele ser la falta de control sobre tiempos y procesos.
+  return `Entiendo. Cuando ya estás importando, uno de los mayores problemas suele ser la falta de control sobre tiempos, coordinación y visibilidad del proceso.
 
 Podemos ayudarte a:
 
@@ -457,7 +423,7 @@ Podemos ayudarte a:
 - tener mayor visibilidad de tu operación
 - optimizar la logística desde origen hasta destino
 
-Además, cuando trabajas con carga consolidada, puedes reducir costos y mejorar la eficiencia logística.
+Además, cuando trabajas con carga consolidada, puedes reducir costos y mejorar eficiencia.
 
 Para orientarte mejor, dime:
 
@@ -470,7 +436,7 @@ function buildLogisticsControlModeReply(userInput, memberships) {
 
   return `Perfecto. Si actualmente estás trabajando con "${mode}", seguramente hay puntos de mejora en coordinación, tiempos o estructura de operación.
 
-Si buscas optimizar tu operación de forma más estructurada, el club está diseñado justo para ese punto.
+Si buscas optimizar tu logística de forma más ordenada, el club está diseñado justo para ese punto.
 
 👉 El plan que suele ser más recomendable en estos casos es el ${memberships?.premium?.nombre}, porque te permite:
 
@@ -486,18 +452,13 @@ Comprar ahora:
 ${memberships?.premium?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}
-
-Si quieres continuar, escribe:
-MENU para volver al menú principal
-REINICIAR para empezar desde cero
-ATRAS para volver al paso anterior`;
+${CLUB_GENERAL_LINK}`;
 }
 
 function buildLogisticsReviewReply() {
-  return `Perfecto. Cuando ya estás importando, muchas veces los problemas no están en el producto, sino en cómo se está gestionando la logística.
+  return `Muy buena observación. Cuando ya estás importando, muchas veces el problema no está en el producto, sino en cómo se está gestionando la logística.
 
-Ahí es donde se suelen perder tiempo y dinero.
+Ahí es donde se suele perder tiempo y dinero.
 
 Normalmente revisamos:
 
@@ -520,7 +481,7 @@ function buildLogisticsReviewContextReply(userInput, memberships) {
 
   return `Perfecto. Si actualmente estás manejando tu logística de esta forma: "${context}", seguramente hay puntos de mejora en organización, seguimiento o estructura.
 
-Si buscas ordenar mejor tu operación y evitar errores en el proceso, el ${memberships?.premium?.nombre} suele ser el plan más recomendado para este tipo de caso.
+Si buscas ordenar mejor la operación y reducir errores en el proceso, el ${memberships?.premium?.nombre} suele ser el plan más recomendado para este tipo de caso.
 
 Ver detalles:
 ${memberships?.premium?.link}
@@ -529,12 +490,7 @@ Comprar ahora:
 ${memberships?.premium?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}
-
-Si quieres continuar, escribe:
-MENU para volver al menú principal
-REINICIAR para empezar desde cero
-ATRAS para volver al paso anterior`;
+${CLUB_GENERAL_LINK}`;
 }
 
 function buildPlanRecommendationReply(user, memberships) {
@@ -564,12 +520,7 @@ Comprar ahora:
 ${professional?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}
-
-Si quieres continuar, escribe:
-MENU para volver al menú principal
-REINICIAR para empezar desde cero
-ATRAS para volver al paso anterior`;
+${CLUB_GENERAL_LINK}`;
   }
 
   if (
@@ -594,15 +545,10 @@ Comprar ahora:
 ${premium?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}
-
-Si quieres continuar, escribe:
-MENU para volver al menú principal
-REINICIAR para empezar desde cero
-ATRAS para volver al paso anterior`;
+${CLUB_GENERAL_LINK}`;
   }
 
-  return `Perfecto. Si estás empezando o todavía estás aterrizando mejor tu proceso, normalmente el plan que más suele equilibrar claridad y acompañamiento es:
+  return `Si estás empezando o todavía estás aterrizando mejor tu proceso, normalmente el plan que más suele equilibrar claridad y acompañamiento es:
 
 👉 ${professional?.nombre}
 
@@ -613,21 +559,11 @@ Comprar ahora:
 ${professional?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}
-
-Si quieres continuar, escribe:
-MENU para volver al menú principal
-REINICIAR para empezar desde cero
-ATRAS para volver al paso anterior`;
+${CLUB_GENERAL_LINK}`;
 }
 
 function buildHiddenExploringReply() {
-  return `Perfecto. Cuando quieras revisar tu caso con más claridad, aquí estaremos para orientarte.
-
-También puedes escribir:
-MENU para ver otras opciones
-REINICIAR para empezar desde cero
-ATRAS para volver al paso anterior`;
+  return `Perfecto. Cuando quieras revisar tu caso con más claridad, aquí estaremos para orientarte.`;
 }
 
 // ========================================================
@@ -774,7 +710,7 @@ function handleClubFlow({
         });
 
         return {
-          reply: buildGeneralClubInfoReply(memberships),
+          reply: buildGeneralClubInfoReply(),
           source: "backend"
         };
       }
@@ -1133,14 +1069,6 @@ function handleClubFlow({
           };
         }
 
-        if (cleanMessage === "3") {
-          user.score += 0;
-          return {
-            reply: buildHiddenExploringReply(),
-            source: "backend"
-          };
-        }
-
         return {
           reply: "Por favor responde con 1️⃣ o 2️⃣.",
           source: "backend"
@@ -1184,14 +1112,6 @@ function handleClubFlow({
           };
         }
 
-        if (cleanMessage === "3") {
-          user.score += 0;
-          return {
-            reply: buildHiddenExploringReply(),
-            source: "backend"
-          };
-        }
-
         return {
           reply: "Por favor responde con 1️⃣ o 2️⃣.",
           source: "backend"
@@ -1212,14 +1132,16 @@ function handleClubFlow({
           });
 
           return {
-            reply: `Perfecto. Para validar si tu idea tiene potencial, lo más importante es revisar:
+            reply: `Aquí es donde muchos fallan al importar 👇
+
+Para validar si tu idea tiene potencial, lo más importante es revisar:
 
 - demanda real
 - facilidad de importación
 - margen posible
 - nivel de competencia
 
-Si quieres, dime qué producto tienes en mente y te orientamos mejor 👇`,
+Si quieres, dime qué producto tienes en mente y te orientamos mejor.`,
             source: "backend"
           };
         }
@@ -1237,27 +1159,17 @@ Si quieres, dime qué producto tienes en mente y te orientamos mejor 👇`,
           });
 
           return {
-            reply: `Perfecto. Antes de importar, conviene revisar:
+            reply: `Antes de importar, conviene tener claras cinco cosas:
 
-- si el producto tiene sentido comercial
+- si el producto realmente tiene sentido comercial
 - costos reales
 - proveedor adecuado
-- logística
+- logística correcta
 - nivel de riesgo
 
-Si quieres, también puedo recomendarte un plan del club según tu caso.
+Si quieres, también puedo orientarte sobre qué plan del club encaja mejor con tu caso.
 
-Responde:
-1️⃣ Ver planes disponibles
-2️⃣ Recomiéndame un plan según mi caso`,
-            source: "backend"
-          };
-        }
-
-        if (cleanMessage === "3") {
-          user.score += 0;
-          return {
-            reply: buildHiddenExploringReply(),
+${buildPlanChoiceCTA()}`,
             source: "backend"
           };
         }
@@ -1305,14 +1217,6 @@ Responde:
           };
         }
 
-        if (cleanMessage === "3") {
-          user.score += 0;
-          return {
-            reply: buildHiddenExploringReply(),
-            source: "backend"
-          };
-        }
-
         return {
           reply: "Por favor responde con 1️⃣ o 2️⃣.",
           source: "backend"
@@ -1352,14 +1256,6 @@ Responde:
 
           return {
             reply: buildLogisticsReviewReply(),
-            source: "backend"
-          };
-        }
-
-        if (cleanMessage === "3") {
-          user.score += 0;
-          return {
-            reply: buildHiddenExploringReply(),
             source: "backend"
           };
         }
@@ -1409,7 +1305,7 @@ Con eso te doy una orientación inicial 👇`,
           });
 
           return {
-            reply: `Perfecto. Para este tipo de etapa, normalmente el plan más recomendable suele ser el ${memberships?.premium?.nombre}, porque te permite trabajar la operación con más estructura y acompañamiento continuo.
+            reply: `En esta etapa, normalmente el plan más recomendable suele ser el ${memberships?.premium?.nombre}, porque te permite trabajar la operación con más estructura y acompañamiento continuo.
 
 Ver detalles:
 ${memberships?.premium?.link}
@@ -1418,12 +1314,7 @@ Comprar ahora:
 ${memberships?.premium?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}
-
-Si quieres continuar, escribe:
-MENU para volver al menú principal
-REINICIAR para empezar desde cero
-ATRAS para volver al paso anterior`,
+${CLUB_GENERAL_LINK}`,
             source: "backend"
           };
         }
@@ -1458,9 +1349,7 @@ ATRAS para volver al paso anterior`,
       }
 
       return {
-        reply: `Si quieres continuar, responde:
-1️⃣ Ver planes disponibles
-2️⃣ Recomiéndame un plan según mi caso`,
+        reply: buildPlanChoiceCTA(),
         source: "backend"
       };
     }
@@ -1475,19 +1364,23 @@ ATRAS para volver al paso anterior`,
       }
 
       if (cleanMessage === "2") {
+        user.estado = "menu_enviado";
+        user.interes_principal = null;
+        user.subopcion = null;
+        user.club_context = null;
+        saveUser(phone, user);
+
         return {
           reply: `Perfecto 👌
 
-Volvemos al menú principal:
-
-MENU para ver opciones
-REINICIAR para empezar desde cero`,
+${require("../menu").getMenu()}`,
           source: "backend"
         };
       }
 
       return {
         reply: `Si quieres continuar, responde:
+
 1️⃣ Recomiéndame el mejor plan para vender en Ecuador
 2️⃣ Volver al menú principal`,
         source: "backend"
@@ -1504,19 +1397,23 @@ REINICIAR para empezar desde cero`,
       }
 
       if (cleanMessage === "2") {
+        user.estado = "menu_enviado";
+        user.interes_principal = null;
+        user.subopcion = null;
+        user.club_context = null;
+        saveUser(phone, user);
+
         return {
           reply: `Perfecto 👌
 
-Volvemos al menú principal:
-
-MENU para ver opciones
-REINICIAR para empezar desde cero`,
+${require("../menu").getMenu()}`,
           source: "backend"
         };
       }
 
       return {
         reply: `Si quieres continuar, responde:
+
 1️⃣ Recomiéndame el mejor plan para Amazon FBA
 2️⃣ Volver al menú principal`,
         source: "backend"
@@ -1535,7 +1432,7 @@ REINICIAR para empezar desde cero`,
       });
 
       return {
-        reply: buildCourierProductReply(userInput, memberships),
+        reply: buildCourierProductReply(userInput),
         source: "backend"
       };
     }
@@ -1667,7 +1564,7 @@ REINICIAR para empezar desde cero`,
       }
 
       return {
-        reply: `Perfecto. Con un presupuesto aproximado de "${userInput}", ya se puede empezar a aterrizar mejor qué tipo de producto podría convenirte según mercado, competencia y logística.
+        reply: `Perfecto. Con un presupuesto aproximado de "${userInput}", ya se puede aterrizar mejor qué tipo de producto podría convenirte según mercado, competencia y logística.
 
 Si quieres, también puedo ayudarte a revisar los planes del club:
 
@@ -1704,9 +1601,7 @@ Si quieres, también puedo ayudarte a revisar los planes del club:
       }
 
       return {
-        reply: `Si quieres continuar, responde:
-1️⃣ Ver planes disponibles
-2️⃣ Recomiéndame un plan según mi caso`,
+        reply: buildPlanChoiceCTA(),
         source: "backend"
       };
     }
@@ -1732,11 +1627,9 @@ Si quieres, también puedo ayudarte a revisar los planes del club:
       return {
         reply: `Perfecto. Para una idea como "${capitalizeText(userInput)}", lo más importante es revisar si el producto tiene sentido comercial, margen suficiente y una logística manejable.
 
-Si quieres acompañamiento para avanzar con más claridad, el club puede ayudarte en ese proceso.
+Si quieres apoyo para avanzar con más claridad, el club puede ayudarte en ese proceso.
 
-Responde:
-1️⃣ Ver planes disponibles
-2️⃣ Recomiéndame un plan según mi caso`,
+${buildPlanChoiceCTA()}`,
         source: "backend"
       };
     }
@@ -1761,9 +1654,7 @@ Responde:
       }
 
       return {
-        reply: `Si quieres continuar, responde:
-1️⃣ Ver planes disponibles
-2️⃣ Recomiéndame un plan según mi caso`,
+        reply: buildPlanChoiceCTA(),
         source: "backend"
       };
     }
@@ -1795,9 +1686,7 @@ Responde:
       }
 
       return {
-        reply: `Si quieres continuar, responde:
-1️⃣ Ver planes disponibles
-2️⃣ Recomiéndame un plan según mi caso`,
+        reply: buildPlanChoiceCTA(),
         source: "backend"
       };
     }
@@ -1835,12 +1724,7 @@ Comprar ahora:
 ${memberships?.premium?.payLink}
 
 También puedes revisar la página general del club:
-${CLUB_GENERAL_LINK}
-
-Si quieres continuar, escribe:
-MENU para volver al menú principal
-REINICIAR para empezar desde cero
-ATRAS para volver al paso anterior`,
+${CLUB_GENERAL_LINK}`,
         source: "backend"
       };
     }

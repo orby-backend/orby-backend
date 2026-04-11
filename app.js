@@ -112,7 +112,7 @@ function isRestartCommand(cleanMessage = "") {
 }
 
 function isBackCommand(cleanMessage = "") {
-  return cleanMessage === "atras" || cleanMessage === "atrás";
+  return cleanMessage === "atras";
 }
 
 function isFinalState(estado = "") {
@@ -147,25 +147,74 @@ function isFreeTextMessage(cleanMessage = "") {
 }
 
 function appendNavigationHint(reply) {
-  return `${reply}\n\nSi quieres ver otras opciones, escribe MENU.\nSi quieres empezar de cero, escribe REINICIAR.\nSi quieres volver al paso anterior dentro del Club, escribe ATRAS.`;
+  return `${reply}
+
+También puedes usar:
+
+🔸 *MENU*
+🔸 *REINICIAR*
+🔸 *ATRAS*`;
 }
 
 function shouldAppendNavigationHint(reply, user) {
   const text = String(reply || "");
+  const normalizedText = normalizeText(text);
 
   if (!text.trim()) return false;
+
+  // Si ya contiene navegación, no repetir
   if (
-    text.includes("escribe MENU") ||
-    text.includes("escribe REINICIAR") ||
-    text.includes("escribe ATRAS")
+    normalizedText.includes("*menu*") ||
+    normalizedText.includes("*reiniciar*") ||
+    normalizedText.includes("*atras*") ||
+    normalizedText.includes("menu para") ||
+    normalizedText.includes("reiniciar para") ||
+    normalizedText.includes("atras para")
   ) {
     return false;
   }
 
-  if (text.includes(CALENDLY_LINK)) return true;
+  // No mostrar navegación en pasos guiados o captura de datos
+  const guidedReplyPatterns = [
+    /ahora dime/i,
+    /para orientarte mejor/i,
+    /^dime:/i,
+    /\ndime:/i,
+    /si quieres, responde:/i,
+    /^responde:/i,
+    /\nresponde:/i,
+    /enviame:/i,
+    /envíame:/i,
+    /cuentame:/i,
+    /cuéntame:/i
+  ];
+
+  if (guidedReplyPatterns.some((pattern) => pattern.test(text))) {
+    return false;
+  }
+
+  // Mostrar navegación en cierres finales
   if (isFinalState(user?.estado)) return true;
 
-  const finalReplyPatterns = [
+  // Mostrar navegación en respuestas con links comerciales relevantes
+  if (
+    text.includes(CALENDLY_LINK) ||
+    text.includes(CLUB_GENERAL_LINK) ||
+    /comprar ahora:/i.test(text) ||
+    /ver detalles:/i.test(text) ||
+    /ver mas:/i.test(normalizedText) ||
+    /ver m[aá]s:/i.test(text)
+  ) {
+    return true;
+  }
+
+  // Mostrar navegación en respuestas tipo fallback o cierre abierto
+  const fallbackOrOpenEndPatterns = [
+    /no entendi/i,
+    /no entend[ií]/i,
+    /cuando quieras retomar/i,
+    /aqui estaremos para orientarte/i,
+    /aquí estaremos para orientarte/i,
     /hemos tomado tu solicitud/i,
     /te contactara/i,
     /te contactará/i,
@@ -177,7 +226,7 @@ function shouldAppendNavigationHint(reply, user) {
     /reunión vía meeting/i
   ];
 
-  return finalReplyPatterns.some((pattern) => pattern.test(text));
+  return fallbackOrOpenEndPatterns.some((pattern) => pattern.test(text));
 }
 
 function decorateReplyPayload(payload, phone) {
@@ -396,8 +445,8 @@ Puedes revisar más aquí:
 ${CLUB_GENERAL_LINK}
 
 Si quieres, responde:
-1. Ver planes disponibles
-2. Recomiéndame un plan según mi caso`;
+1️⃣ Ver planes disponibles
+2️⃣ Recomiéndame un plan según mi caso`;
 }
 
 function buildClubComparisonReply() {
@@ -446,6 +495,7 @@ ${memberships?.profesional?.payLink}`;
       "costs_optimization",
       "logistics_control",
       "logistics_review",
+      "logistics_review_context",
       "business_structure",
       "experienced_importer"
     ].includes(context)
@@ -479,11 +529,18 @@ function getClubBackNavigation(user) {
   const currentContext = String(user?.club_context || "");
   const currentSuboption = String(user?.subopcion || "");
 
-  // Si está en el inicio del club, ATRAS vuelve al menú
+  // Si está en el inicio del club, ATRAS vuelve al menú principal
   if (currentState === "club_p1") {
     return {
       estado: "menu_enviado",
-      reply: `Perfecto 👌\n\nVolvemos al menú principal:\n\n${getMenu()}`
+      interes_principal: null,
+      subopcion: null,
+      club_context: null,
+      reply: `Perfecto 👌
+
+Volvemos al menú principal:
+
+${getMenu()}`
     };
   }
 
@@ -491,6 +548,9 @@ function getClubBackNavigation(user) {
   if (currentState === "club_p2") {
     return {
       estado: "club_p1",
+      interes_principal: "club",
+      subopcion: null,
+      club_context: null,
       reply: getClubIntro()
     };
   }
@@ -500,6 +560,9 @@ function getClubBackNavigation(user) {
     if (currentSuboption === "cero") {
       return {
         estado: "club_p2",
+        interes_principal: "club",
+        subopcion: "cero",
+        club_context: null,
         reply: getClubCaso1()
       };
     }
@@ -507,6 +570,9 @@ function getClubBackNavigation(user) {
     if (currentSuboption === "idea_producto") {
       return {
         estado: "club_p2",
+        interes_principal: "club",
+        subopcion: "idea_producto",
+        club_context: null,
         reply: getClubCaso2()
       };
     }
@@ -514,6 +580,9 @@ function getClubBackNavigation(user) {
     if (currentSuboption === "ya_importo") {
       return {
         estado: "club_p2",
+        interes_principal: "club",
+        subopcion: "ya_importo",
+        club_context: null,
         reply: getClubCaso3()
       };
     }
@@ -523,6 +592,9 @@ function getClubBackNavigation(user) {
   if (currentState === "club_info_general") {
     return {
       estado: "club_p1",
+      interes_principal: "club",
+      subopcion: null,
+      club_context: null,
       reply: getClubIntro()
     };
   }
@@ -531,10 +603,13 @@ function getClubBackNavigation(user) {
   if (["club_sell_ecuador", "club_sell_amazon"].includes(currentState)) {
     return {
       estado: "club_p3",
+      interes_principal: "club",
+      subopcion: "cero",
+      club_context: "sell",
       reply: `Ahora dime:
 
-1. Quiero vender en Ecuador
-2. Quiero vender en Amazon FBA`
+1️⃣ Quiero vender en Ecuador
+2️⃣ Quiero vender en Amazon FBA`
     };
   }
 
@@ -548,10 +623,13 @@ function getClubBackNavigation(user) {
   ) {
     return {
       estado: "club_p3",
+      interes_principal: "club",
+      subopcion: "cero",
+      club_context: "personal_use",
       reply: `Ahora dime:
 
-1. Quiero traer productos pequeños (casillero / courier)
-2. Quiero importar algo específico para mi negocio o uso personal`
+1️⃣ Quiero traer productos pequeños (casillero / courier)
+2️⃣ Quiero importar algo específico para mi negocio o uso personal`
     };
   }
 
@@ -563,10 +641,13 @@ function getClubBackNavigation(user) {
   ) {
     return {
       estado: "club_personal_specific_choice",
+      interes_principal: "club",
+      subopcion: "cero",
+      club_context: "specific_import",
       reply: `Perfecto. Para orientarte mejor, dime:
 
-1. Ya tengo el producto definido
-2. Necesito ayuda para encontrar proveedor`
+1️⃣ Ya tengo el producto definido
+2️⃣ Necesito ayuda para encontrar proveedor`
     };
   }
 
@@ -578,10 +659,13 @@ function getClubBackNavigation(user) {
   ) {
     return {
       estado: "club_p3",
+      interes_principal: "club",
+      subopcion: "cero",
+      club_context: "exploring_ideas",
       reply: `Ahora dime:
 
-1. Sugerencias de productos
-2. Quiero entender mejor qué producto me conviene`
+1️⃣ Sugerencias de productos
+2️⃣ Quiero entender mejor qué producto me conviene`
     };
   }
 
@@ -593,10 +677,13 @@ function getClubBackNavigation(user) {
   ) {
     return {
       estado: "club_p3",
+      interes_principal: "club",
+      subopcion: "idea_producto",
+      club_context: "validated_product",
       reply: `Ahora dime:
 
-1. ¿Cómo puedo empezar?
-2. ¿Cómo me ayudaría el club en mi caso?`
+1️⃣ ¿Cómo puedo empezar?
+2️⃣ ¿Cómo me ayudaría el club en mi caso?`
     };
   }
 
@@ -608,10 +695,13 @@ function getClubBackNavigation(user) {
   ) {
     return {
       estado: "club_p3",
+      interes_principal: "club",
+      subopcion: "idea_producto",
+      club_context: "need_validation",
       reply: `Ahora dime:
 
-1. Quiero validar si mi idea tiene potencial
-2. Quiero entender qué debo revisar antes de importar`
+1️⃣ Quiero validar si mi idea tiene potencial
+2️⃣ Quiero entender qué debo revisar antes de importar`
     };
   }
 
@@ -619,10 +709,13 @@ function getClubBackNavigation(user) {
   if (["club_costs_action_waiting_product", "club_costs_value"].includes(currentState)) {
     return {
       estado: "club_p3",
+      interes_principal: "club",
+      subopcion: "ya_importo",
+      club_context: "costs_optimization",
       reply: `Ahora dime:
 
-1. Quiero optimizar costos y logística
-2. ¿Cómo me ayudaría el club en mi caso específico?`
+1️⃣ Quiero optimizar costos y logística
+2️⃣ ¿Cómo me ayudaría el club en mi caso específico?`
     };
   }
 
@@ -634,10 +727,13 @@ function getClubBackNavigation(user) {
   ) {
     return {
       estado: "club_p3",
+      interes_principal: "club",
+      subopcion: "ya_importo",
+      club_context: "logistics_control",
       reply: `Ahora dime:
 
-1. Quiero mejorar tiempos y control logístico
-2. Quiero revisar si estoy gestionando bien mi logística actual`
+1️⃣ Quiero mejorar tiempos y control logístico
+2️⃣ Quiero revisar si estoy gestionando bien mi logística actual`
     };
   }
 
@@ -645,17 +741,23 @@ function getClubBackNavigation(user) {
   if (["club_business_structure_action", "club_business_structure_plan"].includes(currentState)) {
     return {
       estado: "club_p3",
+      interes_principal: "club",
+      subopcion: "ya_importo",
+      club_context: "business_structure",
       reply: `Ahora dime:
 
-1. Quiero estructurar mi operación con más claridad
-2. Quiero ver qué plan puede ayudarme mejor`
+1️⃣ Quiero estructurar mi operación con más claridad
+2️⃣ Quiero ver qué plan puede ayudarme mejor`
     };
   }
 
-  // fallback suave dentro de club
+  // Fallback suave dentro de club
   if (currentContext || currentSuboption || user?.interes_principal === "club") {
     return {
       estado: "club_p1",
+      interes_principal: "club",
+      subopcion: null,
+      club_context: null,
       reply: getClubIntro()
     };
   }
@@ -1262,6 +1364,7 @@ app.post("/webhook", async (req, res) => {
         user.score = 0;
         user.interes_principal = null;
         user.subopcion = null;
+        user.club_context = null;
       }
 
       saveUser(phone, user);
@@ -1339,6 +1442,19 @@ app.post("/webhook", async (req, res) => {
 
         if (backNav) {
           user.estado = backNav.estado;
+
+          if (Object.prototype.hasOwnProperty.call(backNav, "interes_principal")) {
+            user.interes_principal = backNav.interes_principal;
+          }
+
+          if (Object.prototype.hasOwnProperty.call(backNav, "subopcion")) {
+            user.subopcion = backNav.subopcion;
+          }
+
+          if (Object.prototype.hasOwnProperty.call(backNav, "club_context")) {
+            user.club_context = backNav.club_context;
+          }
+
           saveUser(phone, user);
 
           logLeadEvent({
@@ -1350,7 +1466,8 @@ app.post("/webhook", async (req, res) => {
             subopcion: user.subopcion,
             score: user.score,
             detail: {
-              trigger: "atras_command"
+              trigger: "atras_command",
+              restored_context: user.club_context || null
             }
           });
 
@@ -1600,6 +1717,7 @@ app.post("/webhook", async (req, res) => {
       user.score = 0;
       user.subopcion = null;
       user.interes_principal = null;
+      user.club_context = null;
       saveUser(phone, user);
 
       return res.json({
@@ -1691,6 +1809,7 @@ Mensaje del usuario: ${message}
       if (options[cleanMessage]) {
         user.estado = options[cleanMessage].estado;
         user.interes_principal = options[cleanMessage].interes;
+        user.club_context = null;
         saveUser(phone, user);
 
         logLeadEvent({
@@ -1721,16 +1840,17 @@ Mensaje del usuario: ${message}
     } else if (user.interes_principal === "club") {
       fallbackReply = `Entiendo. Si quieres, puedo seguir ayudándote con el Club de Importadores OneOrbix.
 
-También puedes escribir:
-ATRAS para volver al paso anterior
-MENU para ver otras opciones
-REINICIAR para empezar desde cero`;
+También puedes usar:
+
+🔸 *MENU*
+🔸 *REINICIAR*
+🔸 *ATRAS*`;
     } else if (user.interes_principal) {
       fallbackReply = `Entiendo. Si quieres, puedo seguir ayudándote con ${user.interes_principal}.
 
-También puedes escribir MENU para ver otras opciones.`;
+También puedes escribir *MENU* para ver otras opciones.`;
     } else {
-      fallbackReply = "No entendí del todo tu mensaje. Escribe MENU para ver las opciones disponibles.";
+      fallbackReply = "No entendí del todo tu mensaje. Escribe *MENU* para ver las opciones disponibles.";
     }
 
     return res.json({

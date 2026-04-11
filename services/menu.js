@@ -112,9 +112,9 @@ function getAmazonPreguntaFinal() {
 
 // OPCIÓN 3: CLUB
 function getClubIntro() {
-  return `Excelente. El Club de Importadores OneOrbix es una membresía anual diseñada para ayudarte a importar con acompañamiento real, tanto si estás empezando como si ya tienes experiencia.
+  return `Excelente. El Club de Importadores OneOrbix es una membresía anual pensada para ayudarte a importar con acompañamiento real, tanto si estás empezando como si ya tienes experiencia.
 
-Dentro del club puedes contar con apoyo en:
+Dentro del club puedes apoyarte en:
 
 ✔ Validación y búsqueda de proveedores
 ✔ Simulación de costos de importación
@@ -122,7 +122,7 @@ Dentro del club puedes contar con apoyo en:
 ✔ Acceso a carga consolidada
 ✔ Asesoría continua durante toda tu membresía
 
-Para orientarte mejor, dime:
+Vamos a ubicarte rápido 👇
 
 1️⃣ Quiero empezar a importar desde cero
 2️⃣ Ya tengo una idea de producto
@@ -131,7 +131,7 @@ Para orientarte mejor, dime:
 }
 
 function getClubCaso1() {
-  return `Perfecto. El club está diseñado justo para ayudarte a avanzar con más claridad desde el inicio.
+  return `Bien. Si estás empezando desde cero, el club puede ayudarte a avanzar con más claridad desde el inicio.
 
 Dime:
 
@@ -141,16 +141,16 @@ Dime:
 }
 
 function getClubCaso2() {
-  return `Excelente. Eso acelera mucho el proceso.
+  return `Excelente. Eso acelera bastante el proceso.
 
-Dime:
+Ahora dime:
 
 1️⃣ Ya validé el producto
 2️⃣ Tengo la idea, pero necesito validarla`;
 }
 
 function getClubCaso3() {
-  return `Perfecto. Entonces podemos ayudarte a mejorar tu operación con más estructura.
+  return `Perfecto. Entonces el enfoque ya no es empezar, sino mejorar la operación con más estructura.
 
 Dime:
 
@@ -160,7 +160,7 @@ Dime:
 }
 
 function getClubInfoGeneral() {
-  return `Perfecto. El Club de Importadores OneOrbix funciona como una membresía anual con acompañamiento real para ayudarte a importar con más claridad, mejores decisiones y menos errores.
+  return `Claro. El Club de Importadores OneOrbix funciona como una membresía anual con acompañamiento real para ayudarte a importar con más claridad, mejores decisiones y menos errores.
 
 Está pensado tanto para quienes están empezando como para quienes ya importan y quieren optimizar su operación.
 
