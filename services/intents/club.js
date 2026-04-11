@@ -77,7 +77,11 @@ function detectClubIntent(text = "") {
       "muestrame los planes",
       "muéstrame los planes",
       "quiero conocer los planes",
-      "quiero ver opciones del club"
+      "quiero ver opciones del club",
+      "ver planes disponibles",
+      "quiero ver planes disponibles",
+      "mostrar membresias",
+      "muéstrame las membresías"
     ])
   ) {
     return "show_plans";
@@ -122,7 +126,11 @@ function detectClubIntent(text = "") {
       "donde pago",
       "dónde pago",
       "ayudame con el link de pago",
-      "ayúdame con el link de pago"
+      "ayúdame con el link de pago",
+      "quiero avanzar con una membresia",
+      "quiero avanzar con una membresía",
+      "quiero comprar el plan",
+      "quiero pagar el plan"
     ])
   ) {
     return "payment_help";
@@ -695,7 +703,9 @@ function detectClubIntent(text = "") {
       "qué incluye cada plan",
       "cual plan es mejor",
       "cuál plan es mejor",
-      "que plan cambia"
+      "que plan cambia",
+      "comparar membresias",
+      "comparar membresías"
     ])
   ) {
     return "compare_plans";
@@ -780,7 +790,11 @@ function detectClubIntent(text = "") {
       "cual deberia elegir",
       "cuál debería elegir",
       "ayudame a elegir",
-      "ayúdame a elegir"
+      "ayúdame a elegir",
+      "recomiendame un plan",
+      "recomiéndame un plan",
+      "recomiendame la membresia",
+      "recomiéndame la membresía"
     ])
   ) {
     return "recommend_plan";
@@ -819,7 +833,12 @@ function detectClubIntent(text = "") {
       "que gano pagando",
       "que beneficio tiene pagar",
       "por que no hacerlo solo",
-      "por qué no hacerlo solo"
+      "por qué no hacerlo solo",
+      "me sirve a mi caso",
+      "me serviria a mi caso",
+      "me serviría a mi caso",
+      "realmente me ayudaria",
+      "realmente me ayudaría"
     ])
   ) {
     return "value_question";
@@ -840,7 +859,9 @@ function detectClubIntent(text = "") {
       "como me uno",
       "cómo me uno",
       "como compro",
-      "cómo compro"
+      "cómo compro",
+      "quiero avanzar con una membresia",
+      "quiero avanzar con una membresía"
     ])
   ) {
     return "buy_signal";

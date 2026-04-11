@@ -112,25 +112,26 @@ function getAmazonPreguntaFinal() {
 
 // OPCIÓN 3: CLUB
 function getClubIntro() {
-  return `Excelente. El Club de Importadores OneOrbix es la forma más rápida y segura de empezar a importar con acompañamiento real.
+  return `Excelente. El Club de Importadores OneOrbix es una membresía anual diseñada para ayudarte a importar con acompañamiento real, tanto si estás empezando como si ya tienes experiencia.
 
-Dentro del club tienes acceso a:
+Dentro del club puedes contar con apoyo en:
 
-✔ Búsqueda de proveedores en China y USA
-✔ Asesoría para vender en Amazon
-✔ Importación con carga compartida a Ecuador
-✔ Apoyo logístico y operativo paso a paso
+✔ Validación y búsqueda de proveedores
+✔ Simulación de costos de importación
+✔ Logística desde origen hasta destino
+✔ Acceso a carga consolidada
+✔ Asesoría continua durante toda tu membresía
 
 Para orientarte mejor, dime:
 
 1️⃣ Quiero empezar a importar desde cero
 2️⃣ Ya tengo una idea de producto
 3️⃣ Ya he importado antes, pero quiero mejorar
-4️⃣ Solo quiero conocer cómo funciona el club`;
+4️⃣ ¿Cómo funciona el Club de Importadores OneOrbix?`;
 }
 
 function getClubCaso1() {
-  return `Perfecto. El club está diseñado justo para eso.
+  return `Perfecto. El club está diseñado justo para ayudarte a avanzar con más claridad desde el inicio.
 
 Dime:
 
@@ -149,7 +150,7 @@ Dime:
 }
 
 function getClubCaso3() {
-  return `Perfecto. Entonces podemos ayudarte a escalar.
+  return `Perfecto. Entonces podemos ayudarte a mejorar tu operación con más estructura.
 
 Dime:
 
@@ -159,11 +160,11 @@ Dime:
 }
 
 function getClubInfoGeneral() {
-  return `Perfecto. El Club de Importadores es una membresía que te permite aprender, ejecutar y escalar tus importaciones con acompañamiento paso a paso.
+  return `Perfecto. El Club de Importadores OneOrbix funciona como una membresía anual con acompañamiento real para ayudarte a importar con más claridad, mejores decisiones y menos errores.
 
-Incluye herramientas, asesoría y acceso a oportunidades reales de negocio.
+Está pensado tanto para quienes están empezando como para quienes ya importan y quieren optimizar su operación.
 
-¿Te gustaría conocer los planes disponibles?`;
+Si quieres, puedo mostrarte los planes disponibles o ayudarte a ver cuál se ajusta mejor a tu caso.`;
 }
 
 function getClubPreguntaFinal() {
