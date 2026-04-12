@@ -1434,6 +1434,38 @@ app.post("/webhook", async (req, res) => {
     }
 
     // ========================================================
+    // 1.2 DETECCIÓN DE ENTRADA DIRECTA CLUB (ANUNCIOS META)
+    // ========================================================
+    const clubAdKeywords = [
+      "quiero club oneorbix",
+      "info club oneorbix",
+      "club oneorbix",
+      "quiero informacion del club",
+      "quiero información del club",
+      "info club",
+      "membresia club",
+      "membresía club"
+    ];
+
+    const isClubAdEntry = clubAdKeywords.some((keyword) =>
+      cleanMessage.includes(keyword)
+    );
+
+    if (isClubAdEntry && !user.interes_principal) {
+      user.estado = "club_p1";
+      user.interes_principal = "club";
+      user.subopcion = null;
+      user.club_context = null;
+
+      saveUser(phone, user);
+
+      return res.json({
+        reply: getClubIntro(),
+        source: "backend"
+      });
+    }
+
+    // ========================================================
     // 1.5 ATRAS - NAVEGACIÓN BÁSICA CLUB
     // ========================================================
     if (isBackCommand(cleanMessage)) {
