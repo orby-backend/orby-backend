@@ -29,7 +29,7 @@ function buildPlanLine(plan) {
 function buildPlansOverviewReply(memberships, intro = "") {
   return `${intro}
 
-Estos son los planes disponibles del Club de Importadores OneOrbix:
+*Estos son los planes disponibles del Club de Importadores OneOrbix:*
 
 ${buildPlanLine(memberships?.basico)}
 
@@ -42,7 +42,7 @@ ${CLUB_GENERAL_LINK}`;
 }
 
 function buildPlanChoiceCTA() {
-  return `Si quieres, responde:
+  return `*Para continuar, responde:*
 
 1️⃣ Ver planes disponibles
 2️⃣ Recomiéndame un plan según mi caso`;
@@ -53,13 +53,13 @@ function buildGeneralClubInfoReply() {
 
 Es una membresía pensada para ayudarte a importar con acompañamiento real, evitando errores comunes y tomando decisiones más sólidas desde el inicio.
 
-Dentro del club trabajamos en:
+*Dentro del club trabajamos en:*
 
-- búsqueda y validación de proveedores
-- simulación de costos de importación
-- logística desde origen hasta destino
-- acceso a carga consolidada
-- asesoría paso a paso según tu caso
+- Búsqueda y validación de proveedores
+- Simulación de costos de importación
+- Logística desde origen hasta destino
+- Acceso a carga consolidada
+- Asesoría paso a paso según tu caso
 
 La idea no es que avances a ciegas, sino con más claridad, mejor estructura y apoyo durante el proceso.
 
@@ -72,7 +72,7 @@ ${buildPlanChoiceCTA()}`;
 function buildAmazonFBAReply(memberships) {
   return `Bien. Si tu objetivo es vender en Amazon FBA, el club puede ayudarte a elegir mejor, estructurar el proceso y reducir errores antes de mover dinero.
 
-Estas son las membresías disponibles:
+*Estas son las membresías disponibles:*
 
 ${buildPlanLine(memberships?.basico)}
 
@@ -83,7 +83,7 @@ ${buildPlanLine(memberships?.premium)}
 También puedes revisar la página general del club aquí:
 ${CLUB_GENERAL_LINK}
 
-Si quieres continuar, responde:
+*Para continuar, responde:*
 
 1️⃣ Recomiéndame el mejor plan para Amazon FBA
 2️⃣ Volver al menú principal`;
@@ -92,7 +92,7 @@ Si quieres continuar, responde:
 function buildEcuadorSellReply(memberships) {
   return `Entiendo. Si quieres importar para vender en Ecuador, el club puede ayudarte a avanzar con más estructura, mejor criterio y menos improvisación.
 
-Estas son las membresías disponibles:
+*Estas son las membresías disponibles:*
 
 ${buildPlanLine(memberships?.basico)}
 
@@ -103,7 +103,7 @@ ${buildPlanLine(memberships?.premium)}
 También puedes revisar la página general del club aquí:
 ${CLUB_GENERAL_LINK}
 
-Si quieres continuar, responde:
+*Para continuar, responde:*
 
 1️⃣ Recomiéndame el mejor plan para vender en Ecuador
 2️⃣ Volver al menú principal`;
@@ -112,13 +112,13 @@ Si quieres continuar, responde:
 function buildCourierIntroReply() {
   return `Perfecto. El servicio de casillero funciona de forma simple:
 
-- compras en cualquier tienda internacional
-- envías el producto a tu dirección en el exterior
-- nosotros lo recibimos, consolidamos y lo enviamos a Ecuador
+- Compras en cualquier tienda internacional
+- Envías el producto a tu dirección en el exterior
+- Nosotros lo recibimos, consolidamos y lo enviamos a Ecuador
 
 Este formato suele funcionar muy bien para productos pequeños, compras personales y envíos rápidos.
 
-Si quieres, dime qué producto deseas traer y te ayudamos a estimar mejor el escenario 👇`;
+*Para orientarte mejor, dime qué producto deseas traer:* 👇`;
 }
 
 function buildCourierProductReply(userInput) {
@@ -126,10 +126,10 @@ function buildCourierProductReply(userInput) {
 
   return `Bien. Para un producto como "${product}", lo primero es revisar:
 
-- peso aproximado
-- tamaño
-- valor del producto
-- país de origen
+- Peso aproximado
+- Tamaño
+- Valor del producto
+- País de origen
 
 Con esos datos ya se puede estimar mejor si te conviene traerlo por courier o casillero, y si existe una forma más eficiente de hacerlo.
 
@@ -142,7 +142,7 @@ ${buildPlanChoiceCTA()}`;
 }
 
 function buildSpecificImportChoiceReply() {
-  return `Perfecto. Para orientarte mejor, dime:
+  return `Perfecto. *Para orientarte mejor, dime:*
 
 1️⃣ Ya tengo el producto definido
 2️⃣ Necesito ayuda para encontrar proveedor`;
@@ -151,19 +151,19 @@ function buildSpecificImportChoiceReply() {
 function buildSpecificDefinedReply() {
   return `Excelente. Eso acelera mucho el proceso.
 
-En ese punto podemos ayudarte con:
+*En ese punto podemos ayudarte con:*
 
-- revisión inicial del caso
-- cálculo estimado de costos
-- orientación logística para traerlo a Ecuador
+- Revisión inicial del caso
+- Cálculo estimado de costos
+- Orientación logística para traerlo a Ecuador
 
-Para avanzar, envíame:
+*Para avanzar, envíame:*
 
-- nombre o link del producto
-- país de origen, si lo sabes
-- cantidad aproximada
+- Nombre o link del producto
+- País de origen, si lo sabes
+- Cantidad aproximada
 
-y te doy una orientación inicial 👇`;
+Y te doy una orientación inicial 👇`;
 }
 
 function buildSpecificDefinedProductReply(userInput, memberships) {
@@ -171,17 +171,17 @@ function buildSpecificDefinedProductReply(userInput, memberships) {
 
   return `Bien. Para un producto como "${product}", lo importante es revisar con cuidado:
 
-- proveedor
-- condiciones de compra
-- costos logísticos
-- forma más eficiente de importarlo
+- Proveedor
+- Condiciones de compra
+- Costos logísticos
+- Forma más eficiente de importarlo
 
 Si tu objetivo es avanzar con apoyo más estructurado, normalmente el ${memberships?.profesional?.nombre} suele encajar muy bien, porque te da herramientas, asesoría y acompañamiento práctico para ejecutar con más claridad.
 
-Ver detalles:
+*Ver detalles:*
 ${memberships?.profesional?.link}
 
-Comprar ahora:
+*Comprar ahora:*
 ${memberships?.profesional?.payLink}
 
 También puedes revisar la página general del club:
@@ -191,11 +191,7 @@ ${CLUB_GENERAL_LINK}`;
 function buildSpecificSupplierReply() {
   return `Tiene sentido. Podemos ayudarte a buscar proveedores más confiables y evaluar opciones según el tipo de producto que necesitas.
 
-Para empezar, dime:
-
-👉 qué producto estás buscando importar
-
-y te orientamos sobre los siguientes pasos 👇`;
+*Para empezar, dime qué producto estás buscando importar* 👇`;
 }
 
 function buildSpecificSupplierProductReply(userInput, memberships) {
@@ -205,10 +201,10 @@ function buildSpecificSupplierProductReply(userInput, memberships) {
 
 En escenarios así, normalmente el ${memberships?.profesional?.nombre} suele ser una muy buena opción porque incluye acompañamiento más práctico para avanzar con mayor claridad.
 
-Ver detalles:
+*Ver detalles:*
 ${memberships?.profesional?.link}
 
-Comprar ahora:
+*Comprar ahora:*
 ${memberships?.profesional?.payLink}
 
 También puedes revisar la página general del club:
@@ -216,7 +212,7 @@ ${CLUB_GENERAL_LINK}`;
 }
 
 function buildExploringSuggestionsChoiceReply() {
-  return `Perfecto. Para darte mejores sugerencias, dime:
+  return `Perfecto. *Para darte mejores sugerencias, dime:*
 
 1️⃣ Quiero vender en Ecuador
 2️⃣ Quiero vender en Amazon
@@ -226,82 +222,105 @@ function buildExploringSuggestionsChoiceReply() {
 function buildEcuadorIdeasReply() {
   return `Bien. Para vender en Ecuador, suelen funcionar mejor productos que sean:
 
-- de uso cotidiano
-- fáciles de vender en redes o marketplaces
-- de buena rotación
-- con margen atractivo
+- De uso cotidiano
+- Fáciles de vender en redes o marketplaces
+- De buena rotación
+- Con margen atractivo
 
-Algunas categorías interesantes para explorar pueden ser:
+*Algunas categorías interesantes para explorar pueden ser:*
 
-- accesorios para celular
-- productos para hogar y organización
-- artículos para mascotas
-- productos fitness pequeños
-- iluminación decorativa
-- gadgets prácticos
+- Accesorios para celular
+- Productos para hogar y organización
+- Artículos para mascotas
+- Productos fitness pequeños
+- Iluminación decorativa
+- Gadgets prácticos
 
-Si quieres, también puedo orientarte según tu presupuesto o tipo de cliente.`;
+Con cualquiera de las membresías del Club de Importadores OneOrbix recibes asesoría para:
+
+- Búsqueda de productos y fabricantes
+- Análisis de viabilidad para vender en Ecuador
+- Asesoría logística y aduanera
+
+*Ahora puedes responder:*
+
+1️⃣ Ver planes disponibles
+2️⃣ Recomiéndame un plan según mi caso`;
 }
 
 function buildAmazonIdeasReply() {
   return `Claro. Para Amazon conviene enfocarse en productos que sean:
 
-- ligeros
-- fáciles de enviar
-- con demanda constante
-- sin restricciones complejas
+- Ligeros
+- Fáciles de enviar
+- Con demanda constante
+- Sin restricciones complejas
 
-Algunas categorías interesantes para evaluar son:
+*Algunas categorías interesantes para evaluar son:*
 
-- organizadores
-- accesorios de cocina
-- productos fitness compactos
-- accesorios de viaje
-- artículos de oficina
-- productos para mascotas
+- Organizadores
+- Accesorios de cocina
+- Productos fitness compactos
+- Accesorios de viaje
+- Artículos de oficina
+- Productos para mascotas
 
-Si quieres, también puedo orientarte sobre qué tipo de producto suele convenir más según inversión y competencia.`;
+Con cualquiera de las membresías del Club de Importadores OneOrbix recibes asesoría para:
+
+- Búsqueda de productos y fabricantes
+- Análisis de viabilidad para vender en Amazon
+- Asesoría logística y aduanera
+
+*Ahora puedes responder:*
+
+1️⃣ Ver planes disponibles
+2️⃣ Recomiéndame un plan según mi caso`;
 }
 
 function buildBothMarketsIdeasReply() {
   return `Buena dirección. Si estás evaluando opciones para ambos mercados, lo ideal es separar bien la estrategia:
 
-Para Ecuador suelen funcionar productos de rotación rápida y venta práctica.
-Para Amazon convienen productos ligeros, fáciles de enviar y con demanda más estable.
+- Para Ecuador suelen funcionar productos de rotación rápida y venta práctica
+- Para Amazon convienen productos ligeros, fáciles de enviar y con demanda más estable
 
-Si quieres, puedo ayudarte a definir cuál mercado te conviene más según tu presupuesto, experiencia y tipo de producto.`;
+Con cualquiera de las membresías del Club de Importadores OneOrbix recibes asesoría para:
+
+- Búsqueda de productos y fabricantes
+- Análisis de viabilidad según mercado objetivo
+- Asesoría logística y aduanera
+
+*Ahora puedes responder:*
+
+1️⃣ Ver planes disponibles
+2️⃣ Recomiéndame un plan según mi caso`;
 }
 
 function buildProductGuidanceReply() {
   return `Elegir bien el producto cambia por completo el resultado.
 
-Para tomar una buena decisión conviene considerar:
+*Para tomar una buena decisión conviene considerar:*
 
-- inversión disponible
-- facilidad de importación
-- competencia
-- canal de venta (Ecuador o Amazon)
+- Inversión disponible
+- Facilidad de importación
+- Competencia
+- Canal de venta (Ecuador o Amazon)
 
-Si quieres, dime:
-
-👉 cuánto te gustaría invertir
-
-y te orientamos mejor 👇`;
+*Para orientarte mejor, dime cuánto te gustaría invertir:* 👇`;
 }
 
 function buildValidatedStartReply() {
   return `Muy bien. Si ya tienes el producto validado, el siguiente paso es estructurar bien el proceso para importar y vender sin errores evitables.
 
-Para orientarte mejor, dime:
+*Para orientarte mejor, dime:*
 
 👉 ¿Qué producto específico quieres importar?
-(puedes enviarme el nombre o el link)
+(Puedes enviarme el nombre o el link)
 
-Con eso puedo decirte:
+*Con eso puedo decirte:*
 
-- qué debes revisar antes de comprar
-- cómo calcular costos
-- y qué tipo de acompañamiento te conviene según tu caso 👇`;
+- Qué debes revisar antes de comprar
+- Cómo calcular costos
+- Qué tipo de acompañamiento te conviene según tu caso`;
 }
 
 function buildValidatedStartProductReply(userInput, memberships) {
@@ -309,26 +328,50 @@ function buildValidatedStartProductReply(userInput, memberships) {
 
   return `Perfecto. Para un producto como "${product}", lo más importante es:
 
-- validar proveedor correctamente
-- calcular costos reales
-- definir estrategia de compra
-- revisar la logística adecuada
+- Validar proveedor correctamente
+- Calcular costos reales
+- Definir estrategia de compra
+- Revisar la logística adecuada
 
 En tu caso, el plan que mejor suele encajar es:
 
 👉 ${memberships?.profesional?.nombre}
 
-porque incluye:
+*Porque incluye:*
 
-- asesoría personalizada
-- simulación de costos
-- verificación de proveedores
-- acompañamiento paso a paso
+- Asesoría personalizada
+- Simulación de costos
+- Verificación de proveedores
+- Acompañamiento paso a paso
 
-Ver detalles:
+*Ver detalles:*
 ${memberships?.profesional?.link}
 
-Comprar ahora:
+*Comprar ahora:*
+${memberships?.profesional?.payLink}
+
+También puedes revisar la página general del club:
+${CLUB_GENERAL_LINK}`;
+}
+
+function buildValidatedHybridReply(aiReply, memberships) {
+  return `${aiReply}
+
+En tu caso, el plan que mejor suele encajar es:
+
+👉 ${memberships?.profesional?.nombre}
+
+*Porque incluye:*
+
+- Asesoría personalizada
+- Simulación de costos
+- Verificación de proveedores
+- Acompañamiento paso a paso
+
+*Ver detalles:*
+${memberships?.profesional?.link}
+
+*Comprar ahora:*
 ${memberships?.profesional?.payLink}
 
 También puedes revisar la página general del club:
@@ -338,12 +381,12 @@ ${CLUB_GENERAL_LINK}`;
 function buildValidatedHelpReply() {
   return `Cuando ya tienes el producto validado, el valor del club no está solo en aprender, sino en ayudarte a ejecutar con más claridad, menos errores y mejor estructura.
 
-Dentro del club puedes apoyarte en:
+*Dentro del club puedes apoyarte en:*
 
-- revisión del caso
-- simulación de costos
-- orientación logística
-- acompañamiento para tomar mejores decisiones
+- Revisión del caso
+- Simulación de costos
+- Orientación logística
+- Acompañamiento para tomar mejores decisiones
 
 ${buildPlanChoiceCTA()}`;
 }
@@ -353,16 +396,16 @@ function buildCostsActionReply() {
 
 En el Club de Importadores OneOrbix podemos ayudarte a optimizar:
 
-- costos de compra y negociación con proveedores
-- costos logísticos desde China
-- estructura de importación para mejorar márgenes
+- Costos de compra y negociación con proveedores
+- Costos logísticos desde China
+- Estructura de importación para mejorar márgenes
 
 Además, cuando trabajas con carga consolidada, puedes reducir significativamente el costo por unidad.
 
-Para orientarte mejor, dime:
+*Para orientarte mejor, dime:*
 
 👉 ¿Qué producto estás importando actualmente?
-(puedes enviarme el nombre o un link)
+(Puedes enviarme el nombre o un link)
 
 Con eso te doy una referencia inicial de mejoras posibles 👇`;
 }
@@ -372,26 +415,26 @@ function buildCostsActionProductReply(userInput, memberships) {
 
   return `Perfecto. Para un producto como "${product}", normalmente se puede optimizar:
 
-- selección de proveedor
-- condiciones de compra
-- tipo de envío
-- consolidación de carga
+- Selección de proveedor
+- Condiciones de compra
+- Tipo de envío
+- Consolidación de carga
 
 En tu caso, el plan que mejor suele encajar es:
 
 👉 ${memberships?.premium?.nombre}
 
-porque incluye:
+*Porque incluye:*
 
-- asesoría continua
-- acompañamiento más estratégico
-- análisis más profundo de proveedores y costos
-- apoyo para mejorar logística y ejecución
+- Asesoría continua
+- Acompañamiento más estratégico
+- Análisis más profundo de proveedores y costos
+- Apoyo para mejorar logística y ejecución
 
-Ver detalles:
+*Ver detalles:*
 ${memberships?.premium?.link}
 
-Comprar ahora:
+*Comprar ahora:*
 ${memberships?.premium?.payLink}
 
 También puedes revisar la página general del club:
@@ -401,14 +444,14 @@ ${CLUB_GENERAL_LINK}`;
 function buildCostsValueReply() {
   return `Exacto. Cuando ya estás importando, el valor del club no está en empezar de cero, sino en ayudarte a importar mejor.
 
-Muchos importadores logran:
+*Muchos importadores logran:*
 
-- reducir costos logísticos
-- mejorar condiciones con proveedores
-- aumentar márgenes
-- evitar errores costosos
+- Reducir costos logísticos
+- Mejorar condiciones con proveedores
+- Aumentar márgenes
+- Evitar errores costosos
 
-Si quieres, puedo orientarte según tu caso y ver qué plan tendría más sentido.
+También puedo orientarte según tu caso y mostrarte qué plan tendría más sentido.
 
 ${buildPlanChoiceCTA()}`;
 }
@@ -418,17 +461,17 @@ function buildLogisticsControlReply() {
 
 Podemos ayudarte a:
 
-- mejorar la planificación de envíos
-- reducir retrasos
-- tener mayor visibilidad de tu operación
-- optimizar la logística desde origen hasta destino
+- Mejorar la planificación de envíos
+- Reducir retrasos
+- Tener mayor visibilidad de tu operación
+- Optimizar la logística desde origen hasta destino
 
 Además, cuando trabajas con carga consolidada, puedes reducir costos y mejorar eficiencia.
 
-Para orientarte mejor, dime:
+*Para orientarte mejor, dime:*
 
 👉 ¿Cómo estás trayendo actualmente tu producto?
-(aéreo, marítimo, courier, etc.)`;
+(Aéreo, marítimo, courier, etc.)`;
 }
 
 function buildLogisticsControlModeReply(userInput, memberships) {
@@ -440,15 +483,15 @@ Si buscas optimizar tu logística de forma más ordenada, el club está diseñad
 
 👉 El plan que suele ser más recomendable en estos casos es el ${memberships?.premium?.nombre}, porque te permite:
 
-- optimizar logística de forma continua
-- mejorar coordinación de envíos
-- reducir tiempos y costos
-- trabajar con procesos más eficientes
+- Optimizar logística de forma continua
+- Mejorar coordinación de envíos
+- Reducir tiempos y costos
+- Trabajar con procesos más eficientes
 
-Ver detalles:
+*Ver detalles:*
 ${memberships?.premium?.link}
 
-Comprar ahora:
+*Comprar ahora:*
 ${memberships?.premium?.payLink}
 
 También puedes revisar la página general del club:
@@ -460,20 +503,16 @@ function buildLogisticsReviewReply() {
 
 Ahí es donde se suele perder tiempo y dinero.
 
-Normalmente revisamos:
+*Normalmente revisamos:*
 
-- cómo estás coordinando tus envíos
-- qué tipo de transporte estás usando
-- si estás consolidando correctamente la carga
-- y cómo estás gestionando los tiempos
+- Cómo estás coordinando tus envíos
+- Qué tipo de transporte estás usando
+- Si estás consolidando correctamente la carga
+- Cómo estás gestionando los tiempos
 
 Con pequeños ajustes, se puede mejorar bastante la eficiencia.
 
-Si quieres, cuéntame:
-
-👉 cómo estás manejando actualmente tu logística
-
-y te doy una orientación inicial 👇`;
+*Ahora cuéntame cómo estás manejando actualmente tu logística:* 👇`;
 }
 
 function buildLogisticsReviewContextReply(userInput, memberships) {
@@ -483,10 +522,10 @@ function buildLogisticsReviewContextReply(userInput, memberships) {
 
 Si buscas ordenar mejor la operación y reducir errores en el proceso, el ${memberships?.premium?.nombre} suele ser el plan más recomendado para este tipo de caso.
 
-Ver detalles:
+*Ver detalles:*
 ${memberships?.premium?.link}
 
-Comprar ahora:
+*Comprar ahora:*
 ${memberships?.premium?.payLink}
 
 También puedes revisar la página general del club:
@@ -511,12 +550,12 @@ function buildPlanRecommendationReply(user, memberships) {
 
 👉 ${professional?.nombre}
 
-porque te da más estructura, herramientas y acompañamiento práctico para avanzar con claridad.
+Porque te da más estructura, herramientas y acompañamiento práctico para avanzar con claridad.
 
-Ver detalles:
+*Ver detalles:*
 ${professional?.link}
 
-Comprar ahora:
+*Comprar ahora:*
 ${professional?.payLink}
 
 También puedes revisar la página general del club:
@@ -536,12 +575,12 @@ ${CLUB_GENERAL_LINK}`;
 
 👉 ${premium?.nombre}
 
-porque está pensado para quienes ya están importando y quieren optimizar costos, logística y operación con más acompañamiento.
+Porque está pensado para quienes ya están importando y quieren optimizar costos, logística y operación con más acompañamiento.
 
-Ver detalles:
+*Ver detalles:*
 ${premium?.link}
 
-Comprar ahora:
+*Comprar ahora:*
 ${premium?.payLink}
 
 También puedes revisar la página general del club:
@@ -552,10 +591,10 @@ ${CLUB_GENERAL_LINK}`;
 
 👉 ${professional?.nombre}
 
-Ver detalles:
+*Ver detalles:*
 ${professional?.link}
 
-Comprar ahora:
+*Comprar ahora:*
 ${professional?.payLink}
 
 También puedes revisar la página general del club:
@@ -615,7 +654,7 @@ function moveToState({
 // ========================================================
 // FLOW CLUB
 // ========================================================
-function handleClubFlow({
+async function handleClubFlow({
   user,
   phone,
   cleanMessage,
@@ -630,7 +669,8 @@ function handleClubFlow({
   getLeadTibioReply,
   getLeadCuriosoReply,
   getClubLeadQualifiedReply,
-  memberships
+  memberships,
+  getGeminiReplyWithFallback
 }) {
   try {
     const userInput = getUserInput(message, cleanMessage);
@@ -725,9 +765,6 @@ function handleClubFlow({
     // CLUB - PASO 2
     // =====================================================
     if (user.estado === "club_p2") {
-      // ---------------------------------
-      // DESDE CERO
-      // ---------------------------------
       if (user.subopcion === "cero") {
         if (cleanMessage === "1") {
           user.score += 3;
@@ -804,9 +841,6 @@ function handleClubFlow({
         };
       }
 
-      // ---------------------------------
-      // YA TENGO IDEA DE PRODUCTO
-      // ---------------------------------
       if (user.subopcion === "idea_producto") {
         if (cleanMessage === "1") {
           user.score += 3;
@@ -860,9 +894,6 @@ function handleClubFlow({
         };
       }
 
-      // ---------------------------------
-      // YA IMPORTO
-      // ---------------------------------
       if (user.subopcion === "ya_importo") {
         if (cleanMessage === "1") {
           user.score += 3;
@@ -1134,14 +1165,14 @@ function handleClubFlow({
           return {
             reply: `Aquí es donde muchos fallan al importar 👇
 
-Para validar si tu idea tiene potencial, lo más importante es revisar:
+*Para validar si tu idea tiene potencial, lo más importante es revisar:*
 
-- demanda real
-- facilidad de importación
-- margen posible
-- nivel de competencia
+- Demanda real
+- Facilidad de importación
+- Margen posible
+- Nivel de competencia
 
-Si quieres, dime qué producto tienes en mente y te orientamos mejor.`,
+Ahora dime qué producto tienes en mente y te orientamos mejor.`,
             source: "backend"
           };
         }
@@ -1159,15 +1190,15 @@ Si quieres, dime qué producto tienes en mente y te orientamos mejor.`,
           });
 
           return {
-            reply: `Antes de importar, conviene tener claras cinco cosas:
+            reply: `*Antes de importar, conviene tener claras cinco cosas:*
 
-- si el producto realmente tiene sentido comercial
-- costos reales
-- proveedor adecuado
-- logística correcta
-- nivel de riesgo
+- Si el producto realmente tiene sentido comercial
+- Costos reales
+- Proveedor adecuado
+- Logística correcta
+- Nivel de riesgo
 
-Si quieres, también puedo orientarte sobre qué plan del club encaja mejor con tu caso.
+También puedo orientarte sobre qué plan del club encaja mejor con tu caso.
 
 ${buildPlanChoiceCTA()}`,
             source: "backend"
@@ -1282,10 +1313,10 @@ ${buildPlanChoiceCTA()}`,
           return {
             reply: `Perfecto. Si ya importas y quieres estructurar mejor tu operación, el siguiente paso es ordenar compras, logística, márgenes y decisiones comerciales.
 
-Si quieres, cuéntame:
+*Ahora cuéntame:*
 
-👉 qué producto importas actualmente
-👉 y cuál es el principal problema que quieres resolver
+👉 Qué producto importas actualmente
+👉 Cuál es el principal problema que quieres resolver
 
 Con eso te doy una orientación inicial 👇`,
             source: "backend"
@@ -1307,10 +1338,10 @@ Con eso te doy una orientación inicial 👇`,
           return {
             reply: `En esta etapa, normalmente el plan más recomendable suele ser el ${memberships?.premium?.nombre}, porque te permite trabajar la operación con más estructura y acompañamiento continuo.
 
-Ver detalles:
+*Ver detalles:*
 ${memberships?.premium?.link}
 
-Comprar ahora:
+*Comprar ahora:*
 ${memberships?.premium?.payLink}
 
 También puedes revisar la página general del club:
@@ -1379,7 +1410,7 @@ ${require("../menu").getMenu()}`,
       }
 
       return {
-        reply: `Si quieres continuar, responde:
+        reply: `*Para continuar, responde:*
 
 1️⃣ Recomiéndame el mejor plan para vender en Ecuador
 2️⃣ Volver al menú principal`,
@@ -1412,7 +1443,7 @@ ${require("../menu").getMenu()}`,
       }
 
       return {
-        reply: `Si quieres continuar, responde:
+        reply: `*Para continuar, responde:*
 
 1️⃣ Recomiéndame el mejor plan para Amazon FBA
 2️⃣ Volver al menú principal`,
@@ -1566,7 +1597,9 @@ ${require("../menu").getMenu()}`,
       return {
         reply: `Perfecto. Con un presupuesto aproximado de "${userInput}", ya se puede aterrizar mejor qué tipo de producto podría convenirte según mercado, competencia y logística.
 
-Si quieres, también puedo ayudarte a revisar los planes del club:
+También puedo ayudarte a revisar los planes del club.
+
+*Para continuar, responde:*
 
 1️⃣ Ver planes disponibles
 2️⃣ Recomiéndame un plan según mi caso`,
@@ -1575,8 +1608,45 @@ Si quieres, también puedo ayudarte a revisar los planes del club:
     }
 
     if (user.estado === "club_validated_start_waiting_product") {
+      const fallbackReply = buildValidatedStartProductReply(userInput, memberships);
+
+      if (typeof getGeminiReplyWithFallback === "function") {
+        const product = capitalizeText(userInput);
+
+        const prompt = `
+Eres Orby, asesor experto en importaciones de OneOrbix.
+
+El usuario quiere importar este producto:
+"${product}"
+
+Responde en español, de forma breve, clara y útil.
+No inventes datos técnicos específicos que no puedas sostener.
+No hagas una respuesta demasiado larga.
+
+Estructura la respuesta así:
+
+1. Una frase inicial breve mencionando el producto.
+2. Un bloque con el título: *Lo más importante a revisar es:*
+3. Entre 4 y 6 puntos concretos y útiles sobre lo que debe validar antes de importar ese producto.
+4. Un cierre breve indicando que hacerlo bien desde el inicio evita errores y mejora decisiones.
+
+No incluyas planes, precios, links ni venta. Eso lo añadirá el sistema después.
+        `.trim();
+
+        const aiReply = await getGeminiReplyWithFallback(
+          prompt,
+          user,
+          fallbackReply
+        );
+
+        return {
+          reply: buildValidatedHybridReply(aiReply, memberships),
+          source: "hybrid"
+        };
+      }
+
       return {
-        reply: buildValidatedStartProductReply(userInput, memberships),
+        reply: fallbackReply,
         source: "backend"
       };
     }
@@ -1627,7 +1697,7 @@ Si quieres, también puedo ayudarte a revisar los planes del club:
       return {
         reply: `Perfecto. Para una idea como "${capitalizeText(userInput)}", lo más importante es revisar si el producto tiene sentido comercial, margen suficiente y una logística manejable.
 
-Si quieres apoyo para avanzar con más claridad, el club puede ayudarte en ese proceso.
+El club puede ayudarte a avanzar con más claridad en ese proceso.
 
 ${buildPlanChoiceCTA()}`,
         source: "backend"
@@ -1715,12 +1785,12 @@ En este tipo de caso, el plan que más suele encajar es:
 
 👉 ${memberships?.premium?.nombre}
 
-porque te permite trabajar tu operación con más estructura y acompañamiento continuo.
+Porque te permite trabajar tu operación con más estructura y acompañamiento continuo.
 
-Ver detalles:
+*Ver detalles:*
 ${memberships?.premium?.link}
 
-Comprar ahora:
+*Comprar ahora:*
 ${memberships?.premium?.payLink}
 
 También puedes revisar la página general del club:

@@ -1577,7 +1577,7 @@ app.post("/webhook", async (req, res) => {
     });
     if (importRes) return res.json(importRes);
 
-    const clubRes = handleClubFlow({
+    const clubRes = await handleClubFlow({
       user,
       phone,
       cleanMessage,
@@ -1592,7 +1592,8 @@ app.post("/webhook", async (req, res) => {
       getLeadTibioReply,
       getLeadCuriosoReply,
       getClubLeadQualifiedReply: getLeadCalificadoReply,
-      memberships
+      memberships,
+      getGeminiReplyWithFallback
     });
     if (clubRes) return res.json(clubRes);
 
