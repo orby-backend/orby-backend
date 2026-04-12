@@ -323,6 +323,22 @@ function buildValidatedStartReply() {
 - Qué tipo de acompañamiento te conviene según tu caso`;
 }
 
+function buildValidatedStartBodyFallback(userInput) {
+  const product = capitalizeText(userInput);
+
+  return `Para un producto como "${product}", lo más importante es revisar con cuidado:
+
+*Lo más importante a revisar es:*
+
+- Proveedor y antecedentes del fabricante
+- Costos reales de compra, envío e importación
+- Requisitos logísticos y posibles restricciones
+- Calidad, especificaciones y margen de maniobra comercial
+- Volumen inicial conveniente para no sobreinvertir
+
+Hacer bien esta validación desde el inicio te ayuda a reducir errores y tomar mejores decisiones.`;
+}
+
 function buildValidatedStartProductReply(userInput, memberships) {
   const product = capitalizeText(userInput);
 
@@ -1608,7 +1624,8 @@ También puedo ayudarte a revisar los planes del club.
     }
 
     if (user.estado === "club_validated_start_waiting_product") {
-      const fallbackReply = buildValidatedStartProductReply(userInput, memberships);
+      const fullBackendFallback = buildValidatedStartProductReply(userInput, memberships);
+      const backendBodyFallback = buildValidatedStartBodyFallback(userInput);
 
       if (typeof getGeminiReplyWithFallback === "function") {
         const product = capitalizeText(userInput);
@@ -1619,44 +1636,82 @@ Eres Orby, asesor experto en importaciones de OneOrbix.
 El usuario quiere importar este producto:
 "${product}"
 
-Responde en español, de forma breve, clara y útil.
-No inventes datos técnicos específicos que no puedas sostener.
-No hagas una respuesta demasiado larga.
+Tu tarea es responder en español, de forma clara, útil, concreta y profesional.
 
-Estructura la respuesta así:
+REGLAS OBLIGATORIAS:
+- No inventes datos técnicos específicos que no puedas sostener.
+- No des información ambigua, incompleta ni frases sueltas.
+- No respondas con una sola línea.
+- No menciones planes, precios, links, pagos ni ventas.
+- No uses saludos largos ni introducciones innecesarias.
+- Debes responder pensando en alguien que quiere evaluar una importación con criterio comercial.
 
-1. Una frase inicial breve mencionando el producto.
-2. Un bloque con el título: *Lo más importante a revisar es:*
-3. Entre 4 y 6 puntos concretos y útiles sobre lo que debe validar antes de importar ese producto.
-4. Un cierre breve indicando que hacerlo bien desde el inicio evita errores y mejora decisiones.
+RESPONDE EXACTAMENTE CON ESTA ESTRUCTURA:
 
-No incluyas planes, precios, links ni venta. Eso lo añadirá el sistema después.
+Para importar [producto], conviene revisar varios puntos desde el inicio.
+
+*Lo más importante a revisar es:*
+
+- [Punto claro y útil 1]
+- [Punto claro y útil 2]
+- [Punto claro y útil 3]
+- [Punto claro y útil 4]
+- [Punto claro y útil 5]
+
+[Cierre breve de una sola frase explicando por qué validar eso bien evita errores y mejora decisiones.]
+
+REQUISITOS DE CALIDAD:
+- Los puntos deben ser concretos y útiles.
+- Deben hablar de validación de proveedor, costos, logística, calidad, restricciones, demanda o margen, según aplique.
+- La respuesta debe verse completa y terminada.
+- Debe tener mínimo 5 bullets reales.
         `.trim();
 
         const aiReply = await getGeminiReplyWithFallback(
           prompt,
           user,
-          fallbackReply
+          backendBodyFallback
         );
 
         const cleanedAiReply = String(aiReply || "").trim();
+        console.log("CLUB VALIDATED AI REPLY:", cleanedAiReply);
+
+        const bulletMatches = cleanedAiReply.match(/^- /gm) || [];
+        const hasExpectedTitle = cleanedAiReply.includes("*Lo más importante a revisar es:*");
+        const hasProductMention =
+          cleanedAiReply.toLowerCase().includes(product.toLowerCase());
+        const endsWell =
+          /[.!…]$/.test(cleanedAiReply) ||
+          cleanedAiReply.toLowerCase().includes("decisiones");
+        const hasBrokenStart =
+          cleanedAiReply === "Lo" ||
+          cleanedAiReply === "Hola" ||
+          cleanedAiReply === "Claro" ||
+          cleanedAiReply.length < 220;
 
         const isWeakAiReply =
           !cleanedAiReply ||
-          cleanedAiReply.length < 120 ||
-          cleanedAiReply === "Lo" ||
-          cleanedAiReply.split("\n").length < 4;
+          hasBrokenStart ||
+          bulletMatches.length < 4 ||
+          !hasExpectedTitle ||
+          !hasProductMention ||
+          !endsWell;
 
-        const finalAiReply = isWeakAiReply ? fallbackReply : cleanedAiReply;
+        if (isWeakAiReply) {
+          return {
+            reply: fullBackendFallback,
+            source: "backend_fallback"
+          };
+        }
 
         return {
-          reply: buildValidatedHybridReply(finalAiReply, memberships),
-          source: isWeakAiReply ? "backend_fallback" : "hybrid"
+          reply: buildValidatedHybridReply(cleanedAiReply, memberships),
+          source: "hybrid"
         };
       }
 
       return {
-        reply: fallbackReply,
+        reply: fullBackendFallback,
         source: "backend"
       };
     }
