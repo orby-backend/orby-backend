@@ -120,7 +120,9 @@ function isFinalState(estado = "") {
     "lead_curioso",
     "lead_tibio",
     "lead_calificado",
-    "digital_lead_calificado"
+    "digital_lead_calificado",
+    "asesoria_consulta_respondida",
+    "finalizado"
   ].includes(estado) || String(estado).endsWith("_lead_calificado");
 }
 
@@ -129,7 +131,8 @@ function isConversationalState(estado = "") {
     "lead_curioso",
     "lead_tibio",
     "lead_calificado",
-    "digital_lead_calificado"
+    "digital_lead_calificado",
+    "asesoria_consulta_respondida"
   ].includes(estado) || String(estado).endsWith("_lead_calificado");
 }
 
@@ -759,6 +762,185 @@ ${getMenu()}`
       subopcion: null,
       club_context: null,
       reply: getClubIntro()
+    };
+  }
+
+  return null;
+}
+
+function getAsesoriaBackNavigation(user, phone) {
+  const currentState = String(user?.estado || "");
+  const currentSuboption = String(user?.subopcion || "");
+
+  if (currentState === "asesoria_p1") {
+    return {
+      estado: "menu_enviado",
+      interes_principal: null,
+      subopcion: null,
+      reply: `Perfecto 👌
+
+Volvemos al menú principal:
+
+${getMenu()}`
+    };
+  }
+
+  if (currentState === "asesoria_p2") {
+    return {
+      estado: "asesoria_p1",
+      interes_principal: "asesoria",
+      subopcion: null,
+      reply: getAsesoriaIntro()
+    };
+  }
+
+  if (currentState === "asesoria_p3") {
+    if (currentSuboption === "comercio") {
+      return {
+        estado: "asesoria_p2",
+        interes_principal: "asesoria",
+        subopcion: "comercio",
+        reply: getAsesoriaCaso1()
+      };
+    }
+
+    if (currentSuboption === "negocio") {
+      return {
+        estado: "asesoria_p2",
+        interes_principal: "asesoria",
+        subopcion: "negocio",
+        reply: getAsesoriaCaso2()
+      };
+    }
+
+    if (currentSuboption === "escalar") {
+      return {
+        estado: "asesoria_p2",
+        interes_principal: "asesoria",
+        subopcion: "escalar",
+        reply: getAsesoriaCaso3()
+      };
+    }
+  }
+
+  if (["lead_curioso", "lead_tibio", "lead_calificado"].includes(currentState)) {
+    return {
+      estado: "asesoria_p3",
+      interes_principal: "asesoria",
+      subopcion: currentSuboption || null,
+      reply: getAsesoriaPreguntaFinal()
+    };
+  }
+
+  if (currentState === "asesoria_consulta_pedir") {
+    return {
+      estado: "asesoria_p1",
+      interes_principal: "asesoria",
+      subopcion: null,
+      reply: getAsesoriaIntro()
+    };
+  }
+
+  if (currentState === "asesoria_consulta_respondida") {
+    return {
+      estado: "asesoria_consulta_pedir",
+      interes_principal: "asesoria",
+      subopcion: "consulta",
+      reply: "Perfecto. Por favor escribe tu consulta puntual y te orientaré con la mayor claridad posible."
+    };
+  }
+
+  if (currentState === "asesoria_asesor_confirmar_numero") {
+    if (currentSuboption === "consulta") {
+      return {
+        estado: "asesoria_consulta_respondida",
+        interes_principal: "asesoria",
+        subopcion: "consulta",
+        reply: `Perfecto. Si quieres, puedo seguir ayudándote con tu consulta o, si prefieres avanzar directamente, aquí tienes las dos opciones disponibles.
+
+Si deseas avanzar con uno de nuestros asesores, tienes estas opciones:
+1️⃣ Quiero que un asesor me guíe
+2️⃣ Quiero agendar una reunión vía meeting`
+      };
+    }
+
+    return {
+      estado: "asesoria_p3",
+      interes_principal: "asesoria",
+      subopcion: currentSuboption || null,
+      reply: getAsesoriaPreguntaFinal()
+    };
+  }
+
+  if (currentState === "asesoria_asesor_otro_numero") {
+    return {
+      estado: "asesoria_asesor_confirmar_numero",
+      interes_principal: "asesoria",
+      subopcion: currentSuboption || null,
+      reply: `Perfecto. ¿Deseas que uno de nuestros asesores te contacte a este mismo número?
+
+${phone}
+
+1️⃣ Sí, a este número
+2️⃣ No, quiero dar otro número`
+    };
+  }
+
+  if (currentState === "asesoria_asesor_horario") {
+    if (
+      user?.callback_phone &&
+      String(user.callback_phone).trim() &&
+      String(user.callback_phone).trim() !== String(phone).trim()
+    ) {
+      return {
+        estado: "asesoria_asesor_otro_numero",
+        interes_principal: "asesoria",
+        subopcion: currentSuboption || null,
+        reply: "Perfecto. Envíame el número al que deseas que te contacten y seguimos."
+      };
+    }
+
+    return {
+      estado: "asesoria_asesor_confirmar_numero",
+      interes_principal: "asesoria",
+      subopcion: currentSuboption || null,
+      reply: `Perfecto. ¿Deseas que uno de nuestros asesores te contacte a este mismo número?
+
+${phone}
+
+1️⃣ Sí, a este número
+2️⃣ No, quiero dar otro número`
+    };
+  }
+
+  if (currentState === "finalizado" && user?.interes_principal === "asesoria") {
+    if (currentSuboption === "consulta") {
+      return {
+        estado: "asesoria_consulta_respondida",
+        interes_principal: "asesoria",
+        subopcion: "consulta",
+        reply: `Perfecto. Si quieres, puedo seguir ayudándote con tu consulta o, si prefieres avanzar directamente, aquí tienes las dos opciones disponibles.
+
+Si deseas avanzar con uno de nuestros asesores, tienes estas opciones:
+1️⃣ Quiero que un asesor me guíe
+2️⃣ Quiero agendar una reunión vía meeting`
+      };
+    }
+
+    return {
+      estado: "asesoria_p3",
+      interes_principal: "asesoria",
+      subopcion: currentSuboption || null,
+      reply: getAsesoriaPreguntaFinal()
+    };
+  }
+
+  if (user?.interes_principal === "asesoria") {
+    return {
+      estado: "asesoria_p1",
+      interes_principal: "asesoria",
+      subopcion: null,
+      reply: getAsesoriaIntro()
     };
   }
 
@@ -1466,7 +1648,44 @@ app.post("/webhook", async (req, res) => {
     }
 
     // ========================================================
-    // 1.5 ATRAS - NAVEGACIÓN BÁSICA CLUB
+    // 1.3 DETECCIÓN DE ENTRADA DIRECTA ASESORÍA (ANUNCIOS META)
+    // ========================================================
+    const asesoriaAdKeywords = [
+      "necesito informacion de asesoria",
+      "necesito información de asesoría",
+      "quiero asesoria",
+      "quiero asesoria",
+      "info asesoria",
+      "info asesoria",
+      "asesoria personalizada",
+      "asesoría personalizada",
+      "quiero hablar con un asesor",
+      "quiero hablar con un experto",
+      "necesito asesoria",
+      "necesito asesoria",
+      "quiero informacion de asesoria",
+      "quiero información de asesoría"
+    ];
+
+    const isAsesoriaAdEntry = asesoriaAdKeywords.some((keyword) =>
+      cleanMessage.includes(keyword)
+    );
+
+    if (isAsesoriaAdEntry && !user.interes_principal) {
+      user.estado = "asesoria_p1";
+      user.interes_principal = "asesoria";
+      user.subopcion = null;
+
+      saveUser(phone, user);
+
+      return res.json({
+        reply: getAsesoriaIntro(),
+        source: "backend"
+      });
+    }
+
+    // ========================================================
+    // 1.5 ATRAS - NAVEGACIÓN BÁSICA CLUB Y ASESORÍA
     // ========================================================
     if (isBackCommand(cleanMessage)) {
       if (user.interes_principal === "club") {
@@ -1510,8 +1729,44 @@ app.post("/webhook", async (req, res) => {
         }
       }
 
+      if (user.interes_principal === "asesoria") {
+        const backNav = getAsesoriaBackNavigation(user, phone);
+
+        if (backNav) {
+          user.estado = backNav.estado;
+
+          if (Object.prototype.hasOwnProperty.call(backNav, "interes_principal")) {
+            user.interes_principal = backNav.interes_principal;
+          }
+
+          if (Object.prototype.hasOwnProperty.call(backNav, "subopcion")) {
+            user.subopcion = backNav.subopcion;
+          }
+
+          saveUser(phone, user);
+
+          logLeadEvent({
+            phone,
+            module: "asesoria",
+            event_type: "back_navigation",
+            estado: user.estado,
+            interes_principal: user.interes_principal,
+            subopcion: user.subopcion,
+            score: user.score,
+            detail: {
+              trigger: "atras_command"
+            }
+          });
+
+          return res.json({
+            reply: backNav.reply,
+            source: "backend"
+          });
+        }
+      }
+
       return res.json({
-        reply: "Ahora mismo ATRAS está disponible dentro del módulo Club. Si quieres, escribe MENU para ver las opciones principales.",
+        reply: "Ahora mismo ATRAS está disponible dentro de los módulos Club y Asesoría. Si quieres, escribe MENU para ver las opciones principales.",
         source: "backend"
       });
     }
@@ -1872,6 +2127,14 @@ Mensaje del usuario: ${message}
       fallbackReply = `No entendí tu respuesta.\n\n${getMenu()}`;
     } else if (user.interes_principal === "club") {
       fallbackReply = `Entiendo. Si quieres, puedo seguir ayudándote con el Club de Importadores OneOrbix.
+
+También puedes usar:
+
+🔸 *MENU*
+🔸 *REINICIAR*
+🔸 *ATRAS*`;
+    } else if (user.interes_principal === "asesoria") {
+      fallbackReply = `Entiendo. Si quieres, puedo seguir ayudándote con asesoría personalizada.
 
 También puedes usar:
 

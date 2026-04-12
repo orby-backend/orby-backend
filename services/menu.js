@@ -451,7 +451,7 @@ function getAsesoriaCaso4() {
 function getAsesoriaPreguntaFinal() {
   return `Ahora dime:
 
-1️⃣ Quiero resolver esto lo antes posible
+1️⃣ Quiero validar el producto y su viabilidad comercial
 2️⃣ Quiero entender mejor antes de avanzar
 3️⃣ Solo estoy reuniendo información`;
 }
