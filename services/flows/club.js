@@ -1639,9 +1639,19 @@ No incluyas planes, precios, links ni venta. Eso lo añadirá el sistema despué
           fallbackReply
         );
 
+        const cleanedAiReply = String(aiReply || "").trim();
+
+        const isWeakAiReply =
+          !cleanedAiReply ||
+          cleanedAiReply.length < 120 ||
+          cleanedAiReply === "Lo" ||
+          cleanedAiReply.split("\n").length < 4;
+
+        const finalAiReply = isWeakAiReply ? fallbackReply : cleanedAiReply;
+
         return {
-          reply: buildValidatedHybridReply(aiReply, memberships),
-          source: "hybrid"
+          reply: buildValidatedHybridReply(finalAiReply, memberships),
+          source: isWeakAiReply ? "backend_fallback" : "hybrid"
         };
       }
 
