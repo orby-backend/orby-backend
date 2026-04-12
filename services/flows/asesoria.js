@@ -25,19 +25,19 @@ function getAsesoriaProfileContext(user) {
   }
 
   if (user.subopcion === "comercio") {
-    return `Perfecto. Veo que tu caso está relacionado con **importación, exportación o estructura comercial**, así que lo más importante es ordenar bien el punto de partida antes de avanzar.`;
+    return `Perfecto. Veo que tu caso está relacionado con importación, exportación o estructura comercial, así que lo más importante es ordenar bien el punto de partida antes de avanzar.`;
   }
 
   if (user.subopcion === "negocio") {
-    return `Perfecto. Veo que tu interés está en **estructurar un negocio**, así que conviene aterrizar mejor modelo, oferta, canal y siguiente paso antes de ejecutar.`;
+    return `Perfecto. Veo que tu interés está en estructurar un negocio, así que conviene aterrizar mejor modelo, oferta, canal y siguiente paso antes de ejecutar.`;
   }
 
   if (user.subopcion === "escalar") {
-    return `Perfecto. Veo que ya tienes una base y lo importante ahora no es mover piezas al azar, sino detectar **qué está frenando resultados** y cómo escalar con más criterio.`;
+    return `Perfecto. Veo que ya tienes una base y lo importante ahora no es mover piezas al azar, sino detectar qué está frenando resultados y cómo escalar con más criterio.`;
   }
 
   if (user.subopcion === "consulta") {
-    return `Perfecto. Veo que tienes una **consulta puntual**, así que lo más útil es revisar bien el contexto para darte una orientación clara y accionable.`;
+    return `Perfecto. Veo que tienes una consulta puntual, así que lo más útil es revisar bien el contexto para darte una orientación clara y accionable.`;
   }
 
   return `Perfecto. Ya tengo una idea inicial de tu caso de asesoría.`;
@@ -46,19 +46,19 @@ function getAsesoriaProfileContext(user) {
 function getAsesoriaLeadCuriosoReply(user) {
   return `${getAsesoriaProfileContext(user)}
 
-En esta etapa, lo más útil suele ser **aclarar bien el panorama** para que no avances con dudas sueltas o decisiones poco claras.${getAsesoriaLeadOfferOptions()}`;
+En esta etapa, lo más útil suele ser aclarar bien el panorama para que no avances con dudas sueltas o decisiones poco claras.${getAsesoriaLeadOfferOptions()}`;
 }
 
 function getAsesoriaLeadTibioReply(user) {
   return `${getAsesoriaProfileContext(user)}
 
-Ya hay señales claras de interés, así que sí vale la pena revisar tu caso con más enfoque para ayudarte a **decidir mejor el siguiente paso**.${getAsesoriaLeadOfferOptions()}`;
+Ya hay señales claras de interés, así que sí vale la pena revisar tu caso con más enfoque para ayudarte a decidir mejor el siguiente paso.${getAsesoriaLeadOfferOptions()}`;
 }
 
 function getAsesoriaLeadCalificadoReply(user) {
   return `${getAsesoriaProfileContext(user)}
 
-Tu caso ya está en un punto donde tiene bastante sentido avanzar con **orientación más directa** para ayudarte a resolverlo con más criterio.${getAsesoriaLeadOfferOptions()}`;
+Tu caso ya está en un punto donde tiene bastante sentido avanzar con orientación más directa para ayudarte a resolverlo con más criterio.${getAsesoriaLeadOfferOptions()}`;
 }
 
 function getAsesoriaAdvisorConfirmationReply(phone) {
@@ -189,31 +189,31 @@ function buildAsesoriaConsultBackendReply(message = "", detectedIntent = "") {
   const topic = inferAsesoriaConsultTopic(message, detectedIntent);
 
   if (topic === "amazon") {
-    return `Si tu consulta está relacionada con Amazon, lo más importante es **ordenar bien en qué etapa estás** antes de ejecutar.
+    return `Si tu consulta está relacionada con Amazon, lo más importante es ordenar bien en qué etapa estás antes de ejecutar.
 
-Si ya tienes producto, conviene validar primero **viabilidad, competencia y encaje real** en Amazon. Si aún no lo tienes definido, la prioridad no es correr a abrir todo, sino elegir con más criterio qué tendría sentido vender.
+Si ya tienes producto, conviene validar primero viabilidad, competencia y encaje real en Amazon. Si aún no lo tienes definido, la prioridad no es correr a abrir todo, sino elegir con más criterio qué tendría sentido vender.
 
 Desde ahí ya puedes aterrizar mejor el siguiente paso con más claridad.`;
   }
 
   if (topic === "exportacion") {
-    return `Si tu consulta va por exportación, lo más importante es **no asumir que el producto ya está listo para salir al exterior** solo por tenerlo definido.
+    return `Si tu consulta va por exportación, lo más importante es no asumir que el producto ya está listo para salir al exterior solo por tenerlo definido.
 
-Primero conviene validar **potencial exportable, mercado objetivo y nivel de preparación comercial**. Ahí se aclara si el siguiente paso es trabajar producto, mercado o estructura antes de intentar moverlo afuera.
+Primero conviene validar potencial exportable, mercado objetivo y nivel de preparación comercial. Ahí se aclara si el siguiente paso es trabajar producto, mercado o estructura antes de intentar moverlo afuera.
 
 Desde ahí puedes tomar decisiones con más criterio.`;
   }
 
   if (topic === "importacion") {
-    return `Si tu consulta va por importación, lo más importante es **no saltar directo a comprar o pedir cotizaciones** sin ordenar antes el punto de partida.
+    return `Si tu consulta va por importación, lo más importante es NO saltar directo a comprar o pedir cotizaciones sin ordenar antes el punto de partida.
 
 Primero conviene definir si ya tienes producto claro, si necesitas validarlo mejor o si realmente estás en etapa de búsqueda de proveedor.
 
-Desde ahí ya puedes aterrizar **costos, viabilidad y siguiente paso con más sentido**.`;
+Desde ahí ya puedes aterrizar costos, viabilidad y siguiente paso con más sentido.`;
   }
 
   if (topic === "digital") {
-    return `Si tu consulta está relacionada con ecommerce, automatización o crecimiento digital, lo más útil es **definir primero qué parte del negocio quieres mejorar** para no mover piezas sin dirección.
+    return `Si tu consulta está relacionada con ecommerce, automatización o crecimiento digital, lo más útil es definir primero qué parte del negocio quieres mejorar para no mover piezas sin dirección.
 
 No es lo mismo crear una tienda desde cero, reparar una estructura que no convierte o implementar IA para ventas o procesos.
 
@@ -221,7 +221,7 @@ Cuando eso se aclara, el siguiente paso se vuelve mucho más concreto.`;
   }
 
   if (topic === "club") {
-    return `Si tu consulta va por el Club de Importadores, lo importante es identificar si necesitas **una base inicial, acompañamiento más práctico o un apoyo más completo y continuo**.
+    return `Si tu consulta va por el Club de Importadores, lo importante es identificar si necesitas una base inicial, acompañamiento más práctico o un apoyo más completo y continuo.
 
 Ahí normalmente se define qué plan tiene más sentido según tu etapa, tu nivel de claridad y qué tanto acompañamiento realmente necesitas para avanzar con orden.`;
   }
@@ -230,45 +230,73 @@ Ahí normalmente se define qué plan tiene más sentido según tu etapa, tu nive
     /usa|estados unidos|europa|dubai|dubái|china/.test(text) &&
     /\bvender\b|\bmercado\b|\bcompradores\b/.test(text)
   ) {
-    return `Si tu consulta apunta a vender en mercados internacionales, lo más importante es aclarar primero si estás hablando de **exportación, validación de mercado o estructura comercial**.
+    return `Si tu consulta apunta a vender en mercados internacionales, lo más importante es aclarar primero si estás hablando de exportación, validación de mercado o estructura comercial.
 
 Cuando eso se define bien, ya se puede aterrizar mejor el camino y evitar decisiones apresuradas.`;
   }
 
-  return `Entiendo tu consulta. Para orientarte bien, conviene revisar primero **tu contexto y el punto exacto en el que estás** antes de tomar decisiones apresuradas.`;
+  return `Entiendo tu consulta. Para orientarte bien, conviene revisar primero tu contexto y el punto exacto en el que estás antes de tomar decisiones apresuradas.`;
 }
 
 function buildAsesoriaConsultPrompt(message = "", detectedIntent = "", backendGuide = "") {
   const topic = inferAsesoriaConsultTopic(message, detectedIntent);
 
   return `Eres Orby, asistente comercial de OneOrbix.
-El usuario está en el módulo de asesoría personalizada y acaba de hacer una consulta puntual.
+El usuario hizo una consulta puntual dentro del módulo de asesoría.
 
-Tema inferido de la consulta: ${topic}
+Tema inferido: ${topic}
 
 Consulta del usuario:
 ${message}
 
-Base estratégica que ya definió el backend:
+Base ya respondida por el backend:
 ${backendGuide}
 
-Tu tarea es complementar SIEMPRE esa base con una respuesta breve, natural, útil y comercial.
-No contradigas la base del backend.
+Tu tarea es complementar esa base con 1 o 2 frases realmente útiles.
+No repitas lo mismo que ya dijo el backend.
+No respondas de forma vacía, genérica, ambigua o demasiado corta.
 No inventes precios, servicios ni procesos no definidos.
-No conviertas la respuesta en algo demasiado técnico.
-No repitas el menú.
-No uses listas largas.
-Aterriza mejor la orientación y añade un toque más humano y convincente.
-Responde en español en un solo bloque breve.`;
+Aporta claridad comercial y un siguiente paso lógico.
+Escribe en español, tono natural, breve y convincente.`;
+}
+
+function isWeakGeminiReply(reply = "", backendReply = "") {
+  const text = String(reply || "").trim().toLowerCase();
+  const backend = String(backendReply || "").trim().toLowerCase();
+
+  if (!text) return true;
+  if (text.length < 90) return true;
+
+  const weakPatterns = [
+    "entiendo tu consulta",
+    "puedo ayudarte",
+    "si quieres puedo ayudarte",
+    "depende de tu caso",
+    "es importante revisar",
+    "conviene analizar",
+    "para orientarte mejor",
+    "lo importante es",
+    "puedes evaluar opciones"
+  ];
+
+  if (weakPatterns.some((pattern) => text.includes(pattern) && text.length < 140)) {
+    return true;
+  }
+
+  if (backend && (text === backend || backend.includes(text) || text.includes(backend))) {
+    return true;
+  }
+
+  return false;
 }
 
 function mergeBackendAndGeminiReply(backendReply = "", geminiReply = "") {
   const base = String(backendReply || "").trim();
   const ai = String(geminiReply || "").trim();
 
+  if (!base && !ai) return "";
   if (!ai) return base;
   if (!base) return ai;
-  if (ai === base) return base;
 
   return `${base}
 
@@ -295,6 +323,14 @@ async function resolveAsesoriaConsultation({
       "Si quieres, también podemos aterrizar tu caso con más enfoque para ayudarte a decidir mejor el siguiente paso.";
 
     const geminiReply = await getGeminiReplyWithFallback(prompt, user, geminiFallback);
+
+    if (isWeakGeminiReply(geminiReply, backendReply)) {
+      return {
+        replyText: backendReply,
+        source: "backend",
+        inferredTopic
+      };
+    }
 
     return {
       replyText: mergeBackendAndGeminiReply(backendReply, geminiReply),
