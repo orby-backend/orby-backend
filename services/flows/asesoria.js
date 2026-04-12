@@ -134,12 +134,12 @@ function inferAsesoriaConsultTopic(message = "", detectedIntent = "") {
   if (intent.startsWith("digital")) return "digital";
 
   const hasExportKeyword =
-    /\bexportar\b|\bexportación\b|\bexportacion\b|\bmercado internacional\b|\bmercado exterior\b|\bcompradores\b|\bdistribuidores\b|\bexportable\b/.test(
+    /\bexportar\b|\bexportación\b|\bexportacion\b|\bmercado internacional\b|\bmercado exterior\b|\bcompradores\b|\bdistribuidores\b|\bexportable\b|\bfda\b|\busda\b|\balimentos\b|\bmascotas\b|\bpet food\b|\bregistro sanitario\b|\bpermisos\b/.test(
       text
     );
 
   const hasImportKeyword =
-    /\bimportar\b|\bimportación\b|\bimportacion\b|\bproveedor\b|\bfabricante\b|\balibaba\b|\baduana\b|\btraer productos\b|\btraer mercadería\b|\btraer mercaderia\b/.test(
+    /\bimportar\b|\bimportación\b|\bimportacion\b|\bproveedor\b|\bproveedores\b|\bfabricante\b|\bfabricantes\b|\bverificado\b|\bverificados\b|\balibaba\b|\bsourcing\b|\baduana\b|\btraer productos\b|\btraer mercadería\b|\btraer mercaderia\b|\bchina\b/.test(
       text
     );
 
@@ -167,12 +167,13 @@ function inferAsesoriaConsultTopic(message = "", detectedIntent = "") {
     const exportScore =
       (/\bexportar\b|\bexportación\b|\bexportacion\b/.test(text) ? 3 : 0) +
       (/\bmercado internacional\b|\bmercado exterior\b/.test(text) ? 2 : 0) +
-      (/\bcompradores\b|\bdistribuidores\b/.test(text) ? 1 : 0);
+      (/\bcompradores\b|\bdistribuidores\b/.test(text) ? 1 : 0) +
+      (/\bfda\b|\busda\b|\balimentos\b|\bmascotas\b|\bpet food\b|\bregistro sanitario\b/.test(text) ? 2 : 0);
 
     const importScore =
       (/\bimportar\b|\bimportación\b|\bimportacion\b/.test(text) ? 3 : 0) +
-      (/\bproveedor\b|\bfabricante\b|\balibaba\b/.test(text) ? 2 : 0) +
-      (/\baduana\b|\btraer productos\b|\btraer mercadería\b|\btraer mercaderia\b/.test(text) ? 1 : 0);
+      (/\bproveedor\b|\bproveedores\b|\bfabricante\b|\bfabricantes\b|\balibaba\b|\bsourcing\b/.test(text) ? 2 : 0) +
+      (/\bverificado\b|\bverificados\b|\baduana\b|\btraer productos\b|\btraer mercadería\b|\btraer mercaderia\b|\bchina\b/.test(text) ? 1 : 0);
 
     if (exportScore >= importScore) return "exportacion";
     return "importacion";
@@ -252,20 +253,62 @@ ${message}
 Base ya respondida por el backend:
 ${backendGuide}
 
-Tu tarea es complementar esa base con 1 o 2 frases realmente útiles.
+Tu tarea es complementar esa base con exactamente 2 frases completas y útiles.
 No repitas lo mismo que ya dijo el backend.
 No respondas de forma vacía, genérica, ambigua o demasiado corta.
 No inventes precios, servicios ni procesos no definidos.
 Aporta claridad comercial y un siguiente paso lógico.
-Escribe en español, tono natural, breve y convincente.`;
+La respuesta debe cerrar la idea de forma completa.
+No dejes frases abiertas o inconclusas.
+No termines en expresiones como "la clave está", "es fundamental que", "depende de", "lo ideal es" o similares.
+Escribe en español, tono natural, breve y convincente.
+Cada frase debe terminar correctamente con punto.`;
+}
+
+function hasBadEnding(text = "") {
+  const normalized = String(text || "").trim().toLowerCase();
+
+  const badEndingPatterns = [
+    /(?:\bque|\bpara|\bporque|\bdonde|\bdónde|\bsi)\s*$/i,
+    /la clave esta\s*$/i,
+    /la clave está\s*$/i,
+    /es fundamental que\s*$/i,
+    /depende de\s*$/i,
+    /lo ideal es\s*$/i,
+    /lo importante es\s*$/i,
+    /conviene revisar\s*$/i,
+    /el punto de partida\s*$/i
+  ];
+
+  return badEndingPatterns.some((pattern) => pattern.test(normalized));
+}
+
+function lastSentenceLooksTruncated(text = "") {
+  const normalized = String(text || "").trim();
+
+  if (!normalized) return true;
+  if (!/[.!?]$/.test(normalized)) return true;
+  if (hasBadEnding(normalized)) return true;
+
+  const lines = normalized
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const lastLine = lines[lines.length - 1] || normalized;
+  if (lastLine.length < 25) return true;
+
+  return false;
 }
 
 function isWeakGeminiReply(reply = "", backendReply = "") {
-  const text = String(reply || "").trim().toLowerCase();
+  const text = String(reply || "").trim();
+  const textLower = text.toLowerCase();
   const backend = String(backendReply || "").trim().toLowerCase();
 
   if (!text) return true;
-  if (text.length < 90) return true;
+  if (text.length < 120) return true;
+  if (lastSentenceLooksTruncated(text)) return true;
 
   const weakPatterns = [
     "entiendo tu consulta",
@@ -279,11 +322,11 @@ function isWeakGeminiReply(reply = "", backendReply = "") {
     "puedes evaluar opciones"
   ];
 
-  if (weakPatterns.some((pattern) => text.includes(pattern) && text.length < 140)) {
+  if (weakPatterns.some((pattern) => textLower.includes(pattern) && text.length < 170)) {
     return true;
   }
 
-  if (backend && (text === backend || backend.includes(text) || text.includes(backend))) {
+  if (backend && (textLower === backend || backend.includes(textLower) || textLower.includes(backend))) {
     return true;
   }
 
@@ -303,6 +346,43 @@ function mergeBackendAndGeminiReply(backendReply = "", geminiReply = "") {
 ${ai}`;
 }
 
+async function getValidatedGeminiComplement({
+  prompt,
+  user,
+  backendReply,
+  getGeminiReplyWithFallback
+}) {
+  if (typeof getGeminiReplyWithFallback !== "function") return null;
+
+  const strictFallback =
+    "El siguiente paso más útil es aterrizar mejor tu caso para definir con claridad qué conviene hacer primero y evitar decisiones apresuradas.";
+
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    const attemptPrompt =
+      attempt === 0
+        ? prompt
+        : `${prompt}
+
+IMPORTANTE:
+Tu respuesta anterior quedó débil o incompleta.
+Ahora responde con 2 frases completas, concretas y bien cerradas.
+No dejes ninguna idea a medias.
+Ambas frases deben terminar con punto.`;
+
+    const geminiReply = await getGeminiReplyWithFallback(
+      attemptPrompt,
+      user,
+      strictFallback
+    );
+
+    if (!isWeakGeminiReply(geminiReply, backendReply)) {
+      return geminiReply.trim();
+    }
+  }
+
+  return null;
+}
+
 async function resolveAsesoriaConsultation({
   message,
   detectIntent,
@@ -319,12 +399,15 @@ async function resolveAsesoriaConsultation({
 
   if (typeof getGeminiReplyWithFallback === "function") {
     const prompt = buildAsesoriaConsultPrompt(message, detectedIntent, backendReply);
-    const geminiFallback =
-      "Si quieres, también podemos aterrizar tu caso con más enfoque para ayudarte a decidir mejor el siguiente paso.";
 
-    const geminiReply = await getGeminiReplyWithFallback(prompt, user, geminiFallback);
+    const geminiReply = await getValidatedGeminiComplement({
+      prompt,
+      user,
+      backendReply,
+      getGeminiReplyWithFallback
+    });
 
-    if (isWeakGeminiReply(geminiReply, backendReply)) {
+    if (!geminiReply) {
       return {
         replyText: backendReply,
         source: "backend",
