@@ -284,6 +284,8 @@ function getDigitalIntro() {
 4️⃣ Mejorar campañas, SEO o generación de ventas`;
 }
 
+// ─── 6-1 CREAR TIENDA ────────────────────────────────────────────────────────
+
 function getDigitalCrearTiendaPaso2() {
   return `Perfecto. Dime qué escenario se parece más a tu caso:
 
@@ -300,12 +302,84 @@ function getDigitalCrearTiendaPaso3() {
 3️⃣ Quiero una recomendación clara antes de invertir`;
 }
 
-function getDigitalPreguntaIntencion() {
+// Ruta 6-1-x-1: capa tipo de negocio (productos físicos vs servicios)
+function getDigitalCrearTiendaPreguntaTipoNegocio() {
   return `Ahora dime:
 
 1️⃣ Vendo productos físicos
 2️⃣ Vendo servicios`;
 }
+
+// Ruta 6-1-x-2-1: integración de pagos o envíos
+function getDigitalCrearTiendaPreguntaIntegracion() {
+  return `Ahora dime qué necesitas integrar:
+
+1️⃣ Pasarelas de pago (PayPhone, Datafast, Pagoplux, PayPal)
+2️⃣ Módulo de envíos, etiquetas y facturación`;
+}
+
+// Alias de compatibilidad — usado en digital.js y app.js actuales
+function getDigitalPreguntaIntencion() {
+  return getDigitalCrearTiendaPreguntaTipoNegocio();
+}
+
+// Respuesta final 6-1 para productos físicos
+function getDigitalCrearTiendaRespuestaProductosFisicos(plataforma) {
+  const plat = plataforma || "la plataforma seleccionada";
+  return `Perfecto. Para vender productos físicos en ${plat} necesitas una tienda estructurada para gestionar inventario, variantes, métodos de pago y logística de envíos.
+
+En OneOrbix te ayudamos a desarrollar y configurar cada parte de ese proceso para que puedas empezar a vender con una base sólida.
+
+─────────────────────────
+Si deseas avanzar con uno de nuestros asesores, tienes estas opciones:
+
+1️⃣ Quiero que un asesor me guíe
+2️⃣ Quiero agendar una reunión vía meeting`;
+}
+
+// Respuesta final 6-1 para servicios
+function getDigitalCrearTiendaRespuestaServicios(plataforma) {
+  const plat = plataforma || "la plataforma seleccionada";
+  return `Perfecto. Para vender servicios en ${plat} la tienda necesita estar orientada a reservas, pagos online, catálogo de servicios y captación de clientes potenciales.
+
+En OneOrbix te ayudamos a estructurar ese modelo para que tu tienda funcione como un canal de ventas real desde el primer día.
+
+─────────────────────────
+Si deseas avanzar con uno de nuestros asesores, tienes estas opciones:
+
+1️⃣ Quiero que un asesor me guíe
+2️⃣ Quiero agendar una reunión vía meeting`;
+}
+
+// Respuesta final 6-1-x-2-1: integración de pagos
+function getDigitalCrearTiendaRespuestaPagos(plataforma) {
+  const plat = plataforma || "tu tienda";
+  return `Perfecto. Integrar pasarelas de pago en ${plat} es un paso clave para que tus clientes puedan pagar de forma segura y sin fricciones.
+
+En OneOrbix configuramos y conectamos PayPhone, Datafast, Pagoplux, PayPal u otras pasarelas según tu caso y mercado.
+
+─────────────────────────
+Si deseas avanzar con uno de nuestros asesores, tienes estas opciones:
+
+1️⃣ Quiero que un asesor me guíe
+2️⃣ Quiero agendar una reunión vía meeting`;
+}
+
+// Respuesta final 6-1-x-2-2: módulo de envíos, etiquetas y facturación
+function getDigitalCrearTiendaRespuestaEnvios(plataforma) {
+  const plat = plataforma || "tu tienda";
+  return `Perfecto. Un módulo de envíos bien configurado en ${plat} te permite automatizar la gestión de pedidos, generar etiquetas y manejar la facturación sin procesos manuales.
+
+En OneOrbix te ayudamos a implementar y configurar ese módulo de principio a fin.
+
+─────────────────────────
+Si deseas avanzar con uno de nuestros asesores, tienes estas opciones:
+
+1️⃣ Quiero que un asesor me guíe
+2️⃣ Quiero agendar una reunión vía meeting`;
+}
+
+// ─── 6-2 MEJORAR TIENDA ──────────────────────────────────────────────────────
 
 function getDigitalMejorarTiendaPaso2() {
   return `Perfecto. ¿Qué tipo de tienda tienes actualmente?
@@ -332,6 +406,8 @@ function getDigitalMejorarTiendaPaso4() {
 3️⃣ Solo estoy evaluando opciones por ahora`;
 }
 
+// ─── 6-3 IA / AUTOMATIZACIÓN ─────────────────────────────────────────────────
+
 function getDigitalIAPaso2() {
   return `Excelente. Dime qué quieres implementar:
 
@@ -350,6 +426,8 @@ function getDigitalIAPaso3() {
 function getDigitalIAPaso4() {
   return `Cuéntame brevemente qué necesitas implementar en tu negocio.`;
 }
+
+// ─── 6-4 MARKETING / SEO / VENTAS ────────────────────────────────────────────
 
 function getDigitalMarketingPaso2() {
   return `Perfecto. Dime qué necesitas mejorar:
@@ -374,7 +452,8 @@ function getDigitalMarketingPaso4() {
 2️⃣ Diseño de campañas de alto rendimiento`;
 }
 
-// Se dejan estas funciones por compatibilidad, pero el app.js ya redirige al intro digital
+// ─── COMPATIBILIDAD (el app.js ya redirige al intro digital) ─────────────────
+
 function getDigitalInfoGeneral() {
   return `Perfecto. Para ayudarte mejor, dime qué necesitas exactamente:
 
@@ -511,7 +590,13 @@ module.exports = {
   getDigitalIntro,
   getDigitalCrearTiendaPaso2,
   getDigitalCrearTiendaPaso3,
+  getDigitalCrearTiendaPreguntaTipoNegocio,
+  getDigitalCrearTiendaPreguntaIntegracion,
   getDigitalPreguntaIntencion,
+  getDigitalCrearTiendaRespuestaProductosFisicos,
+  getDigitalCrearTiendaRespuestaServicios,
+  getDigitalCrearTiendaRespuestaPagos,
+  getDigitalCrearTiendaRespuestaEnvios,
   getDigitalMejorarTiendaPaso2,
   getDigitalMejorarTiendaPaso3,
   getDigitalMejorarTiendaPaso4,
