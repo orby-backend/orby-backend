@@ -289,8 +289,7 @@ function getDigitalCrearTiendaPaso2() {
 
 1️⃣ Quiero una tienda en Shopify
 2️⃣ Quiero una tienda en WordPress / WooCommerce
-3️⃣ Quiero una tienda en PrestaShop
-4️⃣ Necesito que me recomienden la mejor plataforma`;
+3️⃣ Quiero una tienda en PrestaShop`;
 }
 
 function getDigitalCrearTiendaPaso3() {
@@ -304,9 +303,8 @@ function getDigitalCrearTiendaPaso3() {
 function getDigitalPreguntaIntencion() {
   return `Ahora dime:
 
-1️⃣ Quiero avanzar pronto con mi tienda
-2️⃣ Quiero revisar primero alcance, costos o estrategia
-3️⃣ Solo estoy evaluando opciones por ahora`;
+1️⃣ Vendo productos físicos
+2️⃣ Vendo servicios`;
 }
 
 function getDigitalMejorarTiendaPaso2() {
@@ -339,24 +337,18 @@ function getDigitalIAPaso2() {
 
 1️⃣ Chatbot para atención al cliente
 2️⃣ Agente con IA para ventas o leads
-3️⃣ Automatización de procesos internos
-4️⃣ Quiero que me recomienden la mejor solución`;
+3️⃣ Automatización de procesos internos`;
 }
 
 function getDigitalIAPaso3() {
   return `Perfecto. Ahora dime cuál de estas opciones describe mejor tu objetivo:
 
-1️⃣ Quiero vender más y atender mejor a mis clientes
-2️⃣ Quiero ahorrar tiempo y automatizar tareas operativas
-3️⃣ Quiero entender primero qué solución me conviene`;
+1️⃣ Quiero mejorar atención y convertir más clientes
+2️⃣ Quiero automatizar tareas y ahorrar tiempo operativo`;
 }
 
 function getDigitalIAPaso4() {
-  return `Ahora dime:
-
-1️⃣ Quiero implementarlo pronto
-2️⃣ Quiero revisar primero alcance, costos o viabilidad
-3️⃣ Solo estoy explorando por ahora`;
+  return `Cuéntame brevemente qué necesitas implementar en tu negocio.`;
 }
 
 function getDigitalMarketingPaso2() {
@@ -364,8 +356,7 @@ function getDigitalMarketingPaso2() {
 
 1️⃣ Campañas en Meta Ads o Google Ads
 2️⃣ SEO para mi sitio web
-3️⃣ Generación de leads o más ventas
-4️⃣ Necesito claridad sobre la estrategia`;
+3️⃣ Generación de leads o más ventas`;
 }
 
 function getDigitalMarketingPaso3() {
@@ -373,15 +364,14 @@ function getDigitalMarketingPaso3() {
 
 1️⃣ Tengo tráfico pero no convierto
 2️⃣ No estoy generando suficiente tráfico
-3️⃣ Quiero empezar desde cero con una estrategia mejor estructurada`;
+3️⃣ Quiero generar más ventas o más leads`;
 }
 
 function getDigitalMarketingPaso4() {
-  return `Perfecto. Ahora dime qué tan pronto quieres trabajar esto:
+  return `Perfecto. Ahora dime qué necesitas:
 
-1️⃣ Quiero empezar lo antes posible
-2️⃣ Quiero revisar primero qué estrategia me conviene
-3️⃣ Solo estoy explorando por ahora`;
+1️⃣ Hacer auditoría
+2️⃣ Diseño de campañas de alto rendimiento`;
 }
 
 // Se dejan estas funciones por compatibilidad, pero el app.js ya redirige al intro digital
