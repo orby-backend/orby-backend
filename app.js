@@ -67,20 +67,31 @@ const {
   getDigitalIntro,
   getDigitalCrearTiendaPaso2,
   getDigitalCrearTiendaPaso3,
-  getDigitalPreguntaIntencion,
-  getDigitalCrearTiendaPreguntaTipoNegocio,
-  getDigitalCrearTiendaPreguntaIntegracion,
+  getDigitalCrearTiendaPaso4FisicosServicios,
+  getDigitalCrearTiendaPaso4ServiciosOnline,
+  getDigitalCrearTiendaPaso4PagosEnvios,
   getDigitalMejorarTiendaPaso2,
   getDigitalMejorarTiendaPaso3,
   getDigitalMejorarTiendaPaso4,
   getDigitalIAPaso2,
   getDigitalIAPaso3,
-  getDigitalIAPaso4,
+  getDigitalIAChatbotProblemaPrompt,
+  getDigitalIAAutomatizacionPrompt,
+  getDigitalIAAgentePaso3,
+  getDigitalIAAgenteConcretarVentasPrompt,
+  getDigitalIAAgenteMulticanalPrompt,
+  getDigitalIAProcesosPaso3,
+  getDigitalIAProcesamientoDocumentosPrompt,
+  getDigitalIATicketsPrompt,
   getDigitalMarketingPaso2,
-  getDigitalMarketingPaso3,
-  getDigitalMarketingPaso4,
+  getDigitalMarketingCampanasPaso3,
+  getDigitalMarketingCampanasPaso4,
+  getDigitalMarketingSEOPaso3,
+  getDigitalMarketingSEOPaso4,
+  getDigitalMarketingSEOSEMPaso4,
+  getDigitalMarketingLeadsPaso3,
+  getDigitalMarketingLeadsPaso4,
   getDigitalInfoGeneral,
-  getDigitalInfoGeneralPaso3,
   getAsesoriaIntro,
   getAsesoriaCaso1,
   getAsesoriaCaso2,
@@ -127,6 +138,8 @@ function isFinalState(estado = "") {
     "lead_curioso",
     "lead_tibio",
     "lead_calificado",
+    "digital_lead_curioso",
+    "digital_lead_tibio",
     "digital_lead_calificado",
     "asesoria_consulta_respondida",
     "finalizado"
@@ -138,6 +151,8 @@ function isConversationalState(estado = "") {
     "lead_curioso",
     "lead_tibio",
     "lead_calificado",
+    "digital_lead_curioso",
+    "digital_lead_tibio",
     "digital_lead_calificado",
     "asesoria_consulta_respondida"
   ].includes(estado) || String(estado).endsWith("_lead_calificado");
@@ -259,7 +274,10 @@ function createNewUser() {
     detalle_importacion: null,
     callback_phone: null,
     callback_schedule: null,
-    origen: "manual"
+    origen: "manual",
+    club_context: null,
+    estado_anterior_digital: null,
+    digital_context_detail: null
   };
 }
 
@@ -428,6 +446,7 @@ ${plan.payLink}
 Y aquí puedes ver más detalles del plan:
 ${plan.link}`;
 }
+
 function buildClubGeneralInfoReply() {
   return `Perfecto. Te explico de forma simple cómo funciona el Club de Importadores OneOrbix:
 
@@ -528,6 +547,89 @@ Comprar ahora:
 ${memberships?.profesional?.payLink}`;
 }
 
+// ========================================================
+// HELPERS DIGITAL
+// ========================================================
+function getDigitalAdvisorConfirmationReply(phone) {
+  return `Perfecto. ¿Deseas que uno de nuestros asesores te contacte a este mismo número?
+
+${phone}
+
+1️⃣ Sí, a este número
+2️⃣ No, quiero dar otro número`;
+}
+
+function getDigitalAdvisorAskNewPhoneReply() {
+  return "Perfecto. Envíame el número al que deseas que te contacten y seguimos.";
+}
+
+function getDigitalAdvisorAskScheduleReply() {
+  return `Perfecto. ¿En qué horario te conviene más que te contacten?
+
+1️⃣ De 9 a 12 pm
+2️⃣ De 2 a 6 pm`;
+}
+
+function getDigitalContextPrefix(user) {
+  const context = String(user?.digital_context_detail || "");
+
+  switch (context) {
+    case "crear_tienda_productos_fisicos":
+      return "Perfecto. Veo que tu interés está en crear una tienda para vender productos físicos.";
+    case "crear_tienda_servicios":
+      return "Perfecto. Veo que tu interés está en crear una tienda o canal digital para vender servicios.";
+    case "crear_tienda_servicios_online":
+      return "Perfecto. Veo que tu caso está más orientado a vender servicios online.";
+    case "crear_tienda_pagos":
+      return "Perfecto. Veo que lo que necesitas resolver está más orientado a integraciones de pago para tu tienda.";
+    case "crear_tienda_envios_facturas":
+      return "Perfecto. Veo que tu caso está más enfocado en módulo de envíos, etiquetas o facturación.";
+    case "mejorar_tienda_ventas":
+      return "Perfecto. Veo que tu prioridad es corregir una tienda que no está generando ventas.";
+    case "mejorar_tienda_diseno":
+      return "Perfecto. Veo que tu prioridad está en mejorar diseño, velocidad o estructura de la tienda.";
+    case "mejorar_tienda_soporte":
+      return "Perfecto. Veo que tu caso está más enfocado en errores técnicos o soporte.";
+    case "ia_chatbot_atencion_ventas":
+      return "Perfecto. Veo que tu interés está en mejorar atención, ventas o seguimiento con ayuda de IA.";
+    case "ia_chatbot_automatizacion":
+      return "Perfecto. Veo que buscas automatizar tareas comerciales u operativas con apoyo de IA.";
+    case "ia_agente_concretar_ventas":
+      return "Perfecto. Veo que tu enfoque está en concretar ventas con un Agente AI.";
+    case "ia_agente_multicanal":
+      return "Perfecto. Veo que tu interés está en vender con un Agente AI en varios canales como WhatsApp, Facebook, Instagram y Web.";
+    case "ia_documentos":
+      return "Perfecto. Veo que tu caso está más orientado al procesamiento de documentos.";
+    case "ia_tickets":
+      return "Perfecto. Veo que tu prioridad está en gestión de tickets, triaje o clasificación inteligente.";
+    case "marketing_campanas_auditoria":
+      return "Perfecto. Veo que tu prioridad está en una auditoría de campañas.";
+    case "marketing_campanas_rendimiento":
+      return "Perfecto. Veo que tu interés está en diseñar campañas de alto rendimiento.";
+    case "marketing_seo":
+      return "Perfecto. Veo que tu caso está enfocado en SEO.";
+    case "marketing_seo_sem":
+      return "Perfecto. Veo que tu caso requiere una revisión combinada de SEO y SEM.";
+    case "marketing_clientes_nuevos":
+      return "Perfecto. Veo que tu prioridad es conseguir clientes nuevos.";
+    case "marketing_retargeting":
+      return "Perfecto. Veo que tu prioridad está en una campaña de retargeting o remarketing.";
+    default:
+      return "Perfecto. Ya veo que tu caso digital merece una revisión más directa.";
+  }
+}
+
+function buildDigitalAdvisorCTAReply(user) {
+  return `${getDigitalContextPrefix(user)}
+
+Si deseas avanzar con uno de nuestros asesores, tienes estas opciones:
+1️⃣ Quiero que un asesor me guíe
+2️⃣ Quiero agendar una reunión vía meeting`;
+}
+
+// ========================================================
+// NAVEGACIÓN ATRÁS CLUB
+// ========================================================
 function getClubBackNavigation(user) {
   const currentState = String(user?.estado || "");
   const currentContext = String(user?.club_context || "");
@@ -756,6 +858,9 @@ ${getMenu()}`
   return null;
 }
 
+// ========================================================
+// NAVEGACIÓN ATRÁS ASESORÍA
+// ========================================================
 function getAsesoriaBackNavigation(user, phone) {
   const currentState = String(user?.estado || "");
   const currentSuboption = String(user?.subopcion || "");
@@ -935,6 +1040,455 @@ Si deseas avanzar con uno de nuestros asesores, tienes estas opciones:
   return null;
 }
 
+// ========================================================
+// NAVEGACIÓN ATRÁS DIGITAL
+// ========================================================
+function getDigitalBackNavigation(user, phone) {
+  const currentState = String(user?.estado || "");
+  const currentSuboption = String(user?.subopcion || "");
+  const previousDigitalState = String(user?.estado_anterior_digital || "");
+  const digitalContextDetail = String(user?.digital_context_detail || "");
+
+  if (currentState === "digital_p1") {
+    return {
+      estado: "menu_enviado",
+      interes_principal: null,
+      subopcion: null,
+      reply: `Perfecto 👌
+
+Volvemos al menú principal:
+
+${getMenu()}`
+    };
+  }
+
+  if (currentState === "digital_crear_p2") {
+    return {
+      estado: "digital_p1",
+      interes_principal: "digital",
+      subopcion: null,
+      reply: getDigitalIntro()
+    };
+  }
+
+  if (currentState === "digital_crear_p3") {
+    return {
+      estado: "digital_crear_p2",
+      interes_principal: "digital",
+      subopcion: "crear_tienda",
+      reply: getDigitalCrearTiendaPaso2()
+    };
+  }
+
+  if (
+    [
+      "digital_crear_p4_fisicos_servicios",
+      "digital_crear_p4_servicios_online",
+      "digital_crear_p4_pagos_envios"
+    ].includes(currentState)
+  ) {
+    return {
+      estado: "digital_crear_p3",
+      interes_principal: "digital",
+      subopcion: "crear_tienda",
+      reply: getDigitalCrearTiendaPaso3()
+    };
+  }
+
+  if (currentState === "digital_mejorar_p2") {
+    return {
+      estado: "digital_p1",
+      interes_principal: "digital",
+      subopcion: null,
+      reply: getDigitalIntro()
+    };
+  }
+
+  if (currentState === "digital_mejorar_p3") {
+    return {
+      estado: "digital_mejorar_p2",
+      interes_principal: "digital",
+      subopcion: "mejorar_tienda",
+      reply: getDigitalMejorarTiendaPaso2()
+    };
+  }
+
+  if (currentState === "digital_mejorar_p4") {
+    return {
+      estado: "digital_mejorar_p3",
+      interes_principal: "digital",
+      subopcion: "mejorar_tienda",
+      reply: getDigitalMejorarTiendaPaso3()
+    };
+  }
+
+  if (currentState === "digital_ia_p2") {
+    return {
+      estado: "digital_p1",
+      interes_principal: "digital",
+      subopcion: null,
+      reply: getDigitalIntro()
+    };
+  }
+
+  if (
+    [
+      "digital_ia_chatbot_p3",
+      "digital_ia_agente_p3",
+      "digital_ia_procesos_p3"
+    ].includes(currentState)
+  ) {
+    return {
+      estado: "digital_ia_p2",
+      interes_principal: "digital",
+      subopcion: "ia_automatizacion",
+      reply: getDigitalIAPaso2()
+    };
+  }
+
+  if (currentState === "digital_ia_chatbot_hibrido") {
+    return {
+      estado: "digital_ia_chatbot_p3",
+      interes_principal: "digital",
+      subopcion: "ia_automatizacion",
+      reply: getDigitalIAPaso3()
+    };
+  }
+
+  if (currentState === "digital_ia_agente_hibrido") {
+    return {
+      estado: "digital_ia_agente_p3",
+      interes_principal: "digital",
+      subopcion: "ia_automatizacion",
+      reply: getDigitalIAAgentePaso3()
+    };
+  }
+
+  if (currentState === "digital_ia_procesos_hibrido") {
+    return {
+      estado: "digital_ia_procesos_p3",
+      interes_principal: "digital",
+      subopcion: "ia_automatizacion",
+      reply: getDigitalIAProcesosPaso3()
+    };
+  }
+
+  if (currentState === "digital_marketing_p2") {
+    return {
+      estado: "digital_p1",
+      interes_principal: "digital",
+      subopcion: null,
+      reply: getDigitalIntro()
+    };
+  }
+
+  if (
+    [
+      "digital_marketing_campanas_p3",
+      "digital_marketing_seo_p3",
+      "digital_marketing_leads_p3"
+    ].includes(currentState)
+  ) {
+    return {
+      estado: "digital_marketing_p2",
+      interes_principal: "digital",
+      subopcion: "marketing_ventas",
+      reply: getDigitalMarketingPaso2()
+    };
+  }
+
+  if (currentState === "digital_marketing_campanas_p4") {
+    return {
+      estado: "digital_marketing_campanas_p3",
+      interes_principal: "digital",
+      subopcion: "marketing_ventas",
+      reply: getDigitalMarketingCampanasPaso3()
+    };
+  }
+
+  if (
+    ["digital_marketing_seo_p4", "digital_marketing_seosem_p4"].includes(currentState)
+  ) {
+    return {
+      estado: "digital_marketing_seo_p3",
+      interes_principal: "digital",
+      subopcion: "marketing_ventas",
+      reply: getDigitalMarketingSEOPaso3()
+    };
+  }
+
+  if (currentState === "digital_marketing_leads_p4") {
+    return {
+      estado: "digital_marketing_leads_p3",
+      interes_principal: "digital",
+      subopcion: "marketing_ventas",
+      reply: getDigitalMarketingLeadsPaso3()
+    };
+  }
+
+  if (
+    ["digital_lead_curioso", "digital_lead_tibio", "digital_lead_calificado"].includes(
+      currentState
+    )
+  ) {
+    if (previousDigitalState) {
+      if (
+        [
+          "digital_crear_p4_fisicos_servicios",
+          "digital_crear_p4_servicios_online",
+          "digital_crear_p4_pagos_envios"
+        ].includes(previousDigitalState)
+      ) {
+        let reply = getDigitalCrearTiendaPaso3();
+
+        if (previousDigitalState === "digital_crear_p4_fisicos_servicios") {
+          reply = getDigitalCrearTiendaPaso4FisicosServicios();
+        }
+
+        if (previousDigitalState === "digital_crear_p4_servicios_online") {
+          reply = getDigitalCrearTiendaPaso4ServiciosOnline();
+        }
+
+        if (previousDigitalState === "digital_crear_p4_pagos_envios") {
+          reply = getDigitalCrearTiendaPaso4PagosEnvios();
+        }
+
+        return {
+          estado: previousDigitalState,
+          interes_principal: "digital",
+          subopcion: "crear_tienda",
+          reply
+        };
+      }
+
+      if (previousDigitalState === "digital_mejorar_p4") {
+        return {
+          estado: "digital_mejorar_p4",
+          interes_principal: "digital",
+          subopcion: "mejorar_tienda",
+          reply: getDigitalMejorarTiendaPaso4()
+        };
+      }
+
+      if (previousDigitalState === "digital_marketing_campanas_p4") {
+        return {
+          estado: "digital_marketing_campanas_p4",
+          interes_principal: "digital",
+          subopcion: "marketing_ventas",
+          reply: getDigitalMarketingCampanasPaso4()
+        };
+      }
+
+      if (previousDigitalState === "digital_marketing_seo_p4") {
+        return {
+          estado: "digital_marketing_seo_p4",
+          interes_principal: "digital",
+          subopcion: "marketing_ventas",
+          reply: getDigitalMarketingSEOPaso4()
+        };
+      }
+
+      if (previousDigitalState === "digital_marketing_seosem_p4") {
+        return {
+          estado: "digital_marketing_seosem_p4",
+          interes_principal: "digital",
+          subopcion: "marketing_ventas",
+          reply: getDigitalMarketingSEOSEMPaso4()
+        };
+      }
+
+      if (previousDigitalState === "digital_marketing_leads_p4") {
+        return {
+          estado: "digital_marketing_leads_p4",
+          interes_principal: "digital",
+          subopcion: "marketing_ventas",
+          reply: getDigitalMarketingLeadsPaso4()
+        };
+      }
+
+      if (previousDigitalState === "digital_ia_chatbot_hibrido") {
+        let reply = getDigitalIAChatbotProblemaPrompt();
+
+        if (digitalContextDetail === "ia_chatbot_automatizacion") {
+          reply = getDigitalIAAutomatizacionPrompt();
+        }
+
+        return {
+          estado: "digital_ia_chatbot_hibrido",
+          interes_principal: "digital",
+          subopcion: "ia_automatizacion",
+          reply
+        };
+      }
+
+      if (previousDigitalState === "digital_ia_agente_hibrido") {
+        let reply = getDigitalIAAgenteConcretarVentasPrompt();
+
+        if (digitalContextDetail === "ia_agente_multicanal") {
+          reply = getDigitalIAAgenteMulticanalPrompt();
+        }
+
+        return {
+          estado: "digital_ia_agente_hibrido",
+          interes_principal: "digital",
+          subopcion: "ia_automatizacion",
+          reply
+        };
+      }
+
+      if (previousDigitalState === "digital_ia_procesos_hibrido") {
+        let reply = getDigitalIAProcesamientoDocumentosPrompt();
+
+        if (digitalContextDetail === "ia_tickets") {
+          reply = getDigitalIATicketsPrompt();
+        }
+
+        return {
+          estado: "digital_ia_procesos_hibrido",
+          interes_principal: "digital",
+          subopcion: "ia_automatizacion",
+          reply
+        };
+      }
+    }
+
+    if (currentSuboption === "crear_tienda") {
+      return {
+        estado: "digital_crear_p3",
+        interes_principal: "digital",
+        subopcion: "crear_tienda",
+        reply: getDigitalCrearTiendaPaso3()
+      };
+    }
+
+    if (currentSuboption === "mejorar_tienda") {
+      return {
+        estado: "digital_mejorar_p4",
+        interes_principal: "digital",
+        subopcion: "mejorar_tienda",
+        reply: getDigitalMejorarTiendaPaso4()
+      };
+    }
+
+    if (currentSuboption === "ia_automatizacion") {
+      return {
+        estado: "digital_ia_p2",
+        interes_principal: "digital",
+        subopcion: "ia_automatizacion",
+        reply: getDigitalIAPaso2()
+      };
+    }
+
+    if (currentSuboption === "marketing_ventas") {
+      return {
+        estado: "digital_marketing_p2",
+        interes_principal: "digital",
+        subopcion: "marketing_ventas",
+        reply: getDigitalMarketingPaso2()
+      };
+    }
+  }
+
+  if (currentState === "digital_asesor_confirmar_numero") {
+    if (
+      currentSuboption &&
+      [
+        "crear_tienda",
+        "mejorar_tienda",
+        "ia_automatizacion",
+        "marketing_ventas",
+        "asesor_directo"
+      ].includes(currentSuboption)
+    ) {
+      return {
+        estado: "digital_lead_calificado",
+        interes_principal: "digital",
+        subopcion: currentSuboption || null,
+        reply: buildDigitalAdvisorCTAReply(user)
+      };
+    }
+
+    return {
+      estado: "digital_p1",
+      interes_principal: "digital",
+      subopcion: null,
+      reply: getDigitalIntro()
+    };
+  }
+
+  if (currentState === "digital_asesor_otro_numero") {
+    return {
+      estado: "digital_asesor_confirmar_numero",
+      interes_principal: "digital",
+      subopcion: currentSuboption || null,
+      reply: getDigitalAdvisorConfirmationReply(phone)
+    };
+  }
+
+  if (currentState === "digital_asesor_horario") {
+    if (
+      user?.callback_phone &&
+      String(user.callback_phone).trim() &&
+      String(user.callback_phone).trim() !== String(phone).trim()
+    ) {
+      return {
+        estado: "digital_asesor_otro_numero",
+        interes_principal: "digital",
+        subopcion: currentSuboption || null,
+        reply: getDigitalAdvisorAskNewPhoneReply()
+      };
+    }
+
+    return {
+      estado: "digital_asesor_confirmar_numero",
+      interes_principal: "digital",
+      subopcion: currentSuboption || null,
+      reply: getDigitalAdvisorConfirmationReply(phone)
+    };
+  }
+
+  if (currentState === "finalizado" && user?.interes_principal === "digital") {
+    if (user?.callback_schedule) {
+      return {
+        estado: "digital_asesor_horario",
+        interes_principal: "digital",
+        subopcion: currentSuboption || null,
+        reply: getDigitalAdvisorAskScheduleReply()
+      };
+    }
+
+    if (user?.callback_phone) {
+      return {
+        estado: "digital_asesor_confirmar_numero",
+        interes_principal: "digital",
+        subopcion: currentSuboption || null,
+        reply: getDigitalAdvisorConfirmationReply(phone)
+      };
+    }
+
+    return {
+      estado: "digital_lead_calificado",
+      interes_principal: "digital",
+      subopcion: currentSuboption || null,
+      reply: buildDigitalAdvisorCTAReply(user)
+    };
+  }
+
+  if (user?.interes_principal === "digital") {
+    return {
+      estado: "digital_p1",
+      interes_principal: "digital",
+      subopcion: null,
+      reply: getDigitalIntro()
+    };
+  }
+
+  return null;
+}
+
+// ========================================================
+// RUTEO POR INTENCIÓN CLUB
+// ========================================================
 function routeClubIntent({ detectedIntent, user }) {
   if (!isClubIntent(detectedIntent)) return null;
 
@@ -966,40 +1520,88 @@ ${CLUB_GENERAL_LINK}`,
       };
 
     case "basic_plan_link":
-      return { reply: buildPlanLinkReply(memberships?.basico), source: "backend", intent: detectedIntent };
+      return {
+        reply: buildPlanLinkReply(memberships?.basico),
+        source: "backend",
+        intent: detectedIntent
+      };
 
     case "professional_plan_link":
-      return { reply: buildPlanLinkReply(memberships?.profesional), source: "backend", intent: detectedIntent };
+      return {
+        reply: buildPlanLinkReply(memberships?.profesional),
+        source: "backend",
+        intent: detectedIntent
+      };
 
     case "premium_plan_link":
-      return { reply: buildPlanLinkReply(memberships?.premium), source: "backend", intent: detectedIntent };
+      return {
+        reply: buildPlanLinkReply(memberships?.premium),
+        source: "backend",
+        intent: detectedIntent
+      };
 
     case "basic_plan_payment":
-      return { reply: buildPlanPaymentReply(memberships?.basico), source: "backend", intent: detectedIntent };
+      return {
+        reply: buildPlanPaymentReply(memberships?.basico),
+        source: "backend",
+        intent: detectedIntent
+      };
 
     case "professional_plan_payment":
-      return { reply: buildPlanPaymentReply(memberships?.profesional), source: "backend", intent: detectedIntent };
+      return {
+        reply: buildPlanPaymentReply(memberships?.profesional),
+        source: "backend",
+        intent: detectedIntent
+      };
 
     case "premium_plan_payment":
-      return { reply: buildPlanPaymentReply(memberships?.premium), source: "backend", intent: detectedIntent };
+      return {
+        reply: buildPlanPaymentReply(memberships?.premium),
+        source: "backend",
+        intent: detectedIntent
+      };
 
     case "basic_plan_details":
-      return { reply: buildPlanDetailsReply(memberships?.basico), source: "backend", intent: detectedIntent };
+      return {
+        reply: buildPlanDetailsReply(memberships?.basico),
+        source: "backend",
+        intent: detectedIntent
+      };
 
     case "professional_plan_details":
-      return { reply: buildPlanDetailsReply(memberships?.profesional), source: "backend", intent: detectedIntent };
+      return {
+        reply: buildPlanDetailsReply(memberships?.profesional),
+        source: "backend",
+        intent: detectedIntent
+      };
 
     case "premium_plan_details":
-      return { reply: buildPlanDetailsReply(memberships?.premium), source: "backend", intent: detectedIntent };
+      return {
+        reply: buildPlanDetailsReply(memberships?.premium),
+        source: "backend",
+        intent: detectedIntent
+      };
 
     case "basic_plan_price":
-      return { reply: buildPlanPriceReply(memberships?.basico), source: "backend", intent: detectedIntent };
+      return {
+        reply: buildPlanPriceReply(memberships?.basico),
+        source: "backend",
+        intent: detectedIntent
+      };
 
     case "professional_plan_price":
-      return { reply: buildPlanPriceReply(memberships?.profesional), source: "backend", intent: detectedIntent };
+      return {
+        reply: buildPlanPriceReply(memberships?.profesional),
+        source: "backend",
+        intent: detectedIntent
+      };
 
     case "premium_plan_price":
-      return { reply: buildPlanPriceReply(memberships?.premium), source: "backend", intent: detectedIntent };
+      return {
+        reply: buildPlanPriceReply(memberships?.premium),
+        source: "backend",
+        intent: detectedIntent
+      };
 
     case "whatsapp_support_plan":
       return {
@@ -1087,10 +1689,18 @@ ${CLUB_GENERAL_LINK}`,
     case "compare_plans":
     case "basic_vs_professional":
     case "professional_vs_premium":
-      return { reply: buildClubComparisonReply(), source: "backend", intent: detectedIntent };
+      return {
+        reply: buildClubComparisonReply(),
+        source: "backend",
+        intent: detectedIntent
+      };
 
     case "recommend_plan":
-      return { reply: buildClubRecommendationReply(user), source: "backend", intent: detectedIntent };
+      return {
+        reply: buildClubRecommendationReply(user),
+        source: "backend",
+        intent: detectedIntent
+      };
 
     case "price_objection":
       return {
@@ -1155,308 +1765,115 @@ ${CLUB_GENERAL_LINK}`,
       };
 
     default:
-      return { reply: buildClubGeneralInfoReply(), source: "backend", intent: detectedIntent };
+      return {
+        reply: buildClubGeneralInfoReply(),
+        source: "backend",
+        intent: detectedIntent
+      };
   }
 }
 
 // ========================================================
-// ATRÁS — DIGITAL
+// RUTEO POR INTENCIÓN DIGITAL
 // ========================================================
-function getDigitalBackNavigation(user, phone) {
-  const currentState = String(user?.estado || "");
-  const currentSuboption = String(user?.subopcion || "");
+function routeDigitalIntent({
+  detectedIntent,
+  user,
+  phone,
+  saveUser
+}) {
+  if (!isDigitalIntent(detectedIntent)) return null;
 
-  if (currentState === "digital_p1") {
-    return {
-      estado: "menu_enviado",
-      interes_principal: null,
-      subopcion: null,
-      reply: `Perfecto 👌
+  user.interes_principal = "digital";
 
-Volvemos al menú principal:
-
-${getMenu()}`
-    };
-  }
-
-  // ── Rama 6-1 Crear Tienda ────────────────────────────────
-  if (currentState === "digital_crear_p2") {
-    return {
-      estado: "digital_p1",
-      interes_principal: "digital",
-      subopcion: null,
-      reply: getDigitalIntro()
-    };
-  }
-
-  if (currentState === "digital_crear_p3") {
-    return {
-      estado: "digital_crear_p2",
-      interes_principal: "digital",
-      subopcion: "crear_tienda",
-      reply: getDigitalCrearTiendaPaso2()
-    };
-  }
-
-  // p4 tipo negocio → vuelve a p3
-  if (currentState === "digital_crear_p4_negocio") {
-    return {
-      estado: "digital_crear_p3",
-      interes_principal: "digital",
-      subopcion: "crear_tienda",
-      reply: getDigitalCrearTiendaPaso3()
-    };
-  }
-
-  // p4 integración → vuelve a p3
-  if (currentState === "digital_crear_p4_integracion") {
-    return {
-      estado: "digital_crear_p3",
-      interes_principal: "digital",
-      subopcion: "crear_tienda",
-      reply: getDigitalCrearTiendaPaso3()
-    };
-  }
-
-  // alias compatibilidad estado viejo
-  if (currentState === "digital_crear_p4") {
-    return {
-      estado: "digital_crear_p3",
-      interes_principal: "digital",
-      subopcion: "crear_tienda",
-      reply: getDigitalCrearTiendaPaso3()
-    };
-  }
-
-  // ── Rama 6-2 Mejorar Tienda ──────────────────────────────
-  if (currentState === "digital_mejorar_p2") {
-    return {
-      estado: "digital_p1",
-      interes_principal: "digital",
-      subopcion: null,
-      reply: getDigitalIntro()
-    };
-  }
-
-  if (currentState === "digital_mejorar_p3") {
-    return {
-      estado: "digital_mejorar_p2",
-      interes_principal: "digital",
-      subopcion: "mejorar_tienda",
-      reply: getDigitalMejorarTiendaPaso2()
-    };
-  }
-
-  if (currentState === "digital_mejorar_p4") {
-    return {
-      estado: "digital_mejorar_p3",
-      interes_principal: "digital",
-      subopcion: "mejorar_tienda",
-      reply: getDigitalMejorarTiendaPaso3()
-    };
-  }
-
-  // ── Rama 6-3 IA ──────────────────────────────────────────
-  if (currentState === "digital_ia_p2") {
-    return {
-      estado: "digital_p1",
-      interes_principal: "digital",
-      subopcion: null,
-      reply: getDigitalIntro()
-    };
-  }
-
-  if (currentState === "digital_ia_p3") {
-    return {
-      estado: "digital_ia_p2",
-      interes_principal: "digital",
-      subopcion: "ia_automatizacion",
-      reply: getDigitalIAPaso2()
-    };
-  }
-
-  if (currentState === "digital_ia_p4") {
-    return {
-      estado: "digital_ia_p3",
-      interes_principal: "digital",
-      subopcion: "ia_automatizacion",
-      reply: getDigitalIAPaso3()
-    };
-  }
-
-  // ── Rama 6-4 Marketing ───────────────────────────────────
-  if (currentState === "digital_marketing_p2") {
-    return {
-      estado: "digital_p1",
-      interes_principal: "digital",
-      subopcion: null,
-      reply: getDigitalIntro()
-    };
-  }
-
-  if (currentState === "digital_marketing_p3") {
-    return {
-      estado: "digital_marketing_p2",
-      interes_principal: "digital",
-      subopcion: "marketing_ventas",
-      reply: getDigitalMarketingPaso2()
-    };
-  }
-
-  if (currentState === "digital_marketing_p4") {
-    return {
-      estado: "digital_marketing_p3",
-      interes_principal: "digital",
-      subopcion: "marketing_ventas",
-      reply: getDigitalMarketingPaso3()
-    };
-  }
-
-  // ── Lead calificado → último paso según subopcion ────────
   if (
-    ["digital_lead_curioso", "digital_lead_tibio", "digital_lead_calificado"].includes(
-      currentState
-    )
+    detectedIntent === "digital_info" ||
+    detectedIntent === "digital_help_options"
   ) {
-    if (currentSuboption === "crear_tienda") {
-      return {
-        estado: "digital_crear_p4_negocio",
-        interes_principal: "digital",
-        subopcion: "crear_tienda",
-        reply: getDigitalCrearTiendaPreguntaTipoNegocio()
-      };
-    }
+    user.estado = "digital_p1";
+    user.subopcion = null;
+    saveUser(phone, user);
 
-    if (currentSuboption === "mejorar_tienda") {
-      return {
-        estado: "digital_mejorar_p4",
-        interes_principal: "digital",
-        subopcion: "mejorar_tienda",
-        reply: getDigitalMejorarTiendaPaso4()
-      };
-    }
-
-    if (currentSuboption === "ia_automatizacion") {
-      return {
-        estado: "digital_ia_p4",
-        interes_principal: "digital",
-        subopcion: "ia_automatizacion",
-        reply: getDigitalIAPaso4()
-      };
-    }
-
-    if (currentSuboption === "marketing_ventas") {
-      return {
-        estado: "digital_marketing_p4",
-        interes_principal: "digital",
-        subopcion: "marketing_ventas",
-        reply: getDigitalMarketingPaso4()
-      };
-    }
-  }
-
-  // ── Asesor confirmar número ───────────────────────────────
-  if (currentState === "digital_asesor_confirmar_numero") {
     return {
-      estado:
-        ["crear_tienda", "mejorar_tienda", "ia_automatizacion", "marketing_ventas"].includes(
-          currentSuboption
-        )
-          ? "digital_lead_calificado"
-          : "digital_p1",
-      interes_principal: "digital",
-      subopcion: currentSuboption || null,
-      reply:
-        ["crear_tienda", "mejorar_tienda", "ia_automatizacion", "marketing_ventas"].includes(
-          currentSuboption
-        )
-          ? `Perfecto. Ya veo que tu caso digital merece una revisión más directa.
-
-Si deseas avanzar con uno de nuestros asesores, tienes estas opciones:
-1️⃣ Quiero que un asesor me guíe
-2️⃣ Quiero agendar una reunión vía meeting`
-          : getDigitalIntro()
+      reply: getDigitalIntro(),
+      source: "backend"
     };
   }
 
-  // ── Asesor otro número ────────────────────────────────────
-  if (currentState === "digital_asesor_otro_numero") {
+  if (
+    detectedIntent === "digital_create_store" ||
+    detectedIntent === "digital_shopify_interest" ||
+    detectedIntent === "digital_wordpress_interest" ||
+    detectedIntent === "digital_prestashop_interest"
+  ) {
+    user.estado = "digital_crear_p2";
+    user.subopcion = "crear_tienda";
+    saveUser(phone, user);
+
     return {
-      estado: "digital_asesor_confirmar_numero",
-      interes_principal: "digital",
-      subopcion: user?.subopcion || null,
-      reply: `Perfecto. ¿Deseas que uno de nuestros asesores te contacte a este mismo número?
-
-${phone}
-
-1️⃣ Sí, a este número
-2️⃣ No, quiero dar otro número`
+      reply: getDigitalCrearTiendaPaso2(),
+      source: "backend"
     };
   }
 
-  // ── Asesor horario ────────────────────────────────────────
-  if (currentState === "digital_asesor_horario") {
-    if (
-      user?.callback_phone &&
-      String(user.callback_phone).trim() &&
-      String(user.callback_phone).trim() !== String(phone).trim()
-    ) {
-      return {
-        estado: "digital_asesor_otro_numero",
-        interes_principal: "digital",
-        subopcion: user?.subopcion || null,
-        reply: "Perfecto. Envíame el número al que deseas que te contacten y seguimos."
-      };
-    }
+  if (detectedIntent === "digital_improve_store") {
+    user.estado = "digital_mejorar_p2";
+    user.subopcion = "mejorar_tienda";
+    saveUser(phone, user);
 
     return {
-      estado: "digital_asesor_confirmar_numero",
-      interes_principal: "digital",
-      subopcion: user?.subopcion || null,
-      reply: `Perfecto. ¿Deseas que uno de nuestros asesores te contacte a este mismo número?
-
-${phone}
-
-1️⃣ Sí, a este número
-2️⃣ No, quiero dar otro número`
+      reply: getDigitalMejorarTiendaPaso2(),
+      source: "backend"
     };
   }
 
-  // ── Finalizado digital ────────────────────────────────────
-  if (currentState === "finalizado" && user?.interes_principal === "digital") {
-    return {
-      estado:
-        ["crear_tienda", "mejorar_tienda", "ia_automatizacion", "marketing_ventas"].includes(
-          currentSuboption
-        )
-          ? "digital_lead_calificado"
-          : "digital_p1",
-      interes_principal: "digital",
-      subopcion: currentSuboption || null,
-      reply:
-        ["crear_tienda", "mejorar_tienda", "ia_automatizacion", "marketing_ventas"].includes(
-          currentSuboption
-        )
-          ? `Perfecto. Ya veo que tu caso digital merece una revisión más directa.
+  if (
+    detectedIntent === "digital_ai_automation" ||
+    detectedIntent === "digital_chatbot_interest"
+  ) {
+    user.estado = "digital_ia_p2";
+    user.subopcion = "ia_automatizacion";
+    saveUser(phone, user);
 
-Si deseas avanzar con uno de nuestros asesores, tienes estas opciones:
-1️⃣ Quiero que un asesor me guíe
-2️⃣ Quiero agendar una reunión vía meeting`
-          : getDigitalIntro()
+    return {
+      reply: getDigitalIAPaso2(),
+      source: "backend"
     };
   }
 
-  // ── Fallback digital ──────────────────────────────────────
-  if (user?.interes_principal === "digital") {
+  if (detectedIntent === "digital_marketing_sales") {
+    user.estado = "digital_marketing_p2";
+    user.subopcion = "marketing_ventas";
+    saveUser(phone, user);
+
     return {
-      estado: "digital_p1",
-      interes_principal: "digital",
-      subopcion: null,
-      reply: getDigitalIntro()
+      reply: getDigitalMarketingPaso2(),
+      source: "backend"
     };
   }
 
-  return null;
+  if (
+    detectedIntent === "digital_next_step" ||
+    detectedIntent === "digital_schedule"
+  ) {
+    user.score = Math.max(user.score || 0, 6);
+    user.estado = "digital_lead_calificado";
+    saveUser(phone, user);
+
+    return {
+      reply: buildDigitalAdvisorCTAReply(user),
+      source: "backend"
+    };
+  }
+
+  user.estado = "digital_p1";
+  user.subopcion = null;
+  saveUser(phone, user);
+
+  return {
+    reply: getDigitalIntro(),
+    source: "backend"
+  };
 }
 
 // ========================================================
@@ -1569,87 +1986,9 @@ function extractMetaMessage(body) {
   return { phone, message };
 }
 
-function routeDigitalIntent({
-  detectedIntent,
-  user,
-  phone,
-  saveUser,
-  getDigitalIntro,
-  getDigitalCrearTiendaPaso2,
-  getDigitalMejorarTiendaPaso2,
-  getDigitalIAPaso2,
-  getDigitalMarketingPaso2,
-  getDigitalInfoGeneral,
-  getLeadCalificadoReply
-}) {
-  if (!isDigitalIntent(detectedIntent)) return null;
-
-  user.interes_principal = "digital";
-
-  if (
-    detectedIntent === "digital_info" ||
-    detectedIntent === "digital_help_options"
-  ) {
-    user.estado = "digital_p1";
-    user.subopcion = null;
-    saveUser(phone, user);
-    return { reply: getDigitalIntro(), source: "backend" };
-  }
-
-  if (
-    detectedIntent === "digital_create_store" ||
-    detectedIntent === "digital_shopify_interest" ||
-    detectedIntent === "digital_wordpress_interest" ||
-    detectedIntent === "digital_prestashop_interest"
-  ) {
-    user.estado = "digital_crear_p2";
-    user.subopcion = "crear_tienda";
-    saveUser(phone, user);
-    return { reply: getDigitalCrearTiendaPaso2(), source: "backend" };
-  }
-
-  if (detectedIntent === "digital_improve_store") {
-    user.estado = "digital_mejorar_p2";
-    user.subopcion = "mejorar_tienda";
-    saveUser(phone, user);
-    return { reply: getDigitalMejorarTiendaPaso2(), source: "backend" };
-  }
-
-  if (
-    detectedIntent === "digital_ai_automation" ||
-    detectedIntent === "digital_chatbot_interest"
-  ) {
-    user.estado = "digital_ia_p2";
-    user.subopcion = "ia_automatizacion";
-    saveUser(phone, user);
-    return { reply: getDigitalIAPaso2(), source: "backend" };
-  }
-
-  if (detectedIntent === "digital_marketing_sales") {
-    user.estado = "digital_marketing_p2";
-    user.subopcion = "marketing_ventas";
-    saveUser(phone, user);
-    return { reply: getDigitalMarketingPaso2(), source: "backend" };
-  }
-
-  if (
-    detectedIntent === "digital_next_step" ||
-    detectedIntent === "digital_schedule"
-  ) {
-    user.score = Math.max(user.score || 0, 6);
-    user.estado = "digital_lead_calificado";
-    saveUser(phone, user);
-    return {
-      reply: `Perfecto. Ya veo que quieres avanzar con ecommerce o automatización.\n\n${getLeadCalificadoReply()}`,
-      source: "backend"
-    };
-  }
-
-  user.estado = "digital_p1";
-  saveUser(phone, user);
-  return { reply: getDigitalIntro(), source: "backend" };
-}
-
+// ========================================================
+// WEBHOOK PRINCIPAL
+// ========================================================
 app.post("/webhook", async (req, res) => {
   try {
     const isMetaWebhook =
@@ -1700,7 +2039,9 @@ app.post("/webhook", async (req, res) => {
                 incoming_message: req.body?.message || null,
                 error_message: sendError.message,
                 stack: sendError.stack,
-                detail: { route: "/webhook" }
+                detail: {
+                  route: "/webhook"
+                }
               });
             } catch (logErr) {
               console.error("Error registrando log de envío:", logErr.message);
@@ -1744,7 +2085,9 @@ app.post("/webhook", async (req, res) => {
           interes_principal: user.interes_principal,
           subopcion: user.subopcion,
           score: user.score,
-          detail: { trigger: "menu" }
+          detail: {
+            trigger: "menu"
+          }
         });
       } else {
         user.estado = "menu_enviado";
@@ -1752,6 +2095,7 @@ app.post("/webhook", async (req, res) => {
         user.interes_principal = null;
         user.subopcion = null;
         user.club_context = null;
+        user.estado_anterior_digital = null;
       }
 
       saveUser(phone, user);
@@ -1764,7 +2108,9 @@ app.post("/webhook", async (req, res) => {
         interes_principal: user.interes_principal,
         subopcion: user.subopcion,
         score: user.score,
-        detail: { trigger: "menu_command" }
+        detail: {
+          trigger: "menu_command"
+        }
       });
 
       return res.json({ reply: getMenu(), source: "backend" });
@@ -1783,7 +2129,9 @@ app.post("/webhook", async (req, res) => {
         interes_principal: newUser.interes_principal,
         subopcion: newUser.subopcion,
         score: newUser.score,
-        detail: { trigger: "reiniciar_command" }
+        detail: {
+          trigger: "reiniciar_command"
+        }
       });
 
       return res.json({
@@ -1810,7 +2158,10 @@ app.post("/webhook", async (req, res) => {
         }
       });
 
-      return res.json({ reply: getMenu(), source: "backend" });
+      return res.json({
+        reply: getMenu(),
+        source: "backend"
+      });
     }
 
     // ========================================================
@@ -1836,9 +2187,13 @@ app.post("/webhook", async (req, res) => {
       user.interes_principal = "club";
       user.subopcion = null;
       user.club_context = null;
+
       saveUser(phone, user);
 
-      return res.json({ reply: getClubIntro(), source: "backend" });
+      return res.json({
+        reply: getClubIntro(),
+        source: "backend"
+      });
     }
 
     // ========================================================
@@ -1866,9 +2221,13 @@ app.post("/webhook", async (req, res) => {
       user.estado = "asesoria_p1";
       user.interes_principal = "asesoria";
       user.subopcion = null;
+
       saveUser(phone, user);
 
-      return res.json({ reply: getAsesoriaIntro(), source: "backend" });
+      return res.json({
+        reply: getAsesoriaIntro(),
+        source: "backend"
+      });
     }
 
     // ========================================================
@@ -1893,9 +2252,13 @@ app.post("/webhook", async (req, res) => {
       user.estado = "digital_p1";
       user.interes_principal = "digital";
       user.subopcion = null;
+
       saveUser(phone, user);
 
-      return res.json({ reply: getDigitalIntro(), source: "backend" });
+      return res.json({
+        reply: getDigitalIntro(),
+        source: "backend"
+      });
     }
 
     // ========================================================
@@ -1911,9 +2274,11 @@ app.post("/webhook", async (req, res) => {
           if (Object.prototype.hasOwnProperty.call(backNav, "interes_principal")) {
             user.interes_principal = backNav.interes_principal;
           }
+
           if (Object.prototype.hasOwnProperty.call(backNav, "subopcion")) {
             user.subopcion = backNav.subopcion;
           }
+
           if (Object.prototype.hasOwnProperty.call(backNav, "club_context")) {
             user.club_context = backNav.club_context;
           }
@@ -1934,7 +2299,10 @@ app.post("/webhook", async (req, res) => {
             }
           });
 
-          return res.json({ reply: backNav.reply, source: "backend" });
+          return res.json({
+            reply: backNav.reply,
+            source: "backend"
+          });
         }
       }
 
@@ -1947,6 +2315,7 @@ app.post("/webhook", async (req, res) => {
           if (Object.prototype.hasOwnProperty.call(backNav, "interes_principal")) {
             user.interes_principal = backNav.interes_principal;
           }
+
           if (Object.prototype.hasOwnProperty.call(backNav, "subopcion")) {
             user.subopcion = backNav.subopcion;
           }
@@ -1961,10 +2330,15 @@ app.post("/webhook", async (req, res) => {
             interes_principal: user.interes_principal,
             subopcion: user.subopcion,
             score: user.score,
-            detail: { trigger: "atras_command" }
+            detail: {
+              trigger: "atras_command"
+            }
           });
 
-          return res.json({ reply: backNav.reply, source: "backend" });
+          return res.json({
+            reply: backNav.reply,
+            source: "backend"
+          });
         }
       }
 
@@ -1977,6 +2351,7 @@ app.post("/webhook", async (req, res) => {
           if (Object.prototype.hasOwnProperty.call(backNav, "interes_principal")) {
             user.interes_principal = backNav.interes_principal;
           }
+
           if (Object.prototype.hasOwnProperty.call(backNav, "subopcion")) {
             user.subopcion = backNav.subopcion;
           }
@@ -1991,10 +2366,16 @@ app.post("/webhook", async (req, res) => {
             interes_principal: user.interes_principal,
             subopcion: user.subopcion,
             score: user.score,
-            detail: { trigger: "atras_command" }
+            detail: {
+              trigger: "atras_command",
+              estado_anterior_digital: user.estado_anterior_digital || null
+            }
           });
 
-          return res.json({ reply: backNav.reply, source: "backend" });
+          return res.json({
+            reply: backNav.reply,
+            source: "backend"
+          });
         }
       }
 
@@ -2007,10 +2388,12 @@ app.post("/webhook", async (req, res) => {
     // ========================================================
     // 2. REDIRECCIÓN MÓDULO DIGITAL
     // ========================================================
-    if (user.estado.startsWith("digital_") || cleanMessage === "6") {
-      if (cleanMessage === "6" && !user.estado.startsWith("digital_")) {
+    if (String(user.estado || "").startsWith("digital_") || cleanMessage === "6") {
+      if (cleanMessage === "6" && !String(user.estado || "").startsWith("digital_")) {
         user.estado = "digital_p1";
         user.interes_principal = "digital";
+        user.subopcion = null;
+        user.estado_anterior_digital = null;
         saveUser(phone, user);
 
         logLeadEvent({
@@ -2027,27 +2410,25 @@ app.post("/webhook", async (req, res) => {
           }
         });
 
-        return res.json({ reply: getDigitalIntro(), source: "backend" });
+        return res.json({
+          reply: getDigitalIntro(),
+          source: "backend"
+        });
       }
 
       const digitalRes = handleDigitalFlow({
         user,
         phone,
         cleanMessage,
+        message,
         saveUser,
         classifyLead,
-        CALENDLY_LINK,
-        getDigitalCrearTiendaPaso2,
-        getDigitalCrearTiendaPaso3,
-        getDigitalPreguntaIntencion,
-        getDigitalMejorarTiendaPaso2,
-        getDigitalMejorarTiendaPaso3,
-        getDigitalIAPaso2,
-        getDigitalMarketingPaso2,
-        getDigitalMarketingPaso3
+        CALENDLY_LINK
       });
 
-      if (digitalRes) return res.json(digitalRes);
+      if (digitalRes) {
+        return res.json(digitalRes);
+      }
     }
 
     // ========================================================
@@ -2182,14 +2563,7 @@ app.post("/webhook", async (req, res) => {
       detectedIntent,
       user,
       phone,
-      saveUser,
-      getDigitalIntro,
-      getDigitalCrearTiendaPaso2,
-      getDigitalMejorarTiendaPaso2,
-      getDigitalIAPaso2,
-      getDigitalMarketingPaso2,
-      getDigitalInfoGeneral,
-      getLeadCalificadoReply
+      saveUser
     });
 
     if (digitalIntentRes) {
@@ -2199,13 +2573,17 @@ app.post("/webhook", async (req, res) => {
     // ========================================================
     // 4.2 RUTEO POR INTENCIÓN CLUB ANTES DEL FALLBACK
     // ========================================================
-    const clubIntentRes = routeClubIntent({ detectedIntent, user });
+    const clubIntentRes = routeClubIntent({
+      detectedIntent,
+      user
+    });
 
     if (clubIntentRes) {
       if (!user.interes_principal) {
         user.interes_principal = "club";
         saveUser(phone, user);
       }
+
       return res.json(clubIntentRes);
     }
 
@@ -2232,6 +2610,7 @@ app.post("/webhook", async (req, res) => {
       user.subopcion = null;
       user.interes_principal = null;
       user.club_context = null;
+      user.estado_anterior_digital = null;
       saveUser(phone, user);
 
       return res.json({
@@ -2259,7 +2638,31 @@ Mensaje del usuario: ${message}
         "Entiendo. ¿Quieres que te ayude a dar el siguiente paso o prefieres que agendemos una reunión?"
       );
 
-      return res.json({ reply: aiReply, source: "gemini" });
+      if (
+        [
+          "digital_ia_chatbot_hibrido",
+          "digital_ia_agente_hibrido",
+          "digital_ia_procesos_hibrido"
+        ].includes(String(user.estado || ""))
+      ) {
+        user.estado_anterior_digital = user.estado;
+        user.estado = "digital_lead_calificado";
+        saveUser(phone, user);
+
+        return res.json({
+          reply: `${aiReply}
+
+Si deseas avanzar con uno de nuestros asesores, tienes estas opciones:
+1️⃣ Quiero que un asesor me guíe
+2️⃣ Quiero agendar una reunión vía meeting`,
+          source: "gemini"
+        });
+      }
+
+      return res.json({
+        reply: aiReply,
+        source: "gemini"
+      });
     }
 
     // ========================================================
@@ -2267,20 +2670,62 @@ Mensaje del usuario: ${message}
     // ========================================================
     if (user.estado === "menu_enviado") {
       const options = {
-        "1": { estado: "importacion_p1", interes: "importacion", reply: getImportacionIntro, module: "importacion" },
-        "2": { estado: "amazon_p1",      interes: "amazon",      reply: getAmazonIntro,      module: "amazon" },
-        "3": { estado: "club_p1",        interes: "club",        reply: getClubIntro,        module: "club" },
-        "4": { estado: "exportacion_p1", interes: "exportacion", reply: getExportacionIntro, module: "exportacion" },
-        "5": { estado: "ferias_p1",      interes: "ferias",      reply: getFeriasIntro,      module: "ferias" },
-        "6": { estado: "digital_p1",     interes: "digital",     reply: getDigitalIntro,     module: "digital" },
-        "7": { estado: "asesoria_p1",    interes: "asesoria",    reply: getAsesoriaIntro,    module: "asesoria" },
-        "8": { estado: "atencion_cliente_p1", interes: "atencion_cliente", reply: getAtencionClienteIntro, module: "atencion_cliente" }
+        "1": {
+          estado: "importacion_p1",
+          interes: "importacion",
+          reply: getImportacionIntro,
+          module: "importacion"
+        },
+        "2": {
+          estado: "amazon_p1",
+          interes: "amazon",
+          reply: getAmazonIntro,
+          module: "amazon"
+        },
+        "3": {
+          estado: "club_p1",
+          interes: "club",
+          reply: getClubIntro,
+          module: "club"
+        },
+        "4": {
+          estado: "exportacion_p1",
+          interes: "exportacion",
+          reply: getExportacionIntro,
+          module: "exportacion"
+        },
+        "5": {
+          estado: "ferias_p1",
+          interes: "ferias",
+          reply: getFeriasIntro,
+          module: "ferias"
+        },
+        "6": {
+          estado: "digital_p1",
+          interes: "digital",
+          reply: getDigitalIntro,
+          module: "digital"
+        },
+        "7": {
+          estado: "asesoria_p1",
+          interes: "asesoria",
+          reply: getAsesoriaIntro,
+          module: "asesoria"
+        },
+        "8": {
+          estado: "atencion_cliente_p1",
+          interes: "atencion_cliente",
+          reply: getAtencionClienteIntro,
+          module: "atencion_cliente"
+        }
       };
 
       if (options[cleanMessage]) {
         user.estado = options[cleanMessage].estado;
         user.interes_principal = options[cleanMessage].interes;
         user.club_context = null;
+        user.subopcion = null;
+        user.estado_anterior_digital = null;
         saveUser(phone, user);
 
         logLeadEvent({
@@ -2297,7 +2742,10 @@ Mensaje del usuario: ${message}
           }
         });
 
-        return res.json({ reply: options[cleanMessage].reply(), source: "backend" });
+        return res.json({
+          reply: options[cleanMessage].reply(),
+          source: "backend"
+        });
       }
     }
 
@@ -2337,8 +2785,10 @@ También puedes escribir *MENU* para ver otras opciones.`;
       fallbackReply = "No entendí del todo tu mensaje. Escribe *MENU* para ver las opciones disponibles.";
     }
 
-    return res.json({ reply: fallbackReply, source: "backend" });
-
+    return res.json({
+      reply: fallbackReply,
+      source: "backend"
+    });
   } catch (error) {
     console.error("Error en webhook:", error);
 
@@ -2355,7 +2805,9 @@ También puedes escribir *MENU* para ver otras opciones.`;
         incoming_message: safeMessage,
         error_message: error.message,
         stack: error.stack,
-        detail: { route: "/webhook" }
+        detail: {
+          route: "/webhook"
+        }
       });
     } catch (logError) {
       console.error("Error registrando log de error:", logError.message);
