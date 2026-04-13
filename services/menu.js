@@ -285,28 +285,28 @@ function getDigitalIntro() {
 }
 
 function getDigitalCrearTiendaPaso2() {
-  return `Perfecto. Dime qué tipo de tienda quieres crear:
+  return `Perfecto. Dime qué escenario se parece más a tu caso:
 
-1️⃣ Shopify
-2️⃣ WordPress / WooCommerce
-3️⃣ PrestaShop
-4️⃣ Aún no sé cuál me conviene`;
+1️⃣ Quiero una tienda en Shopify
+2️⃣ Quiero una tienda en WordPress / WooCommerce
+3️⃣ Quiero una tienda en PrestaShop
+4️⃣ Necesito que me recomienden la mejor plataforma`;
 }
 
 function getDigitalCrearTiendaPaso3() {
   return `Perfecto. Ahora dime qué necesitas exactamente:
 
-1️⃣ Crear la tienda completa desde cero
-2️⃣ Configurar pagos, envíos y estructura básica
-3️⃣ Necesito orientación para definir la mejor opción`;
+1️⃣ Quiero que me desarrollen la tienda completa
+2️⃣ Ya tengo algo avanzado, pero necesito estructura y configuración
+3️⃣ Quiero una recomendación clara antes de invertir`;
 }
 
 function getDigitalPreguntaIntencion() {
   return `Ahora dime:
 
-1️⃣ Quiero empezar lo antes posible
-2️⃣ Quiero entender primero cómo funcionaría
-3️⃣ Solo estoy explorando`;
+1️⃣ Quiero avanzar pronto con mi tienda
+2️⃣ Quiero revisar primero alcance, costos o estrategia
+3️⃣ Solo estoy evaluando opciones por ahora`;
 }
 
 function getDigitalMejorarTiendaPaso2() {
@@ -340,23 +340,23 @@ function getDigitalIAPaso2() {
 1️⃣ Chatbot para atención al cliente
 2️⃣ Agente con IA para ventas o leads
 3️⃣ Automatización de procesos internos
-4️⃣ No tengo claro qué necesito`;
+4️⃣ Quiero que me recomienden la mejor solución`;
 }
 
 function getDigitalIAPaso3() {
   return `Perfecto. Ahora dime cuál de estas opciones describe mejor tu objetivo:
 
-1️⃣ Quiero mejorar atención y convertir más clientes
-2️⃣ Quiero automatizar tareas y ahorrar tiempo operativo
-3️⃣ Quiero entender primero qué tipo de solución me conviene`;
+1️⃣ Quiero vender más y atender mejor a mis clientes
+2️⃣ Quiero ahorrar tiempo y automatizar tareas operativas
+3️⃣ Quiero entender primero qué solución me conviene`;
 }
 
 function getDigitalIAPaso4() {
   return `Ahora dime:
 
 1️⃣ Quiero implementarlo pronto
-2️⃣ Quiero entender cómo funcionaría
-3️⃣ Solo estoy explorando`;
+2️⃣ Quiero revisar primero alcance, costos o viabilidad
+3️⃣ Solo estoy explorando por ahora`;
 }
 
 function getDigitalMarketingPaso2() {
@@ -365,7 +365,7 @@ function getDigitalMarketingPaso2() {
 1️⃣ Campañas en Meta Ads o Google Ads
 2️⃣ SEO para mi sitio web
 3️⃣ Generación de leads o más ventas
-4️⃣ No tengo clara la estrategia`;
+4️⃣ Necesito claridad sobre la estrategia`;
 }
 
 function getDigitalMarketingPaso3() {
@@ -373,34 +373,29 @@ function getDigitalMarketingPaso3() {
 
 1️⃣ Tengo tráfico pero no convierto
 2️⃣ No estoy generando suficiente tráfico
-3️⃣ Quiero empezar desde cero`;
+3️⃣ Quiero empezar desde cero con una estrategia mejor estructurada`;
 }
 
 function getDigitalMarketingPaso4() {
   return `Perfecto. Ahora dime qué tan pronto quieres trabajar esto:
 
 1️⃣ Quiero empezar lo antes posible
-2️⃣ Quiero entender primero qué estrategia me conviene
+2️⃣ Quiero revisar primero qué estrategia me conviene
 3️⃣ Solo estoy explorando por ahora`;
 }
 
+// Se dejan estas funciones por compatibilidad, pero el app.js ya redirige al intro digital
 function getDigitalInfoGeneral() {
-  return `Con gusto. En OneOrbix ayudamos a:
+  return `Perfecto. Para ayudarte mejor, dime qué necesitas exactamente:
 
-✔ Crear tiendas online
-✔ Mejorar ecommerce existentes
-✔ Implementar automatización con IA
-✔ Optimizar estrategias digitales para generar ventas
-
-Para orientarte mejor, dime qué te interesa más en este momento:
-
-1️⃣ Crear o mejorar una tienda online
-2️⃣ Automatización o IA para vender más
-3️⃣ Marketing digital, SEO o generación de ventas`;
+1️⃣ Crear una tienda online desde cero
+2️⃣ Mejorar o reparar una tienda existente
+3️⃣ Implementar automatización o IA para vender más
+4️⃣ Mejorar campañas, SEO o generación de ventas`;
 }
 
 function getDigitalInfoGeneralPaso3() {
-  return `Y ahora dime:
+  return `Ahora dime:
 
 1️⃣ Quiero avanzar pronto
 2️⃣ Quiero entender primero mis opciones
