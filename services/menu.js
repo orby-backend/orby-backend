@@ -281,8 +281,7 @@ function getDigitalIntro() {
 1️⃣ Crear una tienda online desde cero
 2️⃣ Mejorar o reparar una tienda existente
 3️⃣ Implementar automatización o IA para vender más
-4️⃣ Mejorar campañas, SEO o generación de ventas
-5️⃣ Solo quiero información general`;
+4️⃣ Mejorar campañas, SEO o generación de ventas`;
 }
 
 function getDigitalCrearTiendaPaso2() {

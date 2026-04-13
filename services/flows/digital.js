@@ -2,9 +2,7 @@ const {
   getDigitalMejorarTiendaPaso4,
   getDigitalIAPaso3,
   getDigitalIAPaso4,
-  getDigitalMarketingPaso4,
-  getDigitalInfoGeneral,
-  getDigitalInfoGeneralPaso3
+  getDigitalMarketingPaso4
 } = require("../menu");
 
 const {
@@ -47,10 +45,6 @@ Eso normalmente significa que estás en una etapa donde conviene ordenar bien pl
 
   if (user.subopcion === "marketing_ventas") {
     return `Perfecto. Veo que tu caso está más enfocado en visibilidad, leads o ventas, así que aquí conviene ordenar mejor el punto de partida antes de meter más esfuerzo o presupuesto sin dirección clara.`;
-  }
-
-  if (user.subopcion === "info_general") {
-    return `Perfecto. Veo que todavía estás ordenando el panorama, así que lo importante es identificar qué área te conviene trabajar primero para que el siguiente paso tenga más sentido.`;
   }
 
   return `Perfecto. Ya tengo una idea inicial de tu caso digital.`;
@@ -439,34 +433,8 @@ function handleDigitalFlow({
         };
       }
 
-      if (cleanMessage === "5") {
-        user.estado = "digital_info_p2";
-        user.subopcion = "info_general";
-        saveUser(phone, user);
-
-        logLeadEvent({
-          phone,
-          module: "digital",
-          event_type: "flow_step",
-          estado: user.estado,
-          interes_principal: user.interes_principal,
-          subopcion: user.subopcion,
-          score: user.score,
-          detail: {
-            selected_option: "5",
-            step: "digital_p1_to_info_p2",
-            branch: user.subopcion
-          }
-        });
-
-        return {
-          reply: getDigitalInfoGeneral(),
-          source: "backend"
-        };
-      }
-
       return {
-        reply: "Por favor responde con un número del 1 al 5.",
+        reply: "Por favor responde con un número del 1 al 4.",
         source: "backend"
       };
     }
@@ -828,76 +796,6 @@ function handleDigitalFlow({
     }
 
     if (user.estado === "digital_marketing_p4") {
-      if (!["1", "2", "3"].includes(cleanMessage)) {
-        return {
-          reply: "Por favor responde con 1, 2 o 3.",
-          source: "backend"
-        };
-      }
-
-      if (cleanMessage === "1") user.score += 3;
-      if (cleanMessage === "2") user.score += 1;
-      if (cleanMessage === "3") user.score += 0;
-
-      return closeDigitalLead({
-        user,
-        phone,
-        saveUser,
-        classifyLead
-      });
-    }
-
-    // ========================================================
-    // 7. RAMA INFORMACIÓN GENERAL
-    // ========================================================
-    if (user.estado === "digital_info_p2") {
-      if (!["1", "2", "3"].includes(cleanMessage)) {
-        return {
-          reply: "Por favor responde con 1, 2 o 3.",
-          source: "backend"
-        };
-      }
-
-      if (cleanMessage === "1") {
-        user.score += 2;
-        user.subopcion = "crear_tienda";
-      }
-
-      if (cleanMessage === "2") {
-        user.score += 3;
-        user.subopcion = "ia_automatizacion";
-      }
-
-      if (cleanMessage === "3") {
-        user.score += 2;
-        user.subopcion = "marketing_ventas";
-      }
-
-      user.estado = "digital_info_p3";
-      saveUser(phone, user);
-
-      logLeadEvent({
-        phone,
-        module: "digital",
-        event_type: "flow_step",
-        estado: user.estado,
-        interes_principal: user.interes_principal,
-        subopcion: user.subopcion,
-        score: user.score,
-        detail: {
-          selected_option: cleanMessage,
-          step: "digital_info_p2_to_p3",
-          branch: "info_general"
-        }
-      });
-
-      return {
-        reply: getDigitalInfoGeneralPaso3(),
-        source: "backend"
-      };
-    }
-
-    if (user.estado === "digital_info_p3") {
       if (!["1", "2", "3"].includes(cleanMessage)) {
         return {
           reply: "Por favor responde con 1, 2 o 3.",
